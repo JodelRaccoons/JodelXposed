@@ -173,6 +173,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 for( int i = 0; i < permissions.length; i++ ) {
                     if( grantResults[i] == PackageManager.PERMISSION_GRANTED ) {
                         Log.d("Permissions", "Permission Granted: " + permissions[i]);
+                        setInformation();
                     } else if( grantResults[i] == PackageManager.PERMISSION_DENIED ) {
                         Snackbar snackbar = Snackbar
                                 .make(getWindow().getDecorView().getRootView(), "Permission denied, this app wont work properly!", Snackbar.LENGTH_INDEFINITE)
