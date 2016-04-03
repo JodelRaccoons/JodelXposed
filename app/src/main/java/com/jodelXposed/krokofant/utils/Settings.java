@@ -30,7 +30,6 @@ public class Settings {
     private String city;
     private String country;
     private String countryCode;
-    private boolean doResetAuthenticated;
 
     //If the module is active
     private boolean active;
@@ -65,14 +64,6 @@ public class Settings {
 
     public void setCountryCode(String countryCode) {
         this.countryCode = countryCode;
-    }
-
-    public boolean isDoResetAuthenticated() {
-        return doResetAuthenticated;
-    }
-
-    public void setDoResetAuthenticated(boolean bool){
-        this.doResetAuthenticated = bool;
     }
 
     public double getLat() {
@@ -127,7 +118,6 @@ public class Settings {
             this.lat = jsonObject.getDouble("lat");
             this.lng = jsonObject.getDouble("lng");
             this.active = jsonObject.getBoolean("active");
-            this.doResetAuthenticated = jsonObject.getBoolean("doResetAuthenticated");
 
             this.isLoaded = true;
 
@@ -199,7 +189,6 @@ public class Settings {
         this.lat = -53.076499;
         this.lng = 73.37357;
         this.active = true;
-        this.doResetAuthenticated = false;
         this.writeToFile(file, this.toJson().toString());
     }
 
@@ -216,7 +205,6 @@ public class Settings {
                 toFile.put("countryCode", this.countryCode);
                 toFile.put("lat", this.lat);
                 toFile.put("lng", this.lng);
-                toFile.put("doResetAuthenticated", this.doResetAuthenticated);
 
             return toFile;
         } catch(JSONException e){
