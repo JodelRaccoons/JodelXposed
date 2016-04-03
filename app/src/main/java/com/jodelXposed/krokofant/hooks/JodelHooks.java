@@ -1,5 +1,6 @@
 package com.jodelXposed.krokofant.hooks;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.view.KeyEvent;
@@ -29,6 +30,12 @@ public class JodelHooks {
     public static class OkClient$2 {
         public static String InputStream = "CK";
     }
+
+    public static class RecyclerPostsAdapter {
+        public static String Bitmap = "a";
+    }
+
+
 
     public void hook(XC_LoadPackage.LoadPackageParam lpparam) {
         /**
@@ -122,6 +129,16 @@ public class JodelHooks {
                         }
                     }
                 }
+            }
+        });
+
+        /**
+         * Remove blur effect on posts
+         */
+        findAndHookMethod("com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter", lpparam.classLoader, RecyclerPostsAdapter.Bitmap, Context.class, Bitmap.class, new XC_MethodReplacement() {
+            @Override
+            protected Bitmap replaceHookedMethod(MethodHookParam param) throws Throwable {
+                return (Bitmap)param.args[1];
             }
         });
 
