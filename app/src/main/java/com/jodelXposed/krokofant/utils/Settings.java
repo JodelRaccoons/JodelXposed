@@ -191,7 +191,7 @@ public class Settings {
      * Create a default file
      * @param file
      */
-    private void createDefaultFile(File file) {
+    public void createDefaultFile(File file) {
         xlog("Creating settings file");
         this.city = "Heard and McDonald Islands";
         this.country = "Heard and McDonald Islands";

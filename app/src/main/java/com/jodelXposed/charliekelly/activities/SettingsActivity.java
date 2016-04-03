@@ -33,6 +33,7 @@ import com.jodelXposed.krokofant.utils.Settings;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private Settings mSettings = Settings.getInstance();
     private SwitchCompat chkIsActive;
     private Button btnSelectPosition;
+    private Button btnResetDefaults;
     private static final int REQUEST_CODE_PERMISSIONS = 200;
     static Boolean isTouched = false;
     public static String currentlocation = null;
@@ -62,9 +64,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
 
         this.btnSelectPosition = (Button) findViewById(R.id.btn_select_position);
+        this.btnResetDefaults = (Button) findViewById(R.id.btn_reset_defaults);
 
         assert this.btnSelectPosition != null;
+        assert this.btnResetDefaults != null;
         this.btnSelectPosition.setOnClickListener(this);
+        this.btnResetDefaults.setOnClickListener(this);
 
         try{
             mSettings.load();
@@ -133,6 +138,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         if(viewID == this.chkIsActive.getId()){
 
+        }
+
+        if(viewID == this.btnResetDefaults.getId()){
+            mSettings.createDefaultFile(new File(Settings.settingsPath));
         }
     }
 
