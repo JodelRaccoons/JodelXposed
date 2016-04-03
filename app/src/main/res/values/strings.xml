@@ -2,5 +2,9 @@
     <string name="app_name">Jodel Xposed</string>
     <string name="title_activity_share">Jodel Xposed</string>
     <string name="title_activity_settings">Jodel Xposed</string>
+    <string name="title_choose_location">Choose your Location</string>
     <string name="google_api_key">AIzaSyAFVzjW_nX6UTyeHPZz3xgRpOkoQ96WbUA</string>
+    <string name="select_pos">Select position</string>
+    <string name="your_current_location">Your current location:</string>
+    <string name="feature_description">GPS Override \nIf problems with the GPS - restart the Jodel app. Make sure the feature is activated in the Jodel Xposed app. \n \nOPs posts are faded a little bit darker \n \nUploading images \n1. Share an image to Jodel Xposed \n2. Take a picture like normal in Jodel and then long press the image to change to the shared one \n3. Press Volume down to toggle scaling method \n4. If any problems make sure the app has Read/Write access</string>
 </resources>

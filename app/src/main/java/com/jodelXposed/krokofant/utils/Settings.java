@@ -1,6 +1,9 @@
 package com.jodelXposed.krokofant.utils;
 
 import android.os.Environment;
+
+import com.jodelXposed.charliekelly.activities.SettingsActivity;
+
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
@@ -163,6 +166,7 @@ public class Settings {
         //File file = new File(settingsPath);
         try{
             xlog(String.format("Writing %s to file", string));
+            SettingsActivity.currentlocation = string;
 
             FileOutputStream output = FileUtils.openOutputStream(file);
             output.write(string.getBytes());
