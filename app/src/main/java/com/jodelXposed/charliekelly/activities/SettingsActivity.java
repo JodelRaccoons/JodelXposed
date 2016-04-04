@@ -3,6 +3,7 @@ package com.jodelXposed.charliekelly.activities;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -35,6 +36,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.jodelXposed.R;
 import com.jodelXposed.charliekelly.asynctasks.GeocoderAsync;
 import com.jodelXposed.krokofant.utils.Settings;
+import com.spazedog.lib.rootfw4.RootFW;
+import com.spazedog.lib.rootfw4.utils.Device;
 
 import org.json.JSONException;
 
@@ -54,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private SwitchCompat chkIsActive;
     private ActionProcessButton btnSelectPosition;
     private ActionProcessButton btnResetDefaults;
+    private ActionProcessButton btnRestartJodel;
     private static final int REQUEST_CODE_PERMISSIONS = 200;
     static Boolean isTouched = false;
     public static String currentlocation = null;
@@ -71,11 +75,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         this.btnSelectPosition = (ActionProcessButton) findViewById(R.id.btn_select_position);
         this.btnResetDefaults = (ActionProcessButton) findViewById(R.id.btn_reset_defaults);
+        this.btnRestartJodel = (ActionProcessButton) findViewById(R.id.btn_restart_jodel);
 
         assert this.btnSelectPosition != null;
         assert this.btnResetDefaults != null;
         this.btnSelectPosition.setOnClickListener(this);
         this.btnResetDefaults.setOnClickListener(this);
+        this.btnRestartJodel.setOnClickListener(this);
 
         this.btnSelectPosition.setMode(ActionProcessButton.Mode.ENDLESS);
 
@@ -85,6 +91,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             xlog(e.getMessage());
         }
         setInformation();
+
+        RootFW.connect();
     }
 
     private void setOnClickListener() {
@@ -142,6 +150,13 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if(viewID == this.btnResetDefaults.getId()){
             mSettings.createDefaultFile(new File(Settings.settingsPath));
         }
+
+        if(viewID == this.btnRestartJodel.getId()){
+            Device.Process process = RootFW.getProcess("com.tellm.android.app");
+            if (process.kill())
+                openApp(this, "com.tellm.android.app");
+            Log.d("Killed", "Jodel!");
+        }
     }
 
     @Override
@@ -149,6 +164,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem item = menu.findItem(R.id.toggleservice);
         this.chkIsActive = (SwitchCompat) MenuItemCompat.getActionView(item);
+        chkIsActive.setChecked(mSettings.isActive());
         setOnClickListener();
         return super.onCreateOptionsMenu(menu);
     }
@@ -175,7 +191,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                         setInformation();
                     } else if( grantResults[i] == PackageManager.PERMISSION_DENIED ) {
                         Snackbar snackbar = Snackbar
-                                .make(getWindow().getDecorView().getRootView(), "Permission denied, this app wont work properly!", Snackbar.LENGTH_INDEFINITE)
+                                .make(findViewById(R.id.scrollview), "Permission denied, this app wont work properly!", Snackbar.LENGTH_INDEFINITE)
                                 .setAction("Check that", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -309,6 +325,10 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             setInformation();
             this.btnSelectPosition.setProgress(100);
             resetProgress();
+            Snackbar snackbar = Snackbar
+                    .make(findViewById(R.id.scrollview), "For changes to take effect please restart Jodel!", Snackbar.LENGTH_LONG)
+                    .setAction("Okay", null);
+            snackbar.show();
             break;
         }
 
@@ -333,5 +353,19 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 btnSelectPosition.setProgress(0); //reset progress after 2,5sec
             }
         }, 2500);
+    }
+    public static boolean openApp(Context context, String packageName) {
+        PackageManager manager = context.getPackageManager();
+        try {
+            Intent i = manager.getLaunchIntentForPackage(packageName);
+            if (i == null) {
+                throw new PackageManager.NameNotFoundException();
+            }
+            i.addCategory(Intent.CATEGORY_LAUNCHER);
+            context.startActivity(i);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 }

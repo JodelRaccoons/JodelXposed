@@ -12,6 +12,7 @@
         android:id="@+id/tool_bar"
         layout="@layout/toolbar"/>
     <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -67,6 +68,24 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
                         android:text="@string/reset_defaults"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        custom:pb_colorComplete="@color/green_complete"
+                        custom:pb_colorNormal="@color/colorPrimary"
+                        custom:pb_colorPressed="@color/colorPrimaryDark"
+                        custom:pb_colorProgress="@color/purple_progress"
+                        custom:pb_textComplete="Success"
+                        custom:pb_textProgress="Loading"
+                        custom:pb_textError="Error"
+                        custom:pb_colorError="@color/red_error" />
+
+                    <com.dd.processbutton.iml.ActionProcessButton
+                        android:layout_marginTop="15dp"
+                        android:id="@+id/btn_restart_jodel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="@string/restart_jodel"
                         android:textColor="@android:color/white"
                         android:textSize="18sp"
                         custom:pb_colorComplete="@color/green_complete"
