@@ -9,8 +9,8 @@ android {
         applicationId "com.jodelXposed"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 3
-        versionName "1.3.0"
+        versionCode 4
+        versionName "1.3.1"
     }
     signingConfigs {
         release {
