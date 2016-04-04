@@ -39,6 +39,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.android.support:design:23.2.1'
     compile 'com.android.support:cardview-v7:23.1.1'
+    compile 'com.github.dmytrodanylyk.android-process-button:library:1.0.4'
 }
 
 gradle.taskGraph.whenReady { taskGraph ->

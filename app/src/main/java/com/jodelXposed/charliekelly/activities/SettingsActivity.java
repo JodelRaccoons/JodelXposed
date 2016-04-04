@@ -2,14 +2,18 @@ package com.jodelXposed.charliekelly.activities;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +27,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dd.processbutton.iml.ActionProcessButton;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.model.LatLng;
@@ -35,8 +40,10 @@ import org.json.JSONException;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Delayed;
 
 import static com.jodelXposed.krokofant.utils.Log.xlog;
 
@@ -45,8 +52,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private int PLACEPICKER_REQUEST = 0;
     private Settings mSettings = Settings.getInstance();
     private SwitchCompat chkIsActive;
-    private Button btnSelectPosition;
-    private Button btnResetDefaults;
+    private ActionProcessButton btnSelectPosition;
+    private ActionProcessButton btnResetDefaults;
     private static final int REQUEST_CODE_PERMISSIONS = 200;
     static Boolean isTouched = false;
     public static String currentlocation = null;
@@ -62,14 +69,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             checkPermissions();
         }
 
-
-        this.btnSelectPosition = (Button) findViewById(R.id.btn_select_position);
-        this.btnResetDefaults = (Button) findViewById(R.id.btn_reset_defaults);
+        this.btnSelectPosition = (ActionProcessButton) findViewById(R.id.btn_select_position);
+        this.btnResetDefaults = (ActionProcessButton) findViewById(R.id.btn_reset_defaults);
 
         assert this.btnSelectPosition != null;
         assert this.btnResetDefaults != null;
         this.btnSelectPosition.setOnClickListener(this);
         this.btnResetDefaults.setOnClickListener(this);
+
+        this.btnSelectPosition.setMode(ActionProcessButton.Mode.ENDLESS);
 
         try{
             mSettings.load();
@@ -112,7 +120,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         TextView tvCity = (TextView) findViewById(R.id.tvCity);
         TextView tvCountry = (TextView) findViewById(R.id.tvCountry);
         TextView tvCountrycode = (TextView) findViewById(R.id.tvCountrycode);
-        TextView tvDoresetauthenticated = (TextView) findViewById(R.id.tvDoresetauthenticated);
         assert tvLat != null;
         tvLat.setText("Lat: "+String.valueOf(mSettings.getLat()));
         assert tvLng != null;
@@ -131,11 +138,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         if(viewID == this.btnSelectPosition.getId())
             this.pickLocation();
-
-
-        if(viewID == this.chkIsActive.getId()){
-
-        }
 
         if(viewID == this.btnResetDefaults.getId()){
             mSettings.createDefaultFile(new File(Settings.settingsPath));
@@ -206,8 +208,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         PlacePicker.IntentBuilder i = new PlacePicker.IntentBuilder();
         i.setLatLngBounds(new LatLngBounds(
-                new LatLng( (lat-0.20), (lng-0.20) ),
-                new LatLng( (lat+0.20), (lng+0.20))
+                new LatLng((lat - 0.20), (lng - 0.20)),
+                new LatLng((lat + 0.20), (lng + 0.20))
         ));
 
 
@@ -239,7 +241,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 xlog("data was null");
                 return;
             }
-
+            this.btnSelectPosition.setProgress(1);
             Place place = PlacePicker.getPlace(this, data);
             this.setSettingsFromPlace(place);
 
@@ -281,16 +283,22 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
             if(locality == null){
                 xlog("Locality was null");
+                this.btnSelectPosition.setProgress(-1); //error in geofetching
+                resetProgress();
                 continue;
             }
 
             if(country == null){
                 xlog("Country was null");
+                this.btnSelectPosition.setProgress(-1);
+                resetProgress();
                 continue;
             }
 
             if(countryCode == null){
                 xlog("CountryCode was null");
+                this.btnSelectPosition.setProgress(-1);
+                resetProgress();
                 continue;
             }
 
@@ -299,6 +307,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             mSettings.setCountryCode(countryCode);
             save = true;
             setInformation();
+            this.btnSelectPosition.setProgress(100);
+            resetProgress();
             break;
         }
 
@@ -314,5 +324,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         }else{
             Toast.makeText(getApplicationContext(), "Could not save location, try again", Toast.LENGTH_SHORT).show();
         }
+    }
+    private void resetProgress(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                btnSelectPosition.setProgress(0); //reset progress after 2,5sec
+            }
+        }, 2500);
     }
 }
