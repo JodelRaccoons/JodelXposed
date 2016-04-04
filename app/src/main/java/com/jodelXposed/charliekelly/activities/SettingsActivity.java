@@ -94,7 +94,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 try {
                     mSettings.setActive(chkIsActive.isChecked());
                     Log.d("isactive", String.valueOf(chkIsActive.isChecked()));
-                    mSettings.setDoResetAuthenticated(true);
                     mSettings.save();
                     setInformation();
 
@@ -124,8 +123,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         tvCountry.setText("Country: "+String.valueOf(mSettings.getCountry()));
         assert tvCountrycode != null;
         tvCountrycode.setText("Countrycode: "+String.valueOf(mSettings.getCountryCode()));
-        assert tvDoresetauthenticated != null;
-        tvDoresetauthenticated.setText("IsDoResetAuthenticated: "+String.valueOf(mSettings.isDoResetAuthenticated()));
     }
 
     @Override
@@ -300,7 +297,6 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             mSettings.setCity(locality);
             mSettings.setCountry(country);
             mSettings.setCountryCode(countryCode);
-            mSettings.setDoResetAuthenticated(true);
             save = true;
             setInformation();
             break;
