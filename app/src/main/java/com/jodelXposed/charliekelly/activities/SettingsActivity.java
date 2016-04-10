@@ -50,7 +50,7 @@ import java.util.concurrent.Delayed;
 
 import static com.jodelXposed.krokofant.utils.Log.xlog;
 
-public class SettingsActivity extends AppCompatActivity implements View.OnClickListener, GeocoderAsync.OnGeoListener{
+public class SettingsActivity extends AppCompatActivity implements View.OnClickListener, GeocoderAsync.OnGeoListener {
 
     private int PLACEPICKER_REQUEST = 0;
     private Settings mSettings = Settings.getInstance();
@@ -85,9 +85,9 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         this.btnSelectPosition.setMode(ActionProcessButton.Mode.ENDLESS);
 
-        try{
+        try {
             mSettings.load();
-        } catch (JSONException | IOException e){
+        } catch (JSONException | IOException e) {
             xlog(e.getMessage());
         }
         setInformation();
@@ -122,36 +122,36 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-    private void setInformation(){
+    private void setInformation() {
         TextView tvLat = (TextView) findViewById(R.id.tvLat);
         TextView tvLng = (TextView) findViewById(R.id.tvLng);
         TextView tvCity = (TextView) findViewById(R.id.tvCity);
         TextView tvCountry = (TextView) findViewById(R.id.tvCountry);
         TextView tvCountrycode = (TextView) findViewById(R.id.tvCountrycode);
         assert tvLat != null;
-        tvLat.setText("Lat: "+String.valueOf(mSettings.getLat()));
+        tvLat.setText("Lat: " + String.valueOf(mSettings.getLat()));
         assert tvLng != null;
-        tvLng.setText("Lng: "+String.valueOf(mSettings.getLng()));
+        tvLng.setText("Lng: " + String.valueOf(mSettings.getLng()));
         assert tvCity != null;
-        tvCity.setText("City: "+String.valueOf(mSettings.getCity()));
+        tvCity.setText("City: " + String.valueOf(mSettings.getCity()));
         assert tvCountry != null;
-        tvCountry.setText("Country: "+String.valueOf(mSettings.getCountry()));
+        tvCountry.setText("Country: " + String.valueOf(mSettings.getCountry()));
         assert tvCountrycode != null;
-        tvCountrycode.setText("Countrycode: "+String.valueOf(mSettings.getCountryCode()));
+        tvCountrycode.setText("Countrycode: " + String.valueOf(mSettings.getCountryCode()));
     }
 
     @Override
     public void onClick(View v) {
         int viewID = v.getId();
 
-        if(viewID == this.btnSelectPosition.getId())
+        if (viewID == this.btnSelectPosition.getId())
             this.pickLocation();
 
-        if(viewID == this.btnResetDefaults.getId()){
+        if (viewID == this.btnResetDefaults.getId()) {
             mSettings.createDefaultFile(new File(Settings.settingsPath));
         }
 
-        if(viewID == this.btnRestartJodel.getId()){
+        if (viewID == this.btnRestartJodel.getId()) {
             Device.Process process = RootFW.getProcess("com.tellm.android.app");
             if (process.kill())
                 openApp(this, "com.tellm.android.app");
@@ -170,37 +170,37 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @TargetApi(Build.VERSION_CODES.M)
-    private void checkPermissions(){
+    private void checkPermissions() {
         List<String> permissions = new ArrayList<String>();
-        if( checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ) {
-            permissions.add( Manifest.permission.WRITE_EXTERNAL_STORAGE );
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
-        if( !permissions.isEmpty() ) {
-            requestPermissions( permissions.toArray( new String[permissions.size()] ), REQUEST_CODE_PERMISSIONS );
+        if (!permissions.isEmpty()) {
+            requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_PERMISSIONS);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch ( requestCode ) {
+        switch (requestCode) {
             case REQUEST_CODE_PERMISSIONS: {
-                for( int i = 0; i < permissions.length; i++ ) {
-                    if( grantResults[i] == PackageManager.PERMISSION_GRANTED ) {
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
                         Log.d("Permissions", "Permission Granted: " + permissions[i]);
                         setInformation();
-                    } else if( grantResults[i] == PackageManager.PERMISSION_DENIED ) {
+                    } else if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
                         Snackbar snackbar = Snackbar
-                                .make(findViewById(R.id.scrollview), "Permission denied, this app wont work properly!", Snackbar.LENGTH_INDEFINITE)
-                                .setAction("Check that", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        //open up app settings page
-                                        startActivity(
-                                                new Intent().setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                                        .setData(Uri.fromParts("package", getApplicationContext().getPackageName(), null)));
-                                    }
-                                });
+                            .make(findViewById(R.id.scrollview), "Permission denied, this app wont work properly!", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Check that", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    //open up app settings page
+                                    startActivity(
+                                        new Intent().setAction(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                            .setData(Uri.fromParts("package", getApplicationContext().getPackageName(), null)));
+                                }
+                            });
                         snackbar.show();
                     }
                 }
@@ -215,7 +215,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     /**
      * Open a Place picker, zoomed in on coordinates from settings
      */
-    private void pickLocation(){
+    private void pickLocation() {
         //Start place picker with these coordinates in the center
         double lat = mSettings.getLat();
         double lng = mSettings.getLng();
@@ -224,17 +224,16 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         PlacePicker.IntentBuilder i = new PlacePicker.IntentBuilder();
         i.setLatLngBounds(new LatLngBounds(
-                new LatLng((lat - 0.20), (lng - 0.20)),
-                new LatLng((lat + 0.20), (lng + 0.20))
+            new LatLng((lat - 0.20), (lng - 0.20)),
+            new LatLng((lat + 0.20), (lng + 0.20))
         ));
 
 
-        try{
+        try {
             xlog("Opening maps app");
             //Intent in = i.build((Activity)context);
             startActivityForResult(i.build(this), PLACEPICKER_REQUEST);
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             xlog("Error opening maps:");
             xlog(ex.getMessage());
         }
@@ -245,15 +244,15 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         super.onActivityResult(requestCode, resultCode, data);
         xlog("onActivityResult requestcode: " + requestCode);
 
-        if(resultCode != RESULT_OK) {
+        if (resultCode != RESULT_OK) {
             xlog("Error, resultCode: " + String.valueOf(resultCode));
             return;
         }
 
-        if(requestCode == PLACEPICKER_REQUEST){
+        if (requestCode == PLACEPICKER_REQUEST) {
             xlog("Recieved data from placepicker activity");
 
-            if(data == null){
+            if (data == null) {
                 xlog("data was null");
                 return;
             }
@@ -266,6 +265,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     /**
      * Extract location properties from place object and insert to the Settings-object, then save settings to file
+     *
      * @param place
      */
     private void setSettingsFromPlace(Place place) {
@@ -282,7 +282,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onGeoFinished(List<Address> addresses) {
-        if(addresses == null){
+        if (addresses == null) {
             Toast.makeText(this, "No addresses nearby, unable to set location", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -291,27 +291,27 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         boolean save = false;
 
         //Find an adress that has all needed indexes
-        for(int i = 0; i < length; i++){
+        for (int i = 0; i < length; i++) {
             Address a = addresses.get(i);
             String locality = a.getLocality();
             String country = a.getCountryName();
             String countryCode = a.getCountryCode();
 
-            if(locality == null){
+            if (locality == null) {
                 xlog("Locality was null");
                 this.btnSelectPosition.setProgress(-1); //error in geofetching
                 resetProgress();
                 continue;
             }
 
-            if(country == null){
+            if (country == null) {
                 xlog("Country was null");
                 this.btnSelectPosition.setProgress(-1);
                 resetProgress();
                 continue;
             }
 
-            if(countryCode == null){
+            if (countryCode == null) {
                 xlog("CountryCode was null");
                 this.btnSelectPosition.setProgress(-1);
                 resetProgress();
@@ -326,14 +326,14 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             this.btnSelectPosition.setProgress(100);
             resetProgress();
             Snackbar snackbar = Snackbar
-                    .make(findViewById(R.id.scrollview), "For changes to take effect please restart Jodel!", Snackbar.LENGTH_LONG)
-                    .setAction("Okay", null);
+                .make(findViewById(R.id.scrollview), "For changes to take effect please restart Jodel!", Snackbar.LENGTH_LONG)
+                .setAction("Okay", null);
             snackbar.show();
             break;
         }
 
         //If we found an adress with all indexes, save to file
-        if(save){
+        if (save) {
             try {
                 mSettings.save();
                 Toast.makeText(getApplicationContext(), "Location saved", Toast.LENGTH_SHORT).show();
@@ -341,11 +341,12 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                 xlog(e.getLocalizedMessage());
             }
 
-        }else{
+        } else {
             Toast.makeText(getApplicationContext(), "Could not save location, try again", Toast.LENGTH_SHORT).show();
         }
     }
-    private void resetProgress(){
+
+    private void resetProgress() {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -354,6 +355,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             }
         }, 2500);
     }
+
     public static boolean openApp(Context context, String packageName) {
         PackageManager manager = context.getPackageManager();
         try {

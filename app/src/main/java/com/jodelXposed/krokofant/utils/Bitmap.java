@@ -33,7 +33,7 @@ public final class Bitmap {
     public static android.graphics.Bitmap bitmapFromFile(File file) {
         ByteArrayOutputStream blob = new ByteArrayOutputStream();
         android.graphics.Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-        if(bitmap != null) bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 100, blob);
+        if (bitmap != null) bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 100, blob);
         else xlog("Loaded bitmap is null");
         return bitmap;
     }

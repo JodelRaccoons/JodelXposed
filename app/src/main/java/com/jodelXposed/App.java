@@ -13,7 +13,7 @@ public class App implements IXposedHookLoadPackage {
         if (!lpparam.packageName.equals("com.tellm.android.app"))
             return;
 
-        if(lpparam.packageName.equals("com.tellm.android.app")) {
+        if (lpparam.packageName.equals("com.tellm.android.app")) {
             xlog("Loading settings");
             Settings settings = Settings.getInstance();
             settings.load();

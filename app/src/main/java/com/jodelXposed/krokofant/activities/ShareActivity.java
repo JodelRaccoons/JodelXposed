@@ -20,8 +20,8 @@ import static com.jodelXposed.krokofant.utils.Log.xlog;
 public class ShareActivity extends Activity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     @Override
@@ -67,13 +67,13 @@ public class ShareActivity extends Activity {
         switch (requestCode) {
             case REQUEST_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     xlog("Permission granted");
                     handleSendImage(getIntent());
                 } else {
                     xlog("Permission not granted");
                     Toast.makeText(this, "Failed to get permissions",
-                            Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_LONG).show();
                     finish();
                 }
             }
@@ -91,9 +91,9 @@ public class ShareActivity extends Activity {
         if (permission != PackageManager.PERMISSION_GRANTED) {
             xlog("Prompting user for permission");
             ActivityCompat.requestPermissions(
-                    this,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
+                this,
+                PERMISSIONS_STORAGE,
+                REQUEST_EXTERNAL_STORAGE
             );
         } else {
             xlog("We have permission");

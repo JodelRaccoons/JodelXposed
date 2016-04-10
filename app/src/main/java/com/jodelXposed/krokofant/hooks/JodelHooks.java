@@ -36,7 +36,6 @@ public class JodelHooks {
     }
 
 
-
     public void hook(XC_LoadPackage.LoadPackageParam lpparam) {
         /**
          * Add features on ImageView - load custom stored image, adjust ScaleType
@@ -55,15 +54,14 @@ public class JodelHooks {
                     public boolean onLongClick(View v) {
                         xlog("Long clicked!");
                         Bitmap b;
-                        if(isInjected[0]) {
+                        if (isInjected[0]) {
                             b = original;
                             isInjected[0] = false;
-                        }
-                        else{
+                        } else {
                             b = loadBitmap();
                             isInjected[0] = true;
                         }
-                        ((ImageView)v).setImageBitmap(b);
+                        ((ImageView) v).setImageBitmap(b);
                         return true;
                     }
                 });
@@ -72,14 +70,14 @@ public class JodelHooks {
                 a.setOnKeyListener(new View.OnKeyListener() {
                     @Override
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
-                        if(event.getAction() == KeyEvent.ACTION_UP &&
-                                (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN ||
+                        if (event.getAction() == KeyEvent.ACTION_UP &&
+                            (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN ||
                                 keyCode == KeyEvent.KEYCODE_VOLUME_UP)) {
                             return true;
                         }
 
-                        if(keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-                            ImageView iv = (ImageView)v;
+                        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                            ImageView iv = (ImageView) v;
                             ImageView.ScaleType sT;
                             switch (iv.getScaleType()) {
                                 case CENTER:
@@ -112,14 +110,14 @@ public class JodelHooks {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 List posts = (List) param.args[0];
-                if(posts != null) {
+                if (posts != null) {
                     xlog("Posts: " + posts.size());
                     for (Object post : posts) {
                         String color = (String) getObjectField(post, "color");
                         Integer parentCreator = (Integer) getObjectField(post, "parentCreator");
 //                        String message = (String) getObjectField(post, "message");
 //                        xlog("Message:" + message + " Parent:" + parentCreator + " Color:" + color);
-                        if(parentCreator != null && parentCreator == 1) {
+                        if (parentCreator != null && parentCreator == 1) {
                             float[] hsv = new float[3];
                             int c = Color.parseColor("#" + color);
                             Color.colorToHSV(c, hsv);
@@ -138,7 +136,7 @@ public class JodelHooks {
         findAndHookMethod("com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter", lpparam.classLoader, RecyclerPostsAdapter.Bitmap, Context.class, Bitmap.class, new XC_MethodReplacement() {
             @Override
             protected Bitmap replaceHookedMethod(MethodHookParam param) throws Throwable {
-                return (Bitmap)param.args[1];
+                return (Bitmap) param.args[1];
             }
         });
 
@@ -147,45 +145,44 @@ public class JodelHooks {
          * Replace parts of requests
          */
         findAndHookConstructor(
-                "retrofit.client.Request",
-                lpparam.classLoader,
-                String.class,
-                String.class,
-                List.class,
-                "retrofit.mime.TypedOutput",
-                new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        Object request = param.thisObject;
-                        Object body = callMethod(request, "getBody");
-                        List headers = (List)callMethod(request, "getHeaders");
-                        String method = (String)callMethod(request, "getMethod");
-                        String url = (String)callMethod(request, "getUrl");
+            "retrofit.client.Request",
+            lpparam.classLoader,
+            String.class,
+            String.class,
+            List.class,
+            "retrofit.mime.TypedOutput",
+            new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    Object request = param.thisObject;
+                    Object body = callMethod(request, "getBody");
+                    List headers = (List) callMethod(request, "getHeaders");
+                    String method = (String) callMethod(request, "getMethod");
+                    String url = (String) callMethod(request, "getUrl");
 
-                        xlog(method + ": " + url);
+                    xlog(method + ": " + url);
 
-                        if(method.equalsIgnoreCase("GET") && RequestReplacer.processable(url)) {
-                            setObjectField(request, "url", RequestReplacer.processURL(url));
-                        }
-                        else if(body != null && RequestReplacer.processable(url)) {
-                                byte[] bodyBytes = (byte[])getObjectField(body, "jsonBytes");
-                                bodyBytes = RequestReplacer.processBody(bodyBytes);
-                                setObjectField(body, "jsonBytes", bodyBytes);
-                                xlog("Body: " + new String(bodyBytes));
-                            }
-
-                        if(headers != null){
-                            xlog("Headers: " + headers.toString());
-                        }
+                    if (method.equalsIgnoreCase("GET") && RequestReplacer.processable(url)) {
+                        setObjectField(request, "url", RequestReplacer.processURL(url));
+                    } else if (body != null && RequestReplacer.processable(url)) {
+                        byte[] bodyBytes = (byte[]) getObjectField(body, "jsonBytes");
+                        bodyBytes = RequestReplacer.processBody(bodyBytes);
+                        setObjectField(body, "jsonBytes", bodyBytes);
+                        xlog("Body: " + new String(bodyBytes));
                     }
-                });
+
+                    if (headers != null) {
+                        xlog("Headers: " + headers.toString());
+                    }
+                }
+            });
         /**
          * Keep the ResponseBody as String
          */
         findAndHookConstructor("retrofit.client.OkClient$2", lpparam.classLoader, "com.squareup.okhttp.ResponseBody", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                String bodyString = IOUtils.toString((InputStream)callMethod(param.args[0], OkClient$2.InputStream), "UTF-8");
+                String bodyString = IOUtils.toString((InputStream) callMethod(param.args[0], OkClient$2.InputStream), "UTF-8");
                 setAdditionalInstanceField(param.thisObject, "bodyString", bodyString);
             }
         });
@@ -196,8 +193,8 @@ public class JodelHooks {
         findAndHookMethod("retrofit.client.OkClient$2", lpparam.classLoader, "in", new XC_MethodReplacement() {
             @Override
             protected InputStream replaceHookedMethod(MethodHookParam param) throws Throwable {
-                String bodyString = (String)getAdditionalInstanceField(param.thisObject, "bodyString");
-                return IOUtils.toInputStream(bodyString,"UTF-8");
+                String bodyString = (String) getAdditionalInstanceField(param.thisObject, "bodyString");
+                return IOUtils.toInputStream(bodyString, "UTF-8");
             }
         });
 
@@ -205,42 +202,42 @@ public class JodelHooks {
          * Replace parts of response
          */
         findAndHookConstructor(
-                "retrofit.client.Response",
-                lpparam.classLoader,
-                String.class,
-                "int",
-                String.class,
-                List.class,
-                "retrofit.mime.TypedInput",
-                new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                        String url = (String)param.args[0];
-                        int status = (int)param.args[1];
-                        String reason = (String)param.args[2];
-                        List headers = (List)param.args[3];
-                        Object body = param.args[4];
+            "retrofit.client.Response",
+            lpparam.classLoader,
+            String.class,
+            "int",
+            String.class,
+            List.class,
+            "retrofit.mime.TypedInput",
+            new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    String url = (String) param.args[0];
+                    int status = (int) param.args[1];
+                    String reason = (String) param.args[2];
+                    List headers = (List) param.args[3];
+                    Object body = param.args[4];
 
-                        xlog("Response ("+ status +") from " + url);
+                    xlog("Response (" + status + ") from " + url);
 
-                        if(body != null) {
-                            if(ResponseReplacer.processable(url)) {
-                                setAdditionalInstanceField(body, "bodyString", ResponseReplacer.processBody(
-                                        (String)getAdditionalInstanceField(body, "bodyString")
-                                ));
-                                xlog("Manipulated response: " + getAdditionalInstanceField(body, "bodyString"));
-                            }
-                        }
-
-                        if(headers != null) {
-                            xlog("Headers: " + headers.toString());
-                        }
-
-                        if(reason != null) {
-                            xlog("Reason: " + reason);
+                    if (body != null) {
+                        if (ResponseReplacer.processable(url)) {
+                            setAdditionalInstanceField(body, "bodyString", ResponseReplacer.processBody(
+                                (String) getAdditionalInstanceField(body, "bodyString")
+                            ));
+                            xlog("Manipulated response: " + getAdditionalInstanceField(body, "bodyString"));
                         }
                     }
+
+                    if (headers != null) {
+                        xlog("Headers: " + headers.toString());
+                    }
+
+                    if (reason != null) {
+                        xlog("Reason: " + reason);
+                    }
                 }
+            }
         );
     }
 }

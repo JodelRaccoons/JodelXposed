@@ -15,7 +15,7 @@ import static com.jodelXposed.krokofant.utils.Log.xlog;
  * Created by charliekelly2 on 23/01/2016.
  */
 public class GeocoderAsync extends AsyncTask<Void, Void, List<Address>> {
-    public interface OnGeoListener{
+    public interface OnGeoListener {
         public void onGeoFinished(List<Address> addresses);
     }
 
@@ -39,7 +39,7 @@ public class GeocoderAsync extends AsyncTask<Void, Void, List<Address>> {
             List<Address> addresses = geocoder.getFromLocation(mLat, mLng, 5);
 
             return addresses;
-        } catch(IOException e) {
+        } catch (IOException e) {
             xlog("Exception");
             xlog(e.getMessage());
         }
