@@ -30,6 +30,7 @@ public class Settings {
     private String city;
     private String country;
     private String countryCode;
+    private String uid;
 
     //If the module is active
     private boolean active;
@@ -82,6 +83,14 @@ public class Settings {
         this.lng = lng;
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     public boolean isLoaded() {
         return isLoaded;
     }
@@ -119,6 +128,7 @@ public class Settings {
             this.lat = jsonObject.getDouble("lat");
             this.lng = jsonObject.getDouble("lng");
             this.active = jsonObject.getBoolean("active");
+            this.uid = jsonObject.getString("uid");
 
             this.isLoaded = true;
 
@@ -194,6 +204,7 @@ public class Settings {
         this.lat = -53.076499;
         this.lng = 73.37357;
         this.active = true;
+        this.uid = "";
         this.writeToFile(file, this.toJson().toString());
     }
 
@@ -211,6 +222,7 @@ public class Settings {
             toFile.put("countryCode", this.countryCode);
             toFile.put("lat", this.lat);
             toFile.put("lng", this.lng);
+            toFile.put("uid", this.uid);
 
             return toFile;
         } catch (JSONException e) {
