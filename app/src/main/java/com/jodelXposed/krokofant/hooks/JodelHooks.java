@@ -8,11 +8,14 @@ import android.view.View;
 import android.widget.ImageView;
 import com.jodelXposed.krokofant.utils.RequestReplacer;
 import com.jodelXposed.krokofant.utils.ResponseReplacer;
+import com.jodelXposed.krokofant.utils.Settings;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
@@ -239,5 +242,31 @@ public class JodelHooks {
                 }
             }
         );
+
+        /**
+         * Spoof UID
+         */
+        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier", lpparam.classLoader, "yt", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                xlog("UDI = " + param.getResult());
+                Settings settings = Settings.getInstance();
+                try {
+                    if (!settings.isLoaded())
+                        settings.load();
+                    if(settings.getUid().length() == 0) {
+                        settings.setUid((String)param.getResult());
+                        settings.save();
+                    } else if(settings.getUid().equals(param.getResult())) {
+                        xlog("UDI not spoofed");
+                    } else {
+                        xlog("UDI spoof = " + settings.getUid());
+                        param.setResult(settings.getUid());
+                    }
+                } catch (JSONException | IOException e) {
+                    xlog("Error: " + e.getLocalizedMessage());
+                }
+            }
+        });
     }
 }
