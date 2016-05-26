@@ -15,7 +15,8 @@ public class RequestReplacer {
         Pattern.compile("https://api.go-tellm.com(:443)?/api/v2/users/"),
         Pattern.compile("https://api.go-tellm.com(:443)?/api/v2/posts/"),
         Pattern.compile("https://api.go-tellm.com(:443)?/api/v2/posts/location/combo\\?lat=\\d+\\.\\d+&lng=\\d+\\.\\d+"),
-        Pattern.compile("https://api.go-tellm.com(:443)?/api/v2/posts/location/\\?skip=\\d*&limit=\\d*\\&lat=\\d+.\\d+&lng=\\d+\\.\\d+")
+        Pattern.compile("https://api.go-tellm.com(:443)?/api/v2/posts/location/\\?skip=\\d*&limit=\\d*\\&lat=\\d+.\\d+&lng=\\d+\\.\\d+"),
+        Pattern.compile("https://api.go-tellm.com(:443)?/api/v2/posts/location/(discussed|popular)?\\?after=\\w*\\&lat=\\d+.\\d+&lng=\\d+\\.\\d+")
     };
 
     public static boolean processable(String url) {
