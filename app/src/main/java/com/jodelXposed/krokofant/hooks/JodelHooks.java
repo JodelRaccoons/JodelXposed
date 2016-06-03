@@ -17,6 +17,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.jodelXposed.krokofant.utils.Bitmap.loadBitmap;
@@ -266,6 +267,45 @@ public class JodelHooks {
                 } catch (JSONException | IOException e) {
                     xlog("Error: " + e.getLocalizedMessage());
                 }
+            }
+        });
+
+        /**
+         * Track posts #1
+         * Set additional data on the TimeView of each Post to track the
+         * user_handle / poster
+         */
+        findAndHookMethod("com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter", lpparam.classLoader, "a", "com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter$ViewHolder", int.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                Object textView = getObjectField(param.args[0], "atR");
+                List posts = (List)callMethod(param.thisObject, "getPosts");
+                HashMap<String, String> ids = new HashMap<>(posts.size());
+
+                for(Object post : posts) {
+                    String user_handle = (String)getObjectField(post, "user_handle");
+                    if(!ids.containsKey(user_handle)) {
+                        ids.put(user_handle, String.valueOf(ids.size()));
+                    }
+                    setAdditionalInstanceField(post, "updateExtraPost", ids.get(user_handle));
+                }
+
+                int i = (int)param.args[1];
+                String id = (String)getAdditionalInstanceField(posts.get(i), "updateExtraPost");
+                setAdditionalInstanceField(textView, "updateExtraView", id);
+            }
+        });
+
+        /**
+         * Track posts #2
+         * Use the additional data from the TimeView to insert the poster ID
+         * next to the regular TimeView text
+         */
+        findAndHookMethod("com.jodelapp.jodelandroidv3.view.TimeView", lpparam.classLoader, "update", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                String id = (String)getAdditionalInstanceField(param.thisObject, "updateExtraView");
+                callMethod(param.thisObject, "append", " #" + id);
             }
         });
     }
