@@ -27,16 +27,27 @@ import static de.robv.android.xposed.XposedHelpers.*;
 public class JodelHooks {
 
     public static class PhotoEditFragment {
-        public static String Post = "arw";
-        public static String ImageView = "arx";
+        public static String Post = "azr";
+        public static String ImageView = "azs";
+        public static String Method = "BJ";
     }
 
     public static class OkClient$2 {
-        public static String InputStream = "CI";
+        public static String InputStream = "EK";
     }
 
     public static class RecyclerPostsAdapter {
         public static String Bitmap = "a";
+        public static String TrackPoster = "a";
+        public static String TrackOP = "p";
+    }
+
+    public static class RecyclerPostsAdapter$ViewHolder {
+        public static String TimeView = "aBQ";
+    }
+
+    public static class UDI {
+        public static String GetUID = "As";
     }
 
 
@@ -44,7 +55,7 @@ public class JodelHooks {
         /**
          * Add features on ImageView - load custom stored image, adjust ScaleType
          */
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.PhotoEditFragment", lpparam.classLoader, "zC", new XC_MethodHook() {
+        findAndHookMethod("com.jodelapp.jodelandroidv3.view.PhotoEditFragment", lpparam.classLoader, PhotoEditFragment.Method, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
@@ -110,7 +121,7 @@ public class JodelHooks {
         /**
          * Apply darker shade to OP's posts in a thread
          */
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter", lpparam.classLoader, "p", List.class, new XC_MethodHook() {
+        findAndHookMethod("com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter", lpparam.classLoader, RecyclerPostsAdapter.TrackOP, List.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 List posts = (List) param.args[0];
@@ -247,7 +258,7 @@ public class JodelHooks {
         /**
          * Spoof UID
          */
-        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier", lpparam.classLoader, "yr", new XC_MethodHook() {
+        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier", lpparam.classLoader, UDI.GetUID, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 xlog("UDI = " + param.getResult());
@@ -275,10 +286,10 @@ public class JodelHooks {
          * Set additional data on the TimeView of each Post to track the
          * user_handle / poster
          */
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter", lpparam.classLoader, "a", "com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter$ViewHolder", int.class, new XC_MethodHook() {
+        findAndHookMethod("com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter", lpparam.classLoader, RecyclerPostsAdapter.TrackPoster, "com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter$ViewHolder", int.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Object textView = getObjectField(param.args[0], "atR");
+                Object textView = getObjectField(param.args[0], RecyclerPostsAdapter$ViewHolder.TimeView);
                 List posts = (List)callMethod(param.thisObject, "getPosts");
                 HashMap<String, String> ids = new HashMap<>(posts.size());
 
