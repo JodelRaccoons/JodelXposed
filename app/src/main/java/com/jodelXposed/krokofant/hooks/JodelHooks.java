@@ -39,7 +39,7 @@ public class JodelHooks {
     public static class RecyclerPostsAdapter {
         public static String Bitmap = "a";
         public static String TrackPoster = "a";
-        public static String TrackOP = "p";
+        public static String TrackOP = "o";
     }
 
     public static class RecyclerPostsAdapter$ViewHolder {
