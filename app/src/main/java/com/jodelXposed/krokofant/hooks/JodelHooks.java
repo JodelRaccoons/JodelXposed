@@ -1,10 +1,15 @@
 package com.jodelXposed.krokofant.hooks;
 
+import android.app.AndroidAppHelper;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.jodelXposed.krokofant.utils.RequestReplacer;
@@ -330,13 +335,6 @@ public class JodelHooks {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String id = (String)getAdditionalInstanceField(param.thisObject, "updateExtraView");
                 callMethod(param.thisObject, "append", " #" + id);
-            }
-        });
-
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.TimeView", lpparam.classLoader, "update", new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-
             }
         });
     }
