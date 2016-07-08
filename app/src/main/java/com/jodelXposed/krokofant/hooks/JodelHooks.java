@@ -6,12 +6,11 @@ import android.graphics.Color;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+
 import com.jodelXposed.krokofant.utils.RequestReplacer;
 import com.jodelXposed.krokofant.utils.ResponseReplacer;
 import com.jodelXposed.krokofant.utils.Settings;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodReplacement;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
+
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 
@@ -20,34 +19,47 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
+import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XC_MethodReplacement;
+import de.robv.android.xposed.callbacks.XC_LoadPackage;
+
 import static com.jodelXposed.krokofant.utils.Bitmap.loadBitmap;
 import static com.jodelXposed.krokofant.utils.Log.xlog;
-import static de.robv.android.xposed.XposedHelpers.*;
+import static de.robv.android.xposed.XposedHelpers.callMethod;
+import static de.robv.android.xposed.XposedHelpers.findAndHookConstructor;
+import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
+import static de.robv.android.xposed.XposedHelpers.getAdditionalInstanceField;
+import static de.robv.android.xposed.XposedHelpers.getObjectField;
+import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
+import static de.robv.android.xposed.XposedHelpers.setObjectField;
 
 public class JodelHooks {
 
     public static class PhotoEditFragment {
-        public static String Post = "azr";
-        public static String ImageView = "azs";
-        public static String Method = "BJ";
+        public static String Bitmap = "azC";
+        public static String ImageView = "azv";
+        public static String Method = "BA";
     }
 
     public static class OkClient$2 {
-        public static String InputStream = "EK";
+        public static String InputStream = "EO";
     }
 
     public static class RecyclerPostsAdapter {
-        public static String Bitmap = "a";
         public static String TrackPoster = "a";
-        public static String TrackOP = "o";
+        public static String TrackOP = "r";
+    }
+
+    public static class JodelImageHelper{
+        public static String Bitmap = "a";
     }
 
     public static class RecyclerPostsAdapter$ViewHolder {
-        public static String TimeView = "aBQ";
+        public static String TimeView = "aBO";
     }
 
     public static class UDI {
-        public static String GetUID = "As";
+        public static String GetUID = "Ai";
     }
 
 
@@ -60,8 +72,7 @@ public class JodelHooks {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
                 final boolean[] isInjected = {false};
-                Object o = getObjectField(param.thisObject, PhotoEditFragment.Post);
-                final Bitmap original = (Bitmap) getObjectField(o, "imageBitmap");
+                final Bitmap original = (Bitmap) getObjectField(param.thisObject, PhotoEditFragment.Bitmap);
                 ImageView a = (ImageView) getObjectField(param.thisObject, PhotoEditFragment.ImageView);
 
                 a.setOnLongClickListener(new View.OnLongClickListener() {
@@ -148,7 +159,7 @@ public class JodelHooks {
         /**
          * Remove blur effect on posts
          */
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter", lpparam.classLoader, RecyclerPostsAdapter.Bitmap, Context.class, Bitmap.class, new XC_MethodReplacement() {
+        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.JodelImageHelper", lpparam.classLoader, JodelImageHelper.Bitmap, Context.class, Bitmap.class, new XC_MethodReplacement() {
             @Override
             protected Bitmap replaceHookedMethod(MethodHookParam param) throws Throwable {
                 return (Bitmap) param.args[1];
@@ -198,6 +209,7 @@ public class JodelHooks {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 String bodyString = IOUtils.toString((InputStream) callMethod(param.args[0], OkClient$2.InputStream), "UTF-8");
+                xlog(bodyString);
                 setAdditionalInstanceField(param.thisObject, "bodyString", bodyString);
             }
         });
@@ -294,7 +306,7 @@ public class JodelHooks {
                 HashMap<String, String> ids = new HashMap<>(posts.size());
 
                 for(Object post : posts) {
-                    String user_handle = (String)getObjectField(post, "user_handle");
+                    String user_handle = (String)getObjectField(post, "userHandle");
                     if(!ids.containsKey(user_handle)) {
                         ids.put(user_handle, String.valueOf(ids.size()));
                     }
@@ -304,6 +316,7 @@ public class JodelHooks {
                 int i = (int)param.args[1];
                 String id = (String)getAdditionalInstanceField(posts.get(i), "updateExtraPost");
                 setAdditionalInstanceField(textView, "updateExtraView", id);
+                xlog(id);
             }
         });
 
@@ -317,6 +330,13 @@ public class JodelHooks {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String id = (String)getAdditionalInstanceField(param.thisObject, "updateExtraView");
                 callMethod(param.thisObject, "append", " #" + id);
+            }
+        });
+
+        findAndHookMethod("com.jodelapp.jodelandroidv3.view.TimeView", lpparam.classLoader, "update", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+
             }
         });
     }
