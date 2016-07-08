@@ -36,13 +36,13 @@ import static de.robv.android.xposed.XposedHelpers.setObjectField;
 public class JodelHooks {
 
     public static class PhotoEditFragment {
-        public static String Bitmap = "azC";
-        public static String ImageView = "azv";
-        public static String Method = "BA";
+        public static String Bitmap = "azB";
+        public static String ImageView = "azu";
+        public static String Method = "Bz";
     }
 
     public static class OkClient$2 {
-        public static String InputStream = "EO";
+        public static String InputStream = "EN";
     }
 
     public static class RecyclerPostsAdapter {
@@ -55,7 +55,7 @@ public class JodelHooks {
     }
 
     public static class RecyclerPostsAdapter$ViewHolder {
-        public static String TimeView = "aBO";
+        public static String TimeView = "aBN";
     }
 
     public static class UDI {
@@ -63,7 +63,7 @@ public class JodelHooks {
     }
 
 
-    public void hook(XC_LoadPackage.LoadPackageParam lpparam) {
+    public void hook(final XC_LoadPackage.LoadPackageParam lpparam) {
         /**
          * Add features on ImageView - load custom stored image, adjust ScaleType
          */
