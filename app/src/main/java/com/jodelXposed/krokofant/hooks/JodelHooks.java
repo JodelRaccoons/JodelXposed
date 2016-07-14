@@ -468,12 +468,10 @@ public class JodelHooks {
                 final Activity activity = (Activity) callMethod(param.thisObject,"getActivity");
                 Object xposedLocationInformationItem = XposedHelpers.newInstance(MyMenuItem,activity,"xposedInfo", 0);
                 Object xposedMapItem = XposedHelpers.newInstance(MyMenuItem,activity,"xposedMap", 1);
-                Object xposedLocationResetItem = XposedHelpers.newInstance(MyMenuItem,activity,"xposedLocationReset", 2);
                 Object xposedRestartItem = XposedHelpers.newInstance(MyMenuItem,activity,"xposedRestart", 3);
                 ArrayAdapter myMenuItemArrayAdapter = (ArrayAdapter) XposedHelpers.callMethod(param.thisObject,"getListAdapter");
                 myMenuItemArrayAdapter.add(xposedLocationInformationItem);
                 myMenuItemArrayAdapter.add(xposedMapItem);
-                myMenuItemArrayAdapter.add(xposedLocationResetItem);
                 myMenuItemArrayAdapter.add(xposedRestartItem);
                 myMenuItemArrayAdapter.notifyDataSetChanged();
 
@@ -491,15 +489,13 @@ public class JodelHooks {
                 xlog((String)getObjectField(selected,"name"));
 
                 Object activityThread = callStaticMethod(findClass("android.app.ActivityThread", null), "currentActivityThread");
-                Context context = (Context) callMethod(activityThread, "getSystemContext");
-                Intent launchIntent = new Intent(Intent.ACTION_MAIN);
+                final Context context = (Context) callMethod(activityThread, "getSystemContext");
+                final Intent launchIntent = new Intent(Intent.ACTION_MAIN);
                 launchIntent.setComponent(new ComponentName("com.jodelXposed", "com.jodelXposed.BackgroundOperations"));
                 launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedMap")){
                     context.startActivity(launchIntent.putExtra("choice",1));
-                }else if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedLocationReset")){
-                    context.startActivity(launchIntent.putExtra("choice",2));
                 }else if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedRestart")){
                     context.startActivity(launchIntent.putExtra("choice",3));
                 } else if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedInfo")){
@@ -510,7 +506,12 @@ public class JodelHooks {
                             +"\nCountry: "+settings.getCountry()
                             +"\nLat: "+settings.getLat()
                             +"\nLng: "+settings.getLng())
-                        .setPositiveButton("Yarrr", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("Reset", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                context.startActivity(launchIntent.putExtra("choice",2));
+                            }
+                        }).setPositiveButton("Yarrr", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
