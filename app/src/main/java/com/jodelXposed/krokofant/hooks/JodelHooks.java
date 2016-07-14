@@ -468,12 +468,12 @@ public class JodelHooks {
                 final Activity activity = (Activity) callMethod(param.thisObject,"getActivity");
                 Object xposedLocationInformationItem = XposedHelpers.newInstance(MyMenuItem,activity,"xposedInfo", 0);
                 Object xposedMapItem = XposedHelpers.newInstance(MyMenuItem,activity,"xposedMap", 1);
-                Object xposedResetItem = XposedHelpers.newInstance(MyMenuItem,activity,"xposedReset", 2);
+                Object xposedLocationResetItem = XposedHelpers.newInstance(MyMenuItem,activity,"xposedLocationReset", 2);
                 Object xposedRestartItem = XposedHelpers.newInstance(MyMenuItem,activity,"xposedRestart", 3);
                 ArrayAdapter myMenuItemArrayAdapter = (ArrayAdapter) XposedHelpers.callMethod(param.thisObject,"getListAdapter");
                 myMenuItemArrayAdapter.add(xposedLocationInformationItem);
                 myMenuItemArrayAdapter.add(xposedMapItem);
-                myMenuItemArrayAdapter.add(xposedResetItem);
+                myMenuItemArrayAdapter.add(xposedLocationResetItem);
                 myMenuItemArrayAdapter.add(xposedRestartItem);
                 myMenuItemArrayAdapter.notifyDataSetChanged();
 
@@ -498,7 +498,7 @@ public class JodelHooks {
 
                 if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedMap")){
                     context.startActivity(launchIntent.putExtra("choice",1));
-                }else if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedReset")){
+                }else if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedLocationReset")){
                     context.startActivity(launchIntent.putExtra("choice",2));
                 }else if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedRestart")){
                     context.startActivity(launchIntent.putExtra("choice",3));

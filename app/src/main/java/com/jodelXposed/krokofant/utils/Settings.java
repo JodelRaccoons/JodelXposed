@@ -23,6 +23,16 @@ public class Settings {
         return singleton;
     }
 
+    public static class DefaultSettings {
+        public static final String city = "Heard and McDonald Islands";
+        public static final String country = "Heard and McDonald Islands";
+        public static final String countryCode = "AU";
+        public static final double lat = -53.076499;
+        public static final double lng = 73.37357;
+        public static final boolean active = true;
+        public static final String uid = "";
+    }
+
     //private static final int VERSION = 1;
     private static final Settings singleton = new Settings();
 
@@ -199,14 +209,30 @@ public class Settings {
      */
     public void createDefaultFile(File file) {
         xlog("Creating settings file");
-        this.city = "Heard and McDonald Islands";
-        this.country = "Heard and McDonald Islands";
-        this.countryCode = "AU";
-        this.lat = -53.076499;
-        this.lng = 73.37357;
-        this.active = true;
-        this.uid = "";
+        this.city = DefaultSettings.city;
+        this.country = DefaultSettings.country;
+        this.countryCode = DefaultSettings.countryCode;
+        this.lat = DefaultSettings.lat;
+        this.lng = DefaultSettings.lng;
+        this.active = DefaultSettings.active;
+        this.uid = DefaultSettings.uid;
         this.writeToFile(file, this.toJson().toString());
+    }
+
+    /**
+     * Reset location
+     */
+    public void resetLocation() {
+        try {
+            this.city = DefaultSettings.city;
+            this.country = DefaultSettings.country;
+            this.countryCode = DefaultSettings.countryCode;
+            this.lat = DefaultSettings.lat;
+            this.lng = DefaultSettings.lng;
+            this.save();
+        } catch (IOException | JSONException e) {
+            xlog("Failed to reset location");
+        }
     }
 
     /**

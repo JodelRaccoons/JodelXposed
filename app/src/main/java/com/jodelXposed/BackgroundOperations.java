@@ -63,7 +63,7 @@ public class BackgroundOperations extends AppCompatActivity implements GeocoderA
                 pickLocation();
                 break;
             case 2:
-                mSettings.createDefaultFile(new File(Settings.settingsPath));
+                mSettings.resetLocation();
                 restartJodel();
                 break;
             case 3:
