@@ -53,6 +53,8 @@ import static de.robv.android.xposed.XposedHelpers.setObjectField;
 
 public class JodelHooks {
 
+    Settings settings = Settings.getInstance();
+
     public static class PhotoEditFragment {
         public static String Bitmap = "aAq";
         public static String ImageView = "aAj";
@@ -108,6 +110,10 @@ public class JodelHooks {
 
     public static class MyMenuFragment {
         public static String AddEntriesMethod = "BA";
+    }
+
+    public static class FeedFragment {
+        public static String UpdateCityName = "du";
     }
 
 
@@ -322,7 +328,6 @@ public class JodelHooks {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 xlog("UDI = " + param.getResult());
-                Settings settings = Settings.getInstance();
                 try {
                     if (!settings.isLoaded())
                         settings.load();
@@ -499,9 +504,7 @@ public class JodelHooks {
                 }else if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedRestart")){
                     context.startActivity(launchIntent.putExtra("choice",3));
                 } else if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedInfo")){
-                    final Activity activity = (Activity) callMethod(param.thisObject,"getActivity");
-                    Settings settings = Settings.getInstance();
-                    new AlertDialog.Builder(activity).setTitle("Location info")
+                    new AlertDialog.Builder(context).setTitle("Location info")
                         .setMessage("City: "+settings.getCity()
                             +"\nCountry: "+settings.getCountry()
                             +"\nLat: "+settings.getLat()
@@ -521,5 +524,15 @@ public class JodelHooks {
             }
         });
 
+        /* *
+        * Display the correct city name on the sliding tab strip
+        * */
+        findAndHookMethod("com.jodelapp.jodelandroidv3.view.FeedFragment", lpparam.classLoader, FeedFragment.UpdateCityName, String.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (settings.isActive())
+                    param.args[0] = settings.getCity();
+            }
+        });
     }
 }
