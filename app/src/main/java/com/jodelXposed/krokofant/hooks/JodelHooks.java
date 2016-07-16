@@ -442,13 +442,10 @@ public class JodelHooks {
                 }catch(Exception e){
                     switch ((int)methodHookParam.args[2]){
                         case 0:
-                            setObjectField(methodHookParam.thisObject,MyMenuItem.displayName,"Location info");
+                            setObjectField(methodHookParam.thisObject,MyMenuItem.displayName,"Xposed general");
                             break;
                         case 1:
                             setObjectField(methodHookParam.thisObject,MyMenuItem.displayName,"Choose location");
-                            break;
-                        case 2:
-                            setObjectField(methodHookParam.thisObject,MyMenuItem.displayName,"Reset location");
                             break;
                         case 3:
                             setObjectField(methodHookParam.thisObject,MyMenuItem.displayName,"Restart Jodel");
@@ -491,7 +488,6 @@ public class JodelHooks {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Object selected = ((ArrayAdapter) XposedHelpers.callMethod(param.thisObject,"getListAdapter")).getItem(((int)param.args[2])-1);
-                xlog((String)getObjectField(selected,"name"));
 
                 Object activityThread = callStaticMethod(findClass("android.app.ActivityThread", null), "currentActivityThread");
                 final Context context = (Context) callMethod(activityThread, "getSystemContext");
@@ -504,11 +500,24 @@ public class JodelHooks {
                 }else if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedRestart")){
                     context.startActivity(launchIntent.putExtra("choice",3));
                 } else if (((String)getObjectField(selected,"name")).equalsIgnoreCase("xposedInfo")){
-                    new AlertDialog.Builder(context).setTitle("Location info")
+                    final Activity activity = (Activity) callMethod(param.thisObject,"getActivity");
+                    new AlertDialog.Builder(activity).setTitle("Location info")
                         .setMessage("City: "+settings.getCity()
                             +"\nCountry: "+settings.getCountry()
                             +"\nLat: "+settings.getLat()
                             +"\nLng: "+settings.getLng())
+                        .setNeutralButton(settings.isActive() ? "Disable Xposed" : "Enable Xposed", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                settings.setActive(!settings.isActive());
+                                try {
+                                    settings.save();
+                                } catch (IOException | JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                context.startActivity(launchIntent.putExtra("choice",3));
+                            }
+                        })
                         .setNegativeButton("Reset", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
