@@ -118,6 +118,10 @@ public class JodelHooks {
 
     public static class Storage {
         public static String UnlockFeatures = "cU";
+        public static String DisableSchoolScreen1 = "Ac";
+        public static String DisableSchoolScreen2 = "Ad";
+        public static String DisableSchoolScreen3 = "zT";
+        public static String ChannelsLimit = "Ag";
     }
 
 
@@ -559,6 +563,45 @@ public class JodelHooks {
             }
         });
 
+        /* *
+        * Disable the schoolscreen #1
+        * */
+        findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.DisableSchoolScreen1, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                param.setResult(false);
+            }
+        });
+
+        /* *
+        * Disable the schoolscreen #2
+        * */
+        findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.DisableSchoolScreen2, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                param.setResult(false);
+            }
+        });
+
+        /* *
+        * Disable the schoolscreen #3
+        * */
+        findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.DisableSchoolScreen3, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                param.setResult(false);
+            }
+        });
+
+        /* *
+        * Set channels limit from default (5) to 100
+        * */
+        findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.ChannelsLimit, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                param.setResult(100);
+            }
+        });
 
     }
 }
