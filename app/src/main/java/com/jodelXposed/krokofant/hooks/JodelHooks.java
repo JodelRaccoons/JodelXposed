@@ -116,6 +116,10 @@ public class JodelHooks {
         public static String UpdateCityName = "dw";
     }
 
+    public static class Storage {
+        public static String UnlockFeatures = "cU";
+    }
+
 
     public void hook(final XC_LoadPackage.LoadPackageParam lpparam) {
         /**
@@ -541,6 +545,17 @@ public class JodelHooks {
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (settings.isActive())
                     param.args[0] = settings.getCity();
+            }
+        });
+
+        /* *
+        * Unlock experiments (features that are available on some devices like post pining or searching for hashtags)
+        * */
+        findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.UnlockFeatures, String.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                if (settings.isActive())
+                    param.setResult(true);
             }
         });
 
