@@ -136,10 +136,10 @@ public class JodelHooks {
     public void hook(final XC_LoadPackage.LoadPackageParam lpparam) {
 
         try {
-        /* *
+        /**
         * Disable the xposed check and all crash reporters #1
         * @JodelCreators hopefully you dont get any anoying crash reports anymore :)
-        * */
+        */
             findAndHookMethod("com.jodelapp.jodelandroidv3.JodelApp", lpparam.classLoader, "onCreate", new XC_MethodReplacement() {
                 @Override
                 protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
@@ -169,10 +169,10 @@ public class JodelHooks {
             });
 
 
-        /* *
+        /**
         * Disable the xposed check and all crash reporters #2
         * @JodelCreators hopefully you dont get any anoying crash reports anymore :)
-        * */
+        */
             findAndHookConstructor("com.jodelapp.jodelandroidv3.api.ApiModule", lpparam.classLoader, Application.class, new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -495,10 +495,10 @@ public class JodelHooks {
             }
         });
 
-        /* *
+        /**
         * Hook constructor of MyMenuItem to apply strings (Item names) which are not in strings.xml
         * Seamless integration #1
-        * */
+        */
         findAndHookConstructor("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader,Context.class,String.class,int.class, new XC_MethodReplacement() {
             @Override
             protected Object replaceHookedMethod(MethodHookParam methodHookParam) throws Throwable {
@@ -599,9 +599,9 @@ public class JodelHooks {
             }
         });
 
-        /* *
+        /**
         * Display the correct city name on the sliding tab strip
-        * */
+        */
         findAndHookMethod("com.jodelapp.jodelandroidv3.view.FeedFragment", lpparam.classLoader, FeedFragment.UpdateCityName, String.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
@@ -610,9 +610,9 @@ public class JodelHooks {
             }
         });
 
-        /* *
+        /**
         * Unlock experiments (features that are available on some devices like post pining or searching for hashtags)
-        * */
+        */
         findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.UnlockFeatures, String.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -621,9 +621,9 @@ public class JodelHooks {
             }
         });
 
-        /* *
+        /**
         * Disable the schoolscreen #1
-        * */
+        */
         findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.DisableSchoolScreen1, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -631,9 +631,9 @@ public class JodelHooks {
             }
         });
 
-        /* *
+        /**
         * Disable the schoolscreen #2
-        * */
+        */
         findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.DisableSchoolScreen2, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -641,9 +641,9 @@ public class JodelHooks {
             }
         });
 
-        /* *
+        /**
         * Disable the schoolscreen #3
-        * */
+        */
         findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.DisableSchoolScreen3, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -651,9 +651,9 @@ public class JodelHooks {
             }
         });
 
-        /* *
+        /**
         * Set channels limit from default (5) to 100
-        * */
+        */
         findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.ChannelsLimit, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
