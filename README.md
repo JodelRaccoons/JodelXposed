@@ -7,14 +7,33 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
 1. Install via the Xposed Installer
 2. Disable automatic Jodel updates via Play Store
 
+## Features
+* Track posters within a thread
+* Spoof location
+* No blur effect over images
+* Color selection for posts
+* Disabled anti-xposed measures
+* Upload custom images
+    1. Share image to JodelXposed
+    2. Take picture with Jodel camera
+    3. Long press the image
+    4. Use Volume Down to change layout
+* Increased control over account
+    - The account id (UID) is automatically backed upp in `.jodel-settings.json`
+    - The UID can be manually changed to change account
+    - **PS**: Clear all Jodel app data after changing the UID
+
 ## Beta Features
-  Currently now enabled beta features are:
-  1.   Channels (follow specific hashtags, when searching for hashtags on the right side of the toolbar)
-  2.   Search for hashtags (in posts)
-  3.   Pin posts (in PostDetailView on the right side of the toolbar)
+Currently now enabled beta features are:
+
+1. Channels (follow specific hashtags, when searching for hashtags on the right side of the toolbar)
+2. Search for hashtags (in posts)
+3. Pin posts (in PostDetailView on the right side of the toolbar)
 
 ## Version compatibility
 The module aims for compatibility with the latest Jodel version. Jodel apks are usually linked in [the thread on XDA](http://forum.xda-developers.com/xposed/modules/mod-jodelxposed-enhancements-t3350019/).
+
+The latest supported Jodel version is noted [here](https://github.com/krokofant/JodelXposed/blob/master/app/build.gradle#L7).
 
 ## Support
 * Are you using Android?
