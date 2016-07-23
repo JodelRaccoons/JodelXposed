@@ -1,10 +1,10 @@
 import groovy.swing.SwingBuilder
 apply plugin: 'com.android.application'
 
-project.ext.set("versionCode", 12)
+project.ext.set("versionCode", 13)
 project.ext.set("versionName", "1.10.0")
-project.ext.set("jodelVersionCode", 1000009)
-project.ext.set("jodelVersionName", "4.12.3")
+project.ext.set("jodelVersionCode", 1000018)
+project.ext.set("jodelVersionName", "4.12.5")
 
 android {
     compileSdkVersion 24
