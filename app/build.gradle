@@ -1,6 +1,11 @@
 import groovy.swing.SwingBuilder
 apply plugin: 'com.android.application'
 
+project.ext.set("versionCode", 12)
+project.ext.set("versionName", "1.10.0")
+project.ext.set("jodelVersionCode", 1000009)
+project.ext.set("jodelVersionName", "4.12.3")
+
 android {
     compileSdkVersion 24
     buildToolsVersion "23.0.3"
@@ -9,8 +14,8 @@ android {
         applicationId "com.jodelXposed"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 11
-        versionName "1.9.2"
+        versionCode project.versionCode
+        versionName project.versionName
     }
     signingConfigs {
         release {
