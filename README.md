@@ -8,23 +8,25 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
 2. Disable automatic Jodel updates via Play Store
 
 ## Features
-* Track posters within a thread
 * Spoof location
-* No blur effect over images
-* Color selection for posts
 * Disabled anti-xposed measures
-* Upload custom images
-    1. Share image to JodelXposed
-    2. Take picture with Jodel camera
-    3. Long press the image
-    4. Use Volume Down to change layout
-* Increased control over account
-    - The account id (UID) is automatically backed upp in `.jodel-settings.json`
-    - The UID can be manually changed to change account
-    - **PS**: Clear all Jodel app data after changing the UID
+* Track posters within a thread
+* Removed blur on images
+* Color selector for posts
+
+### Upload custom images
+1. Share image to JodelXposed
+2. Take picture with Jodel camera
+3. Long press the image
+4. Use Volume Down to change layout
+
+### Increased control over account
+- The account id (UID) is automatically backed upp in `.jodel-settings.json`
+- The UID can be manually changed to change account
+- **PS**: Clear all Jodel app data after changing the UID
 
 ## Beta Features
-Currently now enabled beta features are:
+Currently enabled beta features are:
 
 1. Channels (follow specific hashtags, when searching for hashtags on the right side of the toolbar)
 2. Search for hashtags (in posts)
