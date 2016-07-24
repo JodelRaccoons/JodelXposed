@@ -43,6 +43,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import static android.R.layout.simple_list_item_1;
 import static com.jodelXposed.krokofant.utils.Bitmap.loadBitmap;
 import static com.jodelXposed.krokofant.utils.Log.xlog;
+import static com.jodelXposed.krokofant.utils.Utils.getSystemContext;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookConstructor;
@@ -555,8 +556,7 @@ public class JodelHooks {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Object selected = ((ArrayAdapter) XposedHelpers.callMethod(param.thisObject,"getListAdapter")).getItem(((int)param.args[2])-1);
 
-                Object activityThread = callStaticMethod(findClass("android.app.ActivityThread", null), "currentActivityThread");
-                final Context context = (Context) callMethod(activityThread, "getSystemContext");
+                final Context context = getSystemContext();
                 final Intent launchIntent = new Intent(Intent.ACTION_MAIN);
                 launchIntent.setComponent(new ComponentName("com.jodelXposed", "com.jodelXposed.BackgroundOperations"));
                 launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
