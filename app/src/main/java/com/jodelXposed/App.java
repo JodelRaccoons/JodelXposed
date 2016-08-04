@@ -1,7 +1,7 @@
 package com.jodelXposed;
 
 import android.content.pm.PackageInfo;
-import com.jodelXposed.krokofant.hooks.JodelHooks;
+import com.jodelXposed.krokofant.features.*;
 import com.jodelXposed.krokofant.utils.Settings;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
@@ -36,7 +36,13 @@ public class App implements IXposedHookLoadPackage {
             settings.load();
 
             xlog("Loading hooks");
-            new JodelHooks().hook(lpparam);
+            new AntiAntiXposed(lpparam);
+            new BetaStuff(lpparam);
+            new ImageStuff(lpparam);
+            new LocationStuff(lpparam);
+            new PostStuff(lpparam);
+            new SettingsStuff(lpparam);
+            new UniqueDeviceIdentifierStuff(lpparam);
         }
     }
 }
