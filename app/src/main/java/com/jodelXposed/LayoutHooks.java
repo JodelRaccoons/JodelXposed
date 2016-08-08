@@ -12,6 +12,7 @@ public class LayoutHooks {
     public static int dialogMainView;
     public static int dialogMainTextView;
     public static int locationSwitch;
+    public static int betaSwitch;
     public static int udiSwitch;
     public static int editTextUdi;
 
@@ -20,6 +21,7 @@ public class LayoutHooks {
         dialogMainView = resparam.res.addResource(modRes,R.layout.xposed_dialog);
         dialogMainTextView = resparam.res.addResource(modRes,R.id.dialogMainTextView);
         locationSwitch = resparam.res.addResource(modRes,R.id.locationSwitch);
+        betaSwitch = resparam.res.addResource(modRes,R.id.betaSwitch);
         udiSwitch = resparam.res.addResource(modRes,R.id.udiSwitch);
         editTextUdi = resparam.res.addResource(modRes,R.id.editTextUdi);
     }

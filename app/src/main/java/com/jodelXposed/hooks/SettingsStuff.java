@@ -147,6 +147,16 @@ public class SettingsStuff {
             }
         });
 
+        final Switch betaSwitch = (Switch) dialoglayout.findViewById(LayoutHooks.betaSwitch);
+        betaSwitch.setChecked(Options.getInstance().getBetaObject().isActive());
+        betaSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Options.getInstance().getBetaObject().setActive(betaSwitch.isChecked());
+                Options.getInstance().save();
+            }
+        });
+
         final Switch udiSwitch = (Switch) dialoglayout.findViewById(LayoutHooks.udiSwitch);
         udiSwitch.setChecked(Options.getInstance().getUDIObject().isActive());
         udiSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

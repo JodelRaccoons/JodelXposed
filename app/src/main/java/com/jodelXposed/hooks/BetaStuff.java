@@ -21,7 +21,7 @@ public class BetaStuff {
         findAndHookMethod("com.jodelapp.jodelandroidv3.model.Storage", lpparam.classLoader, Storage.UnlockFeatures, String.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if (Options.getInstance().getLocationObject().isActive())
+                if (Options.getInstance().getBetaObject().isActive())
                     param.setResult(true);
             }
         });

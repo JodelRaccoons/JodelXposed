@@ -2,6 +2,7 @@ package com.jodelXposed.utils;
 
 import android.os.FileObserver;
 
+import com.jodelXposed.models.Beta;
 import com.jodelXposed.models.Location;
 import com.jodelXposed.models.UDI;
 import com.squareup.moshi.JsonAdapter;
@@ -35,6 +36,7 @@ public class Options extends FileObserver {
     public static class OptionsObject {
         public UDI udi = new UDI();
         public Location location = new Location();
+        public Beta beta = new Beta();
     }
 
     public Location getLocationObject(){
@@ -43,6 +45,10 @@ public class Options extends FileObserver {
 
     public UDI getUDIObject(){
         return this.options.udi;
+    }
+
+    public Beta getBetaObject(){
+        return this.options.beta;
     }
 
     private File settingsFile;
