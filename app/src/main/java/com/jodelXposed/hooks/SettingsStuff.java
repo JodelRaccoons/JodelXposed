@@ -167,7 +167,7 @@ public class SettingsStuff {
             }
         });
 
-        EditText udiEditText = (EditText) dialoglayout.findViewById(LayoutHooks.editTextUdi);
+        final EditText udiEditText = (EditText) dialoglayout.findViewById(LayoutHooks.editTextUdi);
         udiEditText.setTypeface(Typeface.DEFAULT);
         udiEditText.setText(Options.getInstance().getUDIObject().getUdi());
 
@@ -182,7 +182,13 @@ public class SettingsStuff {
         }).setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                Options.getInstance().getUDIObject().setUdi(udiEditText.getText().toString());
+                Options.getInstance().save();
+                dialog.dismiss();
+            }
+        }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         }).show();
