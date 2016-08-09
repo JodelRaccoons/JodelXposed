@@ -27,9 +27,11 @@ public class LocationStuff {
         findAndHookMethod("com.jodelapp.jodelandroidv3.location.LocationManager", lpparam.classLoader, "onLocationChanged", Location.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                Location l = (Location) param.args[0];
-                l.setLatitude(Options.getInstance().getLocationObject().getLat());
-                l.setLongitude(Options.getInstance().getLocationObject().getLng());
+                if(Options.getInstance().getLocationObject().isActive()) {
+                    Location l = (Location) param.args[0];
+                    l.setLatitude(Options.getInstance().getLocationObject().getLat());
+                    l.setLongitude(Options.getInstance().getLocationObject().getLng());
+                }
             }
         });
     }
