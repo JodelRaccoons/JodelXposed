@@ -16,6 +16,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class Hooks {
 
+    private XC_LoadPackage.LoadPackageParam loadPackageParam;
+
+    public Hooks(XC_LoadPackage.LoadPackageParam loadPackageParam) {
+        this.loadPackageParam = loadPackageParam;
+    }
+
+
     public static class PostStuff{
 
         public static class RecyclerPostsAdapter$ViewHolder {
@@ -51,7 +58,8 @@ public class Hooks {
         public static String GetUID;
     }
 
-    public void findHooks(XC_LoadPackage.LoadPackageParam param){
+    public void findHooks(){
+        XC_LoadPackage.LoadPackageParam param = loadPackageParam;
         try {
             Log.dlog("**** Searching for AntiAntiXposed hooks ****");
             antiAntiXposed(param);
@@ -93,7 +101,8 @@ public class Hooks {
         }
     }
 
-    public void hook(XC_LoadPackage.LoadPackageParam lpparam){
+    public void hook(){
+        XC_LoadPackage.LoadPackageParam lpparam = loadPackageParam;
         try {
             Log.dlog("#### Loading AntiAntiXposed hooks ####");
             new AntiAntiXposed(lpparam);

@@ -51,11 +51,13 @@ public class App implements IXposedHookLoadPackage {
                 xlog("Options cannot be loaded");
             }
 
+            Hooks hooks = new Hooks(lpparam);
+
             dlog("**** Locating method and field names ****");
-            new Hooks().findHooks(lpparam);
-//
+            hooks.findHooks();
+
             dlog("#### Loading hooks ####");
-            new Hooks().hook(lpparam);
+            hooks.hook();
         }
     }
 }
