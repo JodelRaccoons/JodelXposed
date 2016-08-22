@@ -39,6 +39,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+            android:key="pref_category_theme"
+            android:title="Theme mod">
+
+        <SwitchPreference
+                android:key="switch_theme"
+                android:title="Theme mod enabled" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="pref_category_logcat"
         android:title="Logcat">
 

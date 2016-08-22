@@ -17,6 +17,7 @@ import com.github.pedrovgs.lynx.LynxConfig;
 import com.jodelXposed.R;
 import com.jodelXposed.models.Beta;
 import com.jodelXposed.models.Location;
+import com.jodelXposed.models.Theme;
 import com.jodelXposed.models.UDI;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Picker;
@@ -31,6 +32,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
     private SwitchPreference betaSwitch;
     private Beta beta;
     private EditTextPreference editUdi;
+    private SwitchPreference themeSwitch;
+    private Theme theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
         options = Options.getInstance();
         udi = Options.getInstance().getUDIObject();
         beta = Options.getInstance().getBetaObject();
+        theme = Options.getInstance().getThemeObject();
 
         addPreferencesFromResource(R.xml.pref_general);
 
@@ -48,12 +52,14 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
         locationSwitch = (SwitchPreference) findPreference("switch_location");
         udiSwitch = (SwitchPreference) findPreference("switch_udi");
         betaSwitch = (SwitchPreference) findPreference("switch_beta");
+        themeSwitch = (SwitchPreference) findPreference("switch_theme");
         editUdi = (EditTextPreference) findPreference("button_edit_udi");
 
         findPreference("button_choose_location").setOnPreferenceClickListener(this);
         locationSwitch.setOnPreferenceChangeListener(this);
         udiSwitch.setOnPreferenceChangeListener(this);
         betaSwitch.setOnPreferenceChangeListener(this);
+        themeSwitch.setOnPreferenceChangeListener(this);
 
         editUdi.setOnPreferenceClickListener(this);
 
@@ -121,6 +127,10 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
                 return true;
             case "switch_beta":
                 beta.setActive((boolean) o);
+                options.save();
+                return true;
+            case "switch_theme":
+                theme.setActive((boolean) o);
                 options.save();
                 return true;
         }
