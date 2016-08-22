@@ -79,4 +79,13 @@ public class Utils {
             return false;
         }
     }
+
+    public static String fixHexColor(String color) {
+        if (color.length() == 9) {
+            return color.substring(0, 1) + color.substring(3, 9);
+        } else if (color.length() == 7) {
+            return color;
+        }
+        return color;
+    }
 }
