@@ -4,6 +4,7 @@ import android.os.FileObserver;
 
 import com.jodelXposed.models.Beta;
 import com.jodelXposed.models.Location;
+import com.jodelXposed.models.Theme;
 import com.jodelXposed.models.UDI;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -38,6 +39,7 @@ public class Options extends FileObserver {
         public UDI udi = new UDI();
         public Location location = new Location();
         public Beta beta = new Beta();
+        public Theme theme = new Theme();
     }
 
     public Location getLocationObject(){
@@ -50,6 +52,10 @@ public class Options extends FileObserver {
 
     public Beta getBetaObject(){
         return this.options.beta;
+    }
+
+    public Theme getThemeObject(){
+        return this.options.theme;
     }
 
     private File settingsFile;
@@ -112,6 +118,9 @@ public class Options extends FileObserver {
                     +"\n             ++++ UDI: ++++"
                     +"\n             Enabled: "+options.udi.isActive()
                     +"\n             UDI: "+options.udi.getUdi()
+
+                    +"\n             ++++ THEME: ++++"
+                    +"\n             Enabled: "+options.theme.isActive()
             );
 
         } catch (IOException e) {

@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import com.jodelXposed.hooks.AntiAntiXposed;
 import com.jodelXposed.hooks.BetaStuff;
 import com.jodelXposed.hooks.LocationStuff;
+import com.jodelXposed.hooks.ThemeStuff;
 import com.jodelXposed.hooks.UniqueDeviceIdentifierStuff;
 
 import java.lang.reflect.Field;
@@ -161,6 +162,14 @@ public class Hooks {
             Log.dlog("#### UniqueDeviceIdentifierStuff hooks loaded! ####");
         }catch(Exception e){
             Log.dlog("!!!! FAILED loading UniqueDeviceIdentifierStuff hooks! !!!!\n\n");
+        }
+
+        try {
+            Log.dlog("#### Loading ThemeStuff hooks ####");
+            new ThemeStuff(lpparam);
+            Log.dlog("#### ThemeStuff hooks loaded! ####");
+        }catch(Exception e){
+            Log.dlog("!!!! FAILED loading ThemeStuff hooks! !!!!\n\n");
         }
     }
 
