@@ -63,7 +63,7 @@ public class Options extends FileObserver {
     public OptionsObject options;
 
     public Options() {
-        super(SettingsPath,MODIFY);
+        super(SettingsPath,CLOSE_WRITE);
         Moshi moshi = new Moshi.Builder().build();
         jsonAdapter = moshi.adapter(OptionsObject.class);
         xlog("Init file object with path: " + SettingsPath);
