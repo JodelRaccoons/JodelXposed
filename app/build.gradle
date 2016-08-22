@@ -4,8 +4,8 @@ apply plugin: 'com.android.application'
 project.ext {
     versionCode = 13
     versionName = "1.10.0"
-    jodelVersionCode = 1000018
-    jodelVersionName = "4.12.5"
+    jodelVersionCode = 1000026
+    jodelVersionName = "4.14.1"
 }
 
 android {
