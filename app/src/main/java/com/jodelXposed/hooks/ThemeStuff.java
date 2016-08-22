@@ -18,7 +18,6 @@ public class ThemeStuff {
                     String color = (String) param.getResult();
                     String newColor;
                     Theme t = Options.getInstance().getThemeObject();
-                    xlog("Color input: " + color);
                     if (color.equalsIgnoreCase("#FF9908")) newColor = t.orange;
                     else if (color.equalsIgnoreCase("#FFBA00")) newColor = t.yellow;
                     else if (color.equalsIgnoreCase("#DD5F5F")) newColor = t.red;
