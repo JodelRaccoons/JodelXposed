@@ -1,11 +1,14 @@
 package com.jodelXposed.hooks;
 
+import android.os.Bundle;
 import com.jodelXposed.models.Theme;
 import com.jodelXposed.utils.Options;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
-import static com.jodelXposed.utils.Log.xlog;
+import static com.jodelXposed.utils.Color.format6;
+import static com.jodelXposed.utils.Color.getReplacementColor;
+import static com.jodelXposed.utils.Color.normalizeColor;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
 public class ThemeStuff {
@@ -16,16 +19,20 @@ public class ThemeStuff {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if (Options.getInstance().getThemeObject().isActive()) {
                     String color = (String) param.getResult();
-                    String newColor;
-                    Theme t = Options.getInstance().getThemeObject();
-                    if (color.equalsIgnoreCase("#FF9908")) newColor = t.orange;
-                    else if (color.equalsIgnoreCase("#FFBA00")) newColor = t.yellow;
-                    else if (color.equalsIgnoreCase("#DD5F5F")) newColor = t.red;
-                    else if (color.equalsIgnoreCase("#06A3CB")) newColor = t.blue;
-                    else if (color.equalsIgnoreCase("#8ABDB0")) newColor = t.bluegrayish;
-                    else if (color.equalsIgnoreCase("#9EC41C")) newColor = t.green;
-                    else newColor = color;
-                    param.setResult(newColor);
+                    param.setResult(getReplacementColor(color));
+                }
+            }
+        });
+
+        findAndHookMethod("com.jodelapp.jodelandroidv3.data.gcm.MyGcmListenerService", lpparam.classLoader, "a", String.class, Bundle.class, new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (Options.getInstance().getThemeObject().isActive()) {
+                    Bundle bundle = (Bundle) param.args[1];
+                    String color = normalizeColor(bundle.getString("color"));
+                    String newColor = getReplacementColor(color);
+                    String formattedColor = format6(newColor);
+                    bundle.putString("color", formattedColor);
                 }
             }
         });
