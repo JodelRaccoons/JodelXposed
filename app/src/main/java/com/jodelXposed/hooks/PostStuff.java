@@ -44,32 +44,6 @@ public class PostStuff {
          */
         findAndHookMethod("com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter", lpparam.classLoader, Hooks.PostStuff.RecyclerPostsAdapter.TrackPoster, "com.jodelapp.jodelandroidv3.view.adapter.RecyclerPostsAdapter$ViewHolder", int.class, new XC_MethodHook() {
             @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                try {
-                    List posts = (List) callMethod(param.thisObject, "getPosts");
-                    Object post =  posts.get((int)param.args[1]);
-
-                    if (getObjectField(post,"replierMark") != null && getObjectField(post,"replierMark").equals("OP")){
-                        String color = (String) getObjectField(post, "color");
-                        float[] hsv = new float[3];
-                        int c = Color.parseColor("#" + color);
-                        Color.colorToHSV(c, hsv);
-                        hsv[2] *= 0.8f;
-                        c = Color.HSVToColor(hsv);
-
-                        if (getAdditionalInstanceField(post,"newColor")== null){
-                            setAdditionalInstanceField(post,"newColor",Integer.toHexString(c).substring(2));
-                            setObjectField(post, "color", Integer.toHexString(c).substring(2));
-                        }
-
-                    }
-                } catch (IndexOutOfBoundsException ignored) {
-                    //In case you reached the last available post (found on Mt. Everest)
-                }
-
-            }
-
-            @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Object textView = getObjectField(param.args[0], Hooks.PostStuff.RecyclerPostsAdapter$ViewHolder.TimeView);
                 List posts = (List) callMethod(param.thisObject, "getPosts");
