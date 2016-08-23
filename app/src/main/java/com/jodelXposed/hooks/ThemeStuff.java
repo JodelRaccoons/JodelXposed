@@ -14,7 +14,7 @@ public class ThemeStuff {
         findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.Util", lpparam.classLoader, "dq", String.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                if(Options.getInstance().getThemeObject().isActive()) {
+                if (Options.getInstance().getThemeObject().isActive()) {
                     String color = (String) param.getResult();
                     String newColor;
                     Theme t = Options.getInstance().getThemeObject();
