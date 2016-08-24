@@ -47,3 +47,7 @@ The latest supported Jodel version is noted [here](https://github.com/krokofant/
 Pull requests are welcome if you would like to provide additional features or just update the hooks.
 
 Please *test the PR* before you submit it.
+
+# Special thanks
+* Charlie Kelly
+* Unbrick
