@@ -1,11 +1,10 @@
 package com.jodelXposed.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Beta {
 
-    private List<String> notificationList = new ArrayList<>();
+    private List<String> notificationList;
 
     public void setNotificationList(List<String> notificationList) {
         this.notificationList = notificationList;

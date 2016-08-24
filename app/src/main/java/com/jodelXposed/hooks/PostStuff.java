@@ -2,9 +2,7 @@ package com.jodelXposed.hooks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
@@ -29,6 +27,7 @@ import java.util.List;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import es.dmoral.prefs.Prefs;
 
 import static android.R.layout.simple_list_item_1;
 import static com.jodelXposed.utils.Utils.Colors.Colors;
@@ -142,48 +141,41 @@ public class PostStuff {
         findAndHookMethod("com.jodelapp.jodelandroidv3.view.PostDetailFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
-                final SharedPreferences sharedPref = getActivity(param).getPreferences(Context.MODE_PRIVATE);
-                final SharedPreferences.Editor editor = sharedPref.edit();
-
                 final String postID = (String)XposedHelpers.getObjectField(param.thisObject,"postId");
 
                 final Switch sw = (Switch) ((View)param.getResult()).findViewWithTag("sw_gcm_notification");
                 sw.setVisibility(View.VISIBLE);
                 sw.setChecked(!Options.getInstance().getBetaObject().getNotificationList().contains(postID));
 
-                int color = 0;
-                try {
-                    color = Color.parseColor((String)getObjectField(param.thisObject,"axS"));
-                    switchColor(sw,sw.isChecked(),color);
-                    final int finalColor = color;
-                    sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            if (!sharedPref.getBoolean("displayedNotificationExplanation", false)){
-                                new AlertDialog.Builder(getActivity(param)).setTitle("You discovered a new Feature!")
-                                    .setMessage("You discovered a new JodelXposed feature, the disabling of notifications in single threads. So now you have the possibility to mute specific threads which get annoying.")
-                                    .setPositiveButton("Okay, dont display again", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            editor.putBoolean("displayedNotificationExplanation", true).apply();
-                                            dialogInterface.dismiss();
-                                        }
-                                    })
-                                    .setCancelable(false)
-                                    .show();
-                            }
-                            switchColor(sw,b, finalColor);
-                            if (b){
-                                Options.getInstance().getBetaObject().getNotificationList().remove(postID);
-                            }else{
-                                Options.getInstance().getBetaObject().getNotificationList().add(postID);
-                            }
-                            Options.getInstance().save();
-                        }
-                    });
-                }catch(IllegalArgumentException ignored){
+                int color = Color.parseColor((String)getObjectField(param.thisObject,"axS"));
 
-                }
+                switchColor(sw,sw.isChecked(),color);
+                final int finalColor = color;
+                sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (!Prefs.with(getActivity(param)).readBoolean("displayedNotificationExplanation",false)){
+                            new AlertDialog.Builder(getActivity(param)).setTitle("You discovered a new Feature!")
+                                .setMessage("You discovered a new JodelXposed feature, the disabling of notifications in single threads. So now you have the possibility to mute specific threads which get annoying.")
+                                .setPositiveButton("Okay, dont display again", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Prefs.with(getActivity(param)).writeBoolean("displayedNotificationExplanation",true);
+                                        dialogInterface.dismiss();
+                                    }
+                                })
+                                .setCancelable(false)
+                                .show();
+                        }
+                        switchColor(sw,b, finalColor);
+                        if (b){
+                            Options.getInstance().getBetaObject().getNotificationList().remove(postID);
+                        }else{
+                            Options.getInstance().getBetaObject().getNotificationList().add(postID);
+                        }
+                        Options.getInstance().save();
+                    }
+                });
             }
         });
 
