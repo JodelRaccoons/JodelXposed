@@ -54,6 +54,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
         betaSwitch = (SwitchPreference) findPreference("switch_beta");
         themeSwitch = (SwitchPreference) findPreference("switch_theme");
         editUdi = (EditTextPreference) findPreference("button_edit_udi");
+        editUdi.setText(udi.getUdi());
 
         findPreference("button_choose_location").setOnPreferenceClickListener(this);
         locationSwitch.setOnPreferenceChangeListener(this);
