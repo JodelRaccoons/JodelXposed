@@ -144,6 +144,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
                 startActivity(new Intent(getApplicationContext(), Picker.class).putExtra("choice", 1));
                 return true;
             case "button_edit_udi":
+                Options.getInstance().getUDIObject().setUdi(editUdi.getText());
+                Options.getInstance().save();
+                Toast.makeText(getApplicationContext(), "Clear Jodel app data and restart app", Toast.LENGTH_LONG).show();
 //                View v = getLayoutInflater().inflate(R.layout.dialog_udi, null);
 //                Spinner udiSpinner = (Spinner) v.findViewById(R.id.udiSpinner);
 //                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, (String[]) udi.getUdis().keySet().toArray());
