@@ -29,7 +29,6 @@ import java.util.List;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import es.dmoral.prefs.Prefs;
 
 import static android.R.layout.simple_list_item_1;
 import static com.jodelXposed.utils.Utils.Colors.Colors;
