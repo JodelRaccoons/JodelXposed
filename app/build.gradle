@@ -2,8 +2,8 @@ import groovy.swing.SwingBuilder
 apply plugin: 'com.android.application'
 
 project.ext {
-    versionCode = 15
-    versionName = "2.0.0-beta"
+    versionCode = 16
+    versionName = "2.0.0"
     jodelVersionCode = 1000026
     jodelVersionName = "4.14.1"
 }
