@@ -3,6 +3,7 @@ package com.jodelXposed.utils;
 import android.os.FileObserver;
 
 import com.jodelXposed.models.Beta;
+import com.jodelXposed.models.Hookvalues;
 import com.jodelXposed.models.Location;
 import com.jodelXposed.models.Theme;
 import com.jodelXposed.models.UDI;
@@ -22,6 +23,25 @@ import static com.jodelXposed.utils.Utils.SettingsPath;
 
 public class Options extends FileObserver {
     private static Options singleton;
+    public OptionsObject options;
+    private File settingsFile;
+    private JsonAdapter<OptionsObject> jsonAdapter;
+
+    public Options() {
+        super(SettingsPath, CLOSE_WRITE);
+        Moshi moshi = new Moshi.Builder().build();
+        jsonAdapter = moshi.adapter(OptionsObject.class);
+        xlog("Init file object with path: " + SettingsPath);
+        settingsFile = new File(SettingsPath);
+
+        if (!settingsFile.exists()) {
+            options = new OptionsObject();
+            save();
+        } else {
+            load();
+        }
+        startWatching();
+    }
 
     public static Options getInstance() {
         if (singleton == null)
@@ -35,11 +55,8 @@ public class Options extends FileObserver {
         save();
     }
 
-    public static class OptionsObject {
-        public UDI udi = new UDI();
-        public Location location = new Location();
-        public Beta beta = new Beta();
-        public Theme theme = new Theme();
+    public Hookvalues getHooks() {
+        return this.options.hookvalues;
     }
 
     public Location getLocationObject(){
@@ -56,26 +73,6 @@ public class Options extends FileObserver {
 
     public Theme getThemeObject(){
         return this.options.theme;
-    }
-
-    private File settingsFile;
-    private JsonAdapter<OptionsObject> jsonAdapter;
-    public OptionsObject options;
-
-    public Options() {
-        super(SettingsPath,CLOSE_WRITE);
-        Moshi moshi = new Moshi.Builder().build();
-        jsonAdapter = moshi.adapter(OptionsObject.class);
-        xlog("Init file object with path: " + SettingsPath);
-        settingsFile = new File(SettingsPath);
-
-        if (!settingsFile.exists()) {
-            options = new OptionsObject();
-            save();
-        } else {
-            load();
-        }
-        startWatching();
     }
 
     private void writeFile()  {
@@ -103,24 +100,25 @@ public class Options extends FileObserver {
 //            if (!options.udi.getUdis().containsKey("default")){
 //                options.udi.getUdis().put("default",options.udi.getUdi());
 //            }
+
             dlog(
                     "++++ Beta: ++++"
-                    +"\n             Enabled: "+options.beta.isActive()
+                        + "\nEnabled: " + options.beta.isActive()
 
-                    +"\n             ++++ Location: ++++"
-                    +"\n             Enabled: "+options.location.isActive()
-                    +"\n             Country: "+options.location.getCountry()
-                    +"\n             Countrycode: "+options.location.getCountryCode()
-                    +"\n             City: "+options.location.getCity()
-                    +"\n             Latitude: "+options.location.getLat()
-                    +"\n             Longitude: "+options.location.getLng()
+                        + "\n++++ Location: ++++"
+                        + "\nEnabled: " + options.location.isActive()
+                        + "\nCountry: " + options.location.getCountry()
+                        + "\nCountrycode: " + options.location.getCountryCode()
+                        + "\nCity: " + options.location.getCity()
+                        + "\nLatitude: " + options.location.getLat()
+                        + "\nLongitude: " + options.location.getLng()
 
-                    +"\n             ++++ UDI: ++++"
-                    +"\n             Enabled: "+options.udi.isActive()
-                    +"\n             UDI: "+options.udi.getUdi()
+                        + "\n++++ UDI: ++++"
+                        + "\nEnabled: " + options.udi.isActive()
+                        + "\nUDI: " + options.udi.getUdi()
 
-                    +"\n             ++++ THEME: ++++"
-                    +"\n             Enabled: "+options.theme.isActive()
+                        + "\n++++ THEME: ++++"
+                        + "\nEnabled: " + options.theme.isActive()
             );
 
         } catch (IOException e) {
@@ -130,5 +128,13 @@ public class Options extends FileObserver {
 
     @Override
     public void onEvent(int event, String path) { load(); }
+
+    public static class OptionsObject {
+        public UDI udi = new UDI();
+        public Location location = new Location();
+        public Beta beta = new Beta();
+        public Theme theme = new Theme();
+        public Hookvalues hookvalues = new Hookvalues();
+    }
 
 }

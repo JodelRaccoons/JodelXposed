@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.jodelXposed.utils.Hooks;
+import com.jodelXposed.utils.Options;
 
 import java.lang.reflect.Method;
 
@@ -115,21 +115,10 @@ public class ImageStuff {
             }
         });
 
-//        findAndHookMethod("com.jodelapp.jodelandroidv3.view.ImagePreviewFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
-//            @Override
-//            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-//                String name = ((Bundle)param.args[2]).getString("image_url");
-//                URL url_value = new URL(name);
-//                Bitmap mIcon1 = BitmapFactory.decodeStream(url_value.openConnection().getInputStream());
-//
-//            }
-//        });
-
-
     }
 
     private void loadImage(final Bitmap bitmap, XC_MethodHook.MethodHookParam param) {
-        final ImageView a = (ImageView) getObjectField(param.thisObject, Hooks.ImageStuff.ImageView);
+        final ImageView a = (ImageView) getObjectField(param.thisObject, Options.getInstance().getHooks().ImageHookValues_ImageView);
         ((Activity) callMethod(param.thisObject, "getActivity"))
             .runOnUiThread(new Runnable() {
                 @Override

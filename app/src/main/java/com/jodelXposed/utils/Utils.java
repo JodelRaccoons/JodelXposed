@@ -51,19 +51,6 @@ public class Utils {
         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return launchIntent;
     }
-    /**
-     * These are the only accepted Colors by the Jodel Server, credits to pydel by rolsdorph
-     */
-    public static class Colors {
-        public static ArrayList<String> Colors = new ArrayList<String>() {{
-            add("#FFFF9908"); //Orange
-            add("#FFFFBA00"); //Yellow
-            add("#FFDD5F5F"); //Red
-            add("#FF06A3CB"); //Blue
-            add("#FF8ABDB0"); //Bluegrayish
-            add("#FF9EC41C"); //Green
-        }};
-    }
 
     public static boolean openApp(Context context, String packageName) {
         PackageManager manager = context.getPackageManager();
@@ -78,5 +65,19 @@ public class Utils {
         } catch (PackageManager.NameNotFoundException e) {
             return false;
         }
+    }
+
+    /**
+     * These are the only accepted Colors by the Jodel Server, credits to pydel by rolsdorph
+     */
+    public static class Colors {
+        public static ArrayList<String> Colors = new ArrayList<String>() {{
+            add("#FFFF9908"); //Orange
+            add("#FF795548"); //Yellow
+            add("#FFDD5F5F"); //Red
+            add("#FF06A3CB"); //Blue
+            add("#FF8ABDB0"); //Bluegrayish
+            add("#FF9EC41C"); //Green
+        }};
     }
 }

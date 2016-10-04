@@ -1,6 +1,5 @@
 package com.jodelXposed.hooks;
 
-import com.jodelXposed.utils.Hooks;
 import com.jodelXposed.utils.Options;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -15,7 +14,7 @@ public class UniqueDeviceIdentifierStuff {
      * Spoof UID
      */
     public UniqueDeviceIdentifierStuff(XC_LoadPackage.LoadPackageParam lpparam) {
-        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier", lpparam.classLoader, Hooks.UDI.GetUID, new XC_MethodHook() {
+        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier", lpparam.classLoader, Options.getInstance().getHooks().UDI_GetUdiMethod, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String realUDI = (String) param.getResult();

@@ -2,8 +2,8 @@ import groovy.swing.SwingBuilder
 apply plugin: 'com.android.application'
 
 project.ext {
-    versionCode = 16
-    versionName = "2.0.0"
+    versionCode = 15
+    versionName = "2.0.0-beta"
     jodelVersionCode = 1000026
     jodelVersionName = "4.14.1"
 }
@@ -49,11 +49,10 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'commons-io:commons-io:2.4'
     compile 'com.schibstedspain.android:leku:2.0.0'
-    compile 'com.google.android.gms:play-services-maps:9.4.0'
-    compile 'com.google.android.gms:play-services-location:9.4.0'
+    compile 'com.google.android.gms:play-services-maps:9.6.0'
+    compile 'com.google.android.gms:play-services-location:9.6.0'
     compile 'com.squareup.moshi:moshi:1.2.0'
-    compile 'com.github.pedrovgs:lynx:1.6'
-    compile 'com.github.GrenderG:Prefs:1.1'
+    compile 'com.google.firebase:firebase-config:9.6.0'
 }
 
 repositories {
@@ -98,3 +97,5 @@ gradle.taskGraph.whenReady { taskGraph ->
         android.signingConfigs.release.keyPassword = keyPass
     }
 }
+
+apply plugin: 'com.google.gms.google-services'
