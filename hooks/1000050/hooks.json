@@ -1,0 +1,22 @@
+{
+  "methods":{
+    "BetaHook_UnlockFeatures": "bp",
+    "ImageHookValues_ImageView": "ayZ",
+    "PostStuff_TrackPostsMethod": "a",
+    "PostStuff_ColorField": "axJ",
+    "Settings_AddEntriesMethod": "xh",
+    "Settings_HandleClickEventsMethod": "a",
+    "Theme_GCMReceiverMethod": "a",
+    "UDI_GetUdiMethod": "za"
+  },
+  "classes":{
+    "Class_Storage": "com.jodelapp.jodelandroidv3.model.Storage",
+    "Class_PhotoEditFragment": "com.jodelapp.jodelandroidv3.view.PhotoEditFragment",
+    "Class_PostDetailRecyclerAdapter": "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter",
+    "Class_CreateTextPostFragment": "com.jodelapp.jodelandroidv3.view.CreateTextPostFragment",
+    "Class_MyMenuPresenter": "com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter",
+    "Class_MyGcmListenerService": "com.jodelapp.jodelandroidv3.data.gcm.MyGcmListenerService",
+    "Class_UniqueDeviceIdentifier": "com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier"
+  },
+  "updatemessage":"Updated hooks for 100050 (4.21.1)"
+}

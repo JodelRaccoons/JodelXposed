@@ -2,10 +2,10 @@ import groovy.swing.SwingBuilder
 apply plugin: 'com.android.application'
 
 project.ext {
-    versionCode = 16
-    versionName = "2.0.0"
-    jodelVersionCode = 1000026
-    jodelVersionName = "4.14.1"
+    versionCode = 17
+    versionName = "2.0.1"
+    jodelVersionCode = 1000050
+    jodelVersionName = "4.21.1"
 }
 
 android {
@@ -49,10 +49,12 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'commons-io:commons-io:2.4'
     compile 'com.schibstedspain.android:leku:2.0.0'
-    compile 'com.google.android.gms:play-services-maps:9.4.0'
-    compile 'com.google.android.gms:play-services-location:9.4.0'
+    compile 'com.google.android.gms:play-services-maps:9.6.0'
+    compile 'com.google.android.gms:play-services-location:9.6.0'
     compile 'com.squareup.moshi:moshi:1.2.0'
-    compile 'com.github.pedrovgs:lynx:1.6'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.2'
+    compile 'com.androidadvance:topsnackbar:1.1.1'
 }
 
 repositories {

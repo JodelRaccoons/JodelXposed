@@ -17,17 +17,17 @@ public class ThemeStuff {
     //TODO DYNAMIC HOOKING
 
     public ThemeStuff(XC_LoadPackage.LoadPackageParam lpparam) {
-        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.Util", lpparam.classLoader, "dq", String.class, new XC_MethodHook() {
+        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.Util", lpparam.classLoader, "parseColor", String.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if (Options.getInstance().getThemeObject().isActive()) {
-                    String color = (String) param.getResult();
-                    param.setResult(getReplacementColor(color));
+                    String color = String.valueOf(param.getResult());
+                    param.setResult(Integer.valueOf(getReplacementColor(color)));
                 }
             }
         });
 
-        findAndHookMethod("com.jodelapp.jodelandroidv3.data.gcm.MyGcmListenerService", lpparam.classLoader, "a", String.class, Bundle.class, new XC_MethodHook() {
+        findAndHookMethod(Options.getInstance().getHooks().Class_MyGcmListenerService, lpparam.classLoader, Options.getInstance().getHooks().Theme_GCMReceiverMethod, String.class, Bundle.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (Options.getInstance().getThemeObject().isActive()) {
@@ -40,4 +40,6 @@ public class ThemeStuff {
             }
         });
     }
+
 }
+

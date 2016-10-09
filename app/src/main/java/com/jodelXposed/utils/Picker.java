@@ -35,37 +35,18 @@ public class Picker extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (ContextCompat.checkSelfPermission(this, (Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, (Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION) || ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ) {
-                //we could derp about how stupid the user is for not giving permissions here using an alertdialog or similar...
-				//on alertDialog dismiss:
-				ActivityCompat.requestPermissions(TimetableActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-            } else
-                ActivityCompat.requestPermissions(TimetableActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-        } else getAction();
-
-    }
-
-	@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE: {
-				boolean success = true;
-				for (int i = 0; i < grantResults.length; i++)
-					if (grantResults[i] != PackageManager.PERMISSION_GRANTED)
-						success = false;
-				
-                if (success) 
-					getAction();
-                else {
-                    Toast.makeText(getApplicationContext(), "This app needs permissions in order to work", Toast.LENGTH_LONG).show();
-					finish(); //prevent further errors by closing the activity
-                }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!permissionsGranted()) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
             }
         }
+
+        if (permissionsGranted()) {
+            getAction();
+        }
+
     }
-	
+
     private void getAction(){
         switch (getIntent().getIntExtra("choice",0)){
             case 1:
@@ -78,9 +59,15 @@ public class Picker extends AppCompatActivity {
             case 3:
                 galleryPicker();
                 break;
+            case 4:
+                syncHooks();
             default:
                 finish();
         }
+    }
+
+    private void syncHooks() {
+
     }
 
     private void galleryPicker() {
@@ -95,6 +82,13 @@ public class Picker extends AppCompatActivity {
         intent.putExtra(LocationPickerActivity.LATITUDE, location.getLat());
         intent.putExtra(LocationPickerActivity.LONGITUDE, location.getLng());
         startActivityForResult(intent, PLACEPICKER_REQUEST_CODE);
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private boolean permissionsGranted() {
+        return this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            && this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override
@@ -129,4 +123,18 @@ public class Picker extends AppCompatActivity {
         }
         finish();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getAction();
+                } else {
+                    Toast.makeText(getApplicationContext(), "This app needs permissions in order to work", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
 }
+

@@ -74,8 +74,6 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             tools:ignore="ExportedPreferenceActivity" />
-
-        <activity android:name="com.github.pedrovgs.lynx.LynxActivity"/>
     </application>
 
 </manifest>
