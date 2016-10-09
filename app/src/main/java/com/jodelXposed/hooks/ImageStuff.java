@@ -45,7 +45,7 @@ public class ImageStuff {
      * Remove blur effect
      */
     public ImageStuff(XC_LoadPackage.LoadPackageParam lpparam) {
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.PhotoEditFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
+        findAndHookMethod(Options.getInstance().getHooks().Class_PhotoEditFragment, lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 

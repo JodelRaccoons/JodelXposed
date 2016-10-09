@@ -14,7 +14,7 @@ public class UniqueDeviceIdentifierStuff {
      * Spoof UID
      */
     public UniqueDeviceIdentifierStuff(XC_LoadPackage.LoadPackageParam lpparam) {
-        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier", lpparam.classLoader, Options.getInstance().getHooks().UDI_GetUdiMethod, new XC_MethodHook() {
+        findAndHookMethod(Options.getInstance().getHooks().Class_UniqueDeviceIdentifier, lpparam.classLoader, Options.getInstance().getHooks().UDI_GetUdiMethod, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String realUDI = (String) param.getResult();

@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.jodelXposed.models.Hookvalues;
 import com.jodelXposed.utils.Log;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Utils;
@@ -35,6 +36,7 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 public class PostStuff {
 
     public PostStuff(XC_LoadPackage.LoadPackageParam lpparam) {
+        final Hookvalues hooks = Options.getInstance().getHooks();
 
         /*
          * Track posts #1
@@ -42,7 +44,7 @@ public class PostStuff {
          * user_handle / poster
          * Apply darker shade to OP's posts in a thread
          */
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter", lpparam.classLoader, Options.getInstance().getHooks().PostStuff_TrackPostsMethod, "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter$PostViewHolder", int.class, new XC_MethodHook() {
+        findAndHookMethod(hooks.Class_PostDetailRecyclerAdapter, lpparam.classLoader, hooks.PostStuff_TrackPostsMethod, "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter$PostViewHolder", int.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Object textView = getObjectField(param.args[0], "created");
@@ -89,7 +91,7 @@ public class PostStuff {
          * Post-background color
          * Instantiate a chooser button / dialog beside the Camera button
          */
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.CreateTextPostFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
+        findAndHookMethod(hooks.Class_CreateTextPostFragment, lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
             @SuppressWarnings("ResourceType")
             @Override
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
@@ -111,7 +113,7 @@ public class PostStuff {
                                 //Set background color
                                 ((View) ((View) param.getResult()).findViewById(id).getParent().getParent()).setBackgroundColor(Color.parseColor(Colors.get(which)));
                                 //set instance field
-                                XposedHelpers.setObjectField(param.thisObject, Options.getInstance().getHooks().PostStuff_ColorField, Colors.get(which));
+                                XposedHelpers.setObjectField(param.thisObject, hooks.PostStuff_ColorField, Colors.get(which));
                                 dialog.dismiss();
                             }
                         }).show();

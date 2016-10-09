@@ -3,11 +3,9 @@ package com.jodelXposed.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
@@ -19,7 +17,9 @@ import com.jodelXposed.models.Hookvalues;
 import com.jodelXposed.models.Location;
 import com.jodelXposed.models.Theme;
 import com.jodelXposed.models.UDI;
+import com.jodelXposed.retrofit.Classes;
 import com.jodelXposed.retrofit.HooksResponse;
+import com.jodelXposed.retrofit.Methods;
 import com.jodelXposed.retrofit.RetrofitProvider;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Picker;
@@ -32,13 +32,10 @@ import retrofit2.Response;
 public class SettingsActivity extends AppCompatPreferenceActivity implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     private SwitchPreference locationSwitch;
-    private SwitchPreference udiSwitch;
     private Location location;
     private Options options;
     private UDI udi;
-    private SwitchPreference betaSwitch;
     private Beta beta;
-    private EditTextPreference editUdi;
     private SwitchPreference themeSwitch;
     private Theme theme;
 
@@ -57,43 +54,45 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
 
 
         locationSwitch = (SwitchPreference) findPreference("switch_location");
-        udiSwitch = (SwitchPreference) findPreference("switch_udi");
-        betaSwitch = (SwitchPreference) findPreference("switch_beta");
         themeSwitch = (SwitchPreference) findPreference("switch_theme");
-        editUdi = (EditTextPreference) findPreference("button_edit_udi");
 
         findPreference("button_choose_location").setOnPreferenceClickListener(this);
         locationSwitch.setOnPreferenceChangeListener(this);
-        udiSwitch.setOnPreferenceChangeListener(this);
-        betaSwitch.setOnPreferenceChangeListener(this);
         themeSwitch.setOnPreferenceChangeListener(this);
-
-        editUdi.setOnPreferenceClickListener(this);
 
         findPreference("button_update").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.d("SettingyActivity","Version code:"+Options.getInstance().getHooks().versionCode);
                 RetrofitProvider.getJodelXposedService().getHooks(Options.getInstance().getHooks().versionCode).enqueue(new Callback<HooksResponse>() {
                     @Override
                     public void onResponse(Call<HooksResponse> call, Response<HooksResponse> response) {
                         Hookvalues hooks = Options.getInstance().getHooks();
                         HooksResponse rhooks = response.body();
-                        hooks.BetaHook_UnlockFeatures = rhooks.getBetaHookUnlockFeatures();
-                        hooks.ImageHookValues_ImageView = rhooks.getImageHookValuesImageView();
-                        hooks.PostStuff_ColorField = rhooks.getPostStuffColorField();
-                        hooks.PostStuff_TrackPostsMethod = rhooks.getPostStuffTrackPostsMethod();
-                        hooks.Settings_AddEntriesMethod = rhooks.getSettingsAddEntriesMethod();
-                        hooks.Settings_HandleClickEventsMethod = rhooks.getSettingsHandleClickEventsMethod();
-                        hooks.Theme_GCMReceiverMethod = rhooks.getThemeGCMReceiverMethod();
-                        hooks.UDI_GetUdiMethod = rhooks.getUDIGetUdiMethod();
+                        Methods methods = rhooks.getMethods();
+                        Classes classes = rhooks.getClasses();
+                        hooks.BetaHook_UnlockFeatures = methods.getBetaHookUnlockFeatures();
+                        hooks.ImageHookValues_ImageView = methods.getImageHookValuesImageView();
+                        hooks.PostStuff_ColorField = methods.getPostStuffColorField();
+                        hooks.PostStuff_TrackPostsMethod = methods.getPostStuffTrackPostsMethod();
+                        hooks.Settings_AddEntriesMethod = methods.getSettingsAddEntriesMethod();
+                        hooks.Settings_HandleClickEventsMethod = methods.getSettingsHandleClickEventsMethod();
+                        hooks.Theme_GCMReceiverMethod = methods.getThemeGCMReceiverMethod();
+                        hooks.UDI_GetUdiMethod = methods.getUDIGetUdiMethod();
+
+                        hooks.Class_CreateTextPostFragment = classes.getClassCreateTextPostFragment();
+                        hooks.Class_MyGcmListenerService = classes.getClassMyGcmListenerService();
+                        hooks.Class_MyMenuPresenter = classes.getClassMyMenuPresenter();
+                        hooks.Class_PhotoEditFragment = classes.getClassPhotoEditFragment();
+                        hooks.Class_PostDetailRecyclerAdapter = classes.getClassPostDetailRecyclerAdapter();
+                        hooks.Class_Storage = classes.getClassStorage();
+                        hooks.Class_UniqueDeviceIdentifier = classes.getClassUniqueDeviceIdentifier();
                         Options.getInstance().save();
-                        Toast.makeText(SettingsActivity.this, "Hooks updated!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SettingsActivity.this, rhooks.getUpdatemessage(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
                     public void onFailure(Call<HooksResponse> call, Throwable t) {
-                        t.printStackTrace();
+                        Toast.makeText(SettingsActivity.this, "Failed updating hooks!", Toast.LENGTH_LONG).show();
                     }
                 });
                 return true;
@@ -119,8 +118,6 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
     private void updateFieldsFromSettings() {
         locationSwitch.setChecked(location.isActive());
         locationSwitch.setSummary("Current location: " + location.getCity());
-        udiSwitch.setChecked(udi.isActive());
-        betaSwitch.setChecked(beta.isActive());
     }
 
     @Override

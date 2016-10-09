@@ -27,7 +27,7 @@ public class ThemeStuff {
             }
         });
 
-        findAndHookMethod("com.jodelapp.jodelandroidv3.data.gcm.MyGcmListenerService", lpparam.classLoader, Options.getInstance().getHooks().Theme_GCMReceiverMethod, String.class, Bundle.class, new XC_MethodHook() {
+        findAndHookMethod(Options.getInstance().getHooks().Class_MyGcmListenerService, lpparam.classLoader, Options.getInstance().getHooks().Theme_GCMReceiverMethod, String.class, Bundle.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (Options.getInstance().getThemeObject().isActive()) {

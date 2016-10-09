@@ -6,173 +6,68 @@ import com.google.gson.annotations.SerializedName;
 
 public class HooksResponse {
 
-    @SerializedName("BetaHook_UnlockFeatures")
+    @SerializedName("methods")
     @Expose
-    private String betaHookUnlockFeatures;
-    @SerializedName("ImageHookValues_ImageView")
+    private Methods methods;
+    @SerializedName("classes")
     @Expose
-    private String imageHookValuesImageView;
-    @SerializedName("PostStuff_TrackPostsMethod")
+    private Classes classes;
+    @SerializedName("updatemessage")
     @Expose
-    private String postStuffTrackPostsMethod;
-    @SerializedName("PostStuff_ColorField")
-    @Expose
-    private String postStuffColorField;
-    @SerializedName("Settings_AddEntriesMethod")
-    @Expose
-    private String settingsAddEntriesMethod;
-    @SerializedName("Settings_HandleClickEventsMethod")
-    @Expose
-    private String settingsHandleClickEventsMethod;
-    @SerializedName("Theme_GCMReceiverMethod")
-    @Expose
-    private String themeGCMReceiverMethod;
-    @SerializedName("UDI_GetUdiMethod")
-    @Expose
-    private String uDIGetUdiMethod;
+    private String updatemessage;
 
     /**
      *
      * @return
-     *     The betaHookUnlockFeatures
+     *     The methods
      */
-    public String getBetaHookUnlockFeatures() {
-        return betaHookUnlockFeatures;
+    public Methods getMethods() {
+        return methods;
     }
 
     /**
      *
-     * @param betaHookUnlockFeatures
-     *     The BetaHook_UnlockFeatures
+     * @param methods
+     *     The methods
      */
-    public void setBetaHookUnlockFeatures(String betaHookUnlockFeatures) {
-        this.betaHookUnlockFeatures = betaHookUnlockFeatures;
+    public void setMethods(Methods methods) {
+        this.methods = methods;
     }
 
     /**
      *
      * @return
-     *     The imageHookValuesImageView
+     *     The classes
      */
-    public String getImageHookValuesImageView() {
-        return imageHookValuesImageView;
+    public Classes getClasses() {
+        return classes;
     }
 
     /**
      *
-     * @param imageHookValuesImageView
-     *     The ImageHookValues_ImageView
+     * @param classes
+     *     The classes
      */
-    public void setImageHookValuesImageView(String imageHookValuesImageView) {
-        this.imageHookValuesImageView = imageHookValuesImageView;
-    }
-
-    /**
-     *
-     * @return
-     *     The postStuffTrackPostsMethod
-     */
-    public String getPostStuffTrackPostsMethod() {
-        return postStuffTrackPostsMethod;
-    }
-
-    /**
-     *
-     * @param postStuffTrackPostsMethod
-     *     The PostStuff_TrackPostsMethod
-     */
-    public void setPostStuffTrackPostsMethod(String postStuffTrackPostsMethod) {
-        this.postStuffTrackPostsMethod = postStuffTrackPostsMethod;
+    public void setClasses(Classes classes) {
+        this.classes = classes;
     }
 
     /**
      *
      * @return
-     *     The postStuffColorField
+     *     The updatemessage
      */
-    public String getPostStuffColorField() {
-        return postStuffColorField;
+    public String getUpdatemessage() {
+        return updatemessage;
     }
 
     /**
      *
-     * @param postStuffColorField
-     *     The PostStuff_ColorField
+     * @param updatemessage
+     *     The updatemessage
      */
-    public void setPostStuffColorField(String postStuffColorField) {
-        this.postStuffColorField = postStuffColorField;
-    }
-
-    /**
-     *
-     * @return
-     *     The settingsAddEntriesMethod
-     */
-    public String getSettingsAddEntriesMethod() {
-        return settingsAddEntriesMethod;
-    }
-
-    /**
-     *
-     * @param settingsAddEntriesMethod
-     *     The Settings_AddEntriesMethod
-     */
-    public void setSettingsAddEntriesMethod(String settingsAddEntriesMethod) {
-        this.settingsAddEntriesMethod = settingsAddEntriesMethod;
-    }
-
-    /**
-     *
-     * @return
-     *     The settingsHandleClickEventsMethod
-     */
-    public String getSettingsHandleClickEventsMethod() {
-        return settingsHandleClickEventsMethod;
-    }
-
-    /**
-     *
-     * @param settingsHandleClickEventsMethod
-     *     The Settings_HandleClickEventsMethod
-     */
-    public void setSettingsHandleClickEventsMethod(String settingsHandleClickEventsMethod) {
-        this.settingsHandleClickEventsMethod = settingsHandleClickEventsMethod;
-    }
-
-    /**
-     *
-     * @return
-     *     The themeGCMReceiverMethod
-     */
-    public String getThemeGCMReceiverMethod() {
-        return themeGCMReceiverMethod;
-    }
-
-    /**
-     *
-     * @param themeGCMReceiverMethod
-     *     The Theme_GCMReceiverMethod
-     */
-    public void setThemeGCMReceiverMethod(String themeGCMReceiverMethod) {
-        this.themeGCMReceiverMethod = themeGCMReceiverMethod;
-    }
-
-    /**
-     *
-     * @return
-     *     The uDIGetUdiMethod
-     */
-    public String getUDIGetUdiMethod() {
-        return uDIGetUdiMethod;
-    }
-
-    /**
-     *
-     * @param uDIGetUdiMethod
-     *     The UDI_GetUdiMethod
-     */
-    public void setUDIGetUdiMethod(String uDIGetUdiMethod) {
-        this.uDIGetUdiMethod = uDIGetUdiMethod;
+    public void setUpdatemessage(String updatemessage) {
+        this.updatemessage = updatemessage;
     }
 
 }

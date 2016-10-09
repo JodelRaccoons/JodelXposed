@@ -2,6 +2,7 @@ package com.jodelXposed.hooks;
 
 import android.content.Intent;
 
+import com.jodelXposed.models.Hookvalues;
 import com.jodelXposed.utils.Options;
 
 import java.util.List;
@@ -19,11 +20,14 @@ import static de.robv.android.xposed.XposedHelpers.getObjectField;
 public class SettingsStuff {
 
     public SettingsStuff(final XC_LoadPackage.LoadPackageParam lpparam) {
+
+        Hookvalues hooks = Options.getInstance().getHooks();
+
         /*
          * Add JodelXposed entries in ListView
          * Seamless integration #1
          */
-        findAndHookMethod("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter", lpparam.classLoader, Options.getInstance().getHooks().Settings_AddEntriesMethod, new XC_MethodHook() {
+        findAndHookMethod(hooks.Class_MyMenuPresenter, lpparam.classLoader, hooks.Settings_AddEntriesMethod, new XC_MethodHook() {
             @SuppressWarnings("unchecked")
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -35,7 +39,7 @@ public class SettingsStuff {
          * Add JodelXposed entries in ListView - Handle clicks on Items
          * Seamless integration #2
          */
-        findAndHookMethod("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter", lpparam.classLoader, Options.getInstance().getHooks().Settings_HandleClickEventsMethod, "com.jodelapp.jodelandroidv3.view.MyMenuItem", new XC_MethodHook() {
+        findAndHookMethod(hooks.Class_MyMenuPresenter, lpparam.classLoader, Options.getInstance().getHooks().Settings_HandleClickEventsMethod, "com.jodelapp.jodelandroidv3.view.MyMenuItem", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String selected = (String) getObjectField(param.args[0], "name");

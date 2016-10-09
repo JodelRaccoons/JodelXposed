@@ -15,30 +15,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:key="pref_category_udi"
-        android:title="UDI">
-
-        <SwitchPreference
-            android:key="switch_udi"
-            android:title="UDI spoofing enabled" />
-
-        <EditTextPreference
-            android:key="button_edit_udi"
-            android:title="Edit UDI" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
-        android:key="pref_category_beta_features"
-        android:title="Beta features">
-
-        <SwitchPreference
-            android:key="switch_beta"
-            android:title="Beta features enabled" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory
             android:key="pref_category_theme"
             android:title="Theme mod">
 

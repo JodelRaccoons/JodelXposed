@@ -16,6 +16,7 @@ public class Hookvalues {
     * modifier: public
     * search term: features
     * */
+    public String Class_Storage = "com.jodelapp.jodelandroidv3.model.Storage";
     public String BetaHook_UnlockFeatures = "bp";
 
     /*
@@ -24,6 +25,7 @@ public class Hookvalues {
     * class: ImageView.class
     * search term: setImageBitmap
     * */
+    public String Class_PhotoEditFragment = "com.jodelapp.jodelandroidv3.view.PhotoEditFragment";
     public String ImageHookValues_ImageView = "ayZ";
 
     /*
@@ -35,6 +37,7 @@ public class Hookvalues {
     * modifier: public
     * search term:  postViewHolder.AP();
     * */
+    public String Class_PostDetailRecyclerAdapter = "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter";
     public String PostStuff_TrackPostsMethod = "a";
 
 
@@ -44,6 +47,7 @@ public class Hookvalues {
     * class: String.class
     * search term: arguments.getString("com.tellm.post.color");
     * */
+    public String Class_CreateTextPostFragment = "com.jodelapp.jodelandroidv3.view.CreateTextPostFragment";
     public String PostStuff_ColorField = "axJ";
 
     /*
@@ -63,6 +67,7 @@ public class Hookvalues {
     *       modifier: public
     *       search term: String str = myMenuItem.name;
     * */
+    public String Class_MyMenuPresenter = "com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter";
     public String Settings_AddEntriesMethod = "xh";
     public String Settings_HandleClickEventsMethod = "a";
 
@@ -75,6 +80,7 @@ public class Hookvalues {
     * modifier: public
     * search term: AnalyticsUtil.u(ShareConstants.WEB_DIALOG_PARAM_MESSAGE, "received");
     * */
+    public String Class_MyGcmListenerService = "com.jodelapp.jodelandroidv3.data.gcm.MyGcmListenerService";
     public String Theme_GCMReceiverMethod = "a";
 
     /*
@@ -85,6 +91,7 @@ public class Hookvalues {
     * modifier: public
     * search term: (getValue()); //method call to getValue
     * */
+    public String Class_UniqueDeviceIdentifier = "com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier";
     public String UDI_GetUdiMethod = "za";
 
 }
