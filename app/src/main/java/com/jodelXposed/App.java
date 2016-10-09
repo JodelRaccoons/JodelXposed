@@ -2,12 +2,18 @@ package com.jodelXposed;
 
 import android.annotation.SuppressLint;
 import android.content.pm.PackageInfo;
+import android.util.Log;
 
+import com.jodelXposed.retrofit.RetrofitProvider;
+import com.jodelXposed.retrofit.VersionResponse;
 import com.jodelXposed.utils.Hooks;
 import com.jodelXposed.utils.Options;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.jodelXposed.utils.Log.dlog;
 import static com.jodelXposed.utils.Log.xlog;
@@ -24,7 +30,7 @@ public class App implements IXposedHookLoadPackage {
 
         if (lpparam.packageName.equals("com.tellm.android.app")) {
 
-            PackageInfo pkgInfo = getSystemContext().getPackageManager().getPackageInfo(lpparam.packageName, 0);
+            final PackageInfo pkgInfo = getSystemContext().getPackageManager().getPackageInfo(lpparam.packageName, 0);
 
             try {
                 dlog(String.format("----------%n" +
@@ -57,6 +63,21 @@ public class App implements IXposedHookLoadPackage {
 
             dlog("#### Loading hooks ####");
             hooks.hook();
+
+            RetrofitProvider.getJodelXposedService().latestVersion().enqueue(new Callback<VersionResponse>() {
+                @Override
+                public void onResponse(Call<VersionResponse> call, Response<VersionResponse> response) {
+                    Log.d("ServerVersionCode: "," "+response.body().getVersioncode());
+                    if (!(response.body().getVersioncode() == pkgInfo.versionCode)){
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<VersionResponse> call, Throwable t) {
+
+                }
+            });
 
         }
     }

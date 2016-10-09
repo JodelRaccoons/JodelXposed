@@ -92,7 +92,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
 
                     @Override
                     public void onFailure(Call<HooksResponse> call, Throwable t) {
-                        Toast.makeText(SettingsActivity.this, "Failed updating hooks!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(SettingsActivity.this, "Failed updating hooks, "+t.getLocalizedMessage()+" !", Toast.LENGTH_LONG).show();
+                        t.printStackTrace();
                     }
                 });
                 return true;

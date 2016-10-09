@@ -12,4 +12,7 @@ import retrofit2.http.Path;
 public interface JodelXposedService {
     @GET("/Unbrick/JodelXposed/master/hooks/{version}/hooks.json")
     Call<HooksResponse> getHooks(@Path("version") int version);
+
+    @GET("/Unbrick/JodelXposed/master/hooks/current.json")
+    Call<VersionResponse> latestVersion();
 }
