@@ -122,6 +122,7 @@ public class Options extends FileObserver {
             );
 
         } catch (IOException e) {
+
             xlog("Could not load options file");
         }
     }

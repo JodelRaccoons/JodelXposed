@@ -6,27 +6,29 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.jodelXposed.R;
 import com.jodelXposed.models.Beta;
+import com.jodelXposed.models.Hookvalues;
 import com.jodelXposed.models.Location;
 import com.jodelXposed.models.Theme;
 import com.jodelXposed.models.UDI;
-import com.jodelXposed.utils.Log;
+import com.jodelXposed.retrofit.HooksResponse;
+import com.jodelXposed.retrofit.RetrofitProvider;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Picker;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+@SuppressWarnings("deprecation")
 public class SettingsActivity extends AppCompatPreferenceActivity implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     private SwitchPreference locationSwitch;
@@ -68,49 +70,30 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
 
         editUdi.setOnPreferenceClickListener(this);
 
-        findPreference("btn_update_hooks").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        findPreference("button_update").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                FirebaseApp.initializeApp(SettingsActivity.this);
-                final FirebaseRemoteConfig mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-                FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                    .setDeveloperModeEnabled(android.support.v4.BuildConfig.DEBUG)
-                    .build();
-                mFirebaseRemoteConfig.setConfigSettings(configSettings);
-                mFirebaseRemoteConfig.fetch().addOnCompleteListener(new OnCompleteListener<Void>() {
+                Log.d("SettingyActivity","Version code:"+Options.getInstance().getHooks().versionCode);
+                RetrofitProvider.getJodelXposedService().getHooks(Options.getInstance().getHooks().versionCode).enqueue(new Callback<HooksResponse>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.dlog(Options.getInstance().getHooks().versionCode + "_BetaHook_UnlockFeatures");
-                        if (task.isSuccessful()) {
-                            Toast.makeText(SettingsActivity.this, "Fetch Succeeded", Toast.LENGTH_SHORT).show();
-                            mFirebaseRemoteConfig.activateFetched();
+                    public void onResponse(Call<HooksResponse> call, Response<HooksResponse> response) {
+                        Hookvalues hooks = Options.getInstance().getHooks();
+                        HooksResponse rhooks = response.body();
+                        hooks.BetaHook_UnlockFeatures = rhooks.getBetaHookUnlockFeatures();
+                        hooks.ImageHookValues_ImageView = rhooks.getImageHookValuesImageView();
+                        hooks.PostStuff_ColorField = rhooks.getPostStuffColorField();
+                        hooks.PostStuff_TrackPostsMethod = rhooks.getPostStuffTrackPostsMethod();
+                        hooks.Settings_AddEntriesMethod = rhooks.getSettingsAddEntriesMethod();
+                        hooks.Settings_HandleClickEventsMethod = rhooks.getSettingsHandleClickEventsMethod();
+                        hooks.Theme_GCMReceiverMethod = rhooks.getThemeGCMReceiverMethod();
+                        hooks.UDI_GetUdiMethod = rhooks.getUDIGetUdiMethod();
+                        Options.getInstance().save();
+                        Toast.makeText(SettingsActivity.this, "Hooks updated!", Toast.LENGTH_LONG).show();
+                    }
 
-                            try {
-                                Log.dlog("SUCCESS!");
-                                Options.getInstance().getHooks().BetaHook_UnlockFeatures
-                                    = mFirebaseRemoteConfig.getString(Options.getInstance().getHooks().versionCode + "_BetaHook_UnlockFeatures");
-                                Options.getInstance().getHooks().ImageHookValues_ImageView
-                                    = mFirebaseRemoteConfig.getString(Options.getInstance().getHooks().versionCode + "_ImageHookValues_ImageView");
-                                Options.getInstance().getHooks().PostStuff_TrackPostsMethod
-                                    = mFirebaseRemoteConfig.getString(Options.getInstance().getHooks().versionCode + "_PostStuff_TrackPostsMethod");
-                                Options.getInstance().getHooks().PostStuff_ColorField
-                                    = mFirebaseRemoteConfig.getString(Options.getInstance().getHooks().versionCode + "_PostStuff_ColorField");
-                                Options.getInstance().getHooks().Settings_AddEntriesMethod
-                                    = mFirebaseRemoteConfig.getString(Options.getInstance().getHooks().versionCode + "_Settings_AddEntriesMethod");
-                                Options.getInstance().getHooks().Settings_HandleClickEventsMethod
-                                    = mFirebaseRemoteConfig.getString(Options.getInstance().getHooks().versionCode + "_Settings_HandleClickEventsMethod");
-                                Options.getInstance().getHooks().Theme_GCMReceiverMethod
-                                    = mFirebaseRemoteConfig.getString(Options.getInstance().getHooks().versionCode + "_Theme_GCMReceiverMethod");
-                                Options.getInstance().getHooks().UDI_GetUdiMethod
-                                    = mFirebaseRemoteConfig.getString(Options.getInstance().getHooks().versionCode + "_UDI_GetUdiMethod");
-                                Options.getInstance().save();
-                            } catch (Throwable t) {
-                                Toast.makeText(SettingsActivity.this, "Your Jodel version isnt supported yet!", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Log.dlog("FAILED!");
-                            Toast.makeText(SettingsActivity.this, "Fetch Failed", Toast.LENGTH_SHORT).show();
-                        }
+                    @Override
+                    public void onFailure(Call<HooksResponse> call, Throwable t) {
+                        t.printStackTrace();
                     }
                 });
                 return true;

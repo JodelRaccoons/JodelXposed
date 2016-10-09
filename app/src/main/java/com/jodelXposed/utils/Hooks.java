@@ -1,17 +1,16 @@
 package com.jodelXposed.utils;
 
 import com.jodelXposed.hooks.BetaStuff;
+import com.jodelXposed.hooks.ImageStuff;
 import com.jodelXposed.hooks.LocationStuff;
+import com.jodelXposed.hooks.PostStuff;
+import com.jodelXposed.hooks.SettingsStuff;
 import com.jodelXposed.hooks.ThemeStuff;
 import com.jodelXposed.hooks.UniqueDeviceIdentifierStuff;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class Hooks {
-
-    static {
-
-    }
 
     private XC_LoadPackage.LoadPackageParam loadPackageParam;
 
@@ -33,7 +32,7 @@ public class Hooks {
 
         try {
             Log.dlog("#### Loading ImageStuff hooks ####");
-            new com.jodelXposed.hooks.ImageStuff(lpparam);
+            new ImageStuff(lpparam);
             Log.dlog("#### ImageStuff hooks loaded! ####");
         } catch (Throwable e) {
             e.printStackTrace();
@@ -53,7 +52,7 @@ public class Hooks {
 
         try {
             Log.dlog("#### Loading PostStuff hooks ####");
-            new com.jodelXposed.hooks.PostStuff(lpparam);
+            new PostStuff(lpparam);
             Log.dlog("#### PostStuff hooks loaded! ####");
         } catch (Throwable e) {
             e.printStackTrace();
@@ -63,7 +62,7 @@ public class Hooks {
 
         try {
             Log.dlog("#### Loading SettingsStuff hooks ####");
-            new com.jodelXposed.hooks.SettingsStuff(lpparam);
+            new SettingsStuff(lpparam);
             Log.dlog("#### SettingsStuff hooks loaded! ####");
         } catch (Throwable e) {
             e.printStackTrace();

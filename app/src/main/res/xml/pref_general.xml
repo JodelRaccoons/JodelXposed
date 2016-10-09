@@ -50,11 +50,11 @@
 
     <PreferenceCategory
         android:key="pref_category_logcat"
-        android:title="Logcat">
+        android:title="Update hooks">
 
         <Preference
-            android:key="button_logcat"
-            android:title="Show logcat" />
+            android:key="button_update"
+            android:title="Update hooks" />
 
     </PreferenceCategory>
 
