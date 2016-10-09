@@ -7,11 +7,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
 
 import java.util.ArrayList;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
@@ -29,19 +31,37 @@ public class Utils {
         return (Activity) callMethod(param.thisObject, "getActivity");
     }
 
-    public static int getDisplayHeight(){
+    public static void makeSnackbar(XC_MethodHook.MethodHookParam param, String message) {
+        try {
+            XposedHelpers.findMethodBestMatch(Class.forName("com.androidadvance.topsnackbar.TSnackbar"), "show")
+                .invoke(
+                    XposedHelpers.callStaticMethod(
+                        Class.forName("com.androidadvance.topsnackbar.TSnackbar"),
+                        "a",
+                        new Class[]{View.class, CharSequence.class, int.class},
+                        Utils
+                            .getActivity(param)
+                            .findViewById(
+                                Utils.getIdentifierById(param, "mainCoordinatorLayout"))
+                        , message, 1));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static int getDisplayHeight() {
         return Utils.getSystemContext().getResources().getDisplayMetrics().heightPixels;
     }
 
-    public static int getDisplayWidth(){
+    public static int getDisplayWidth() {
         return Utils.getSystemContext().getResources().getDisplayMetrics().widthPixels;
     }
 
-    public static Display getDefaultDisplay(){
-        return ((WindowManager)Utils.getSystemContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+    public static Display getDefaultDisplay() {
+        return ((WindowManager) Utils.getSystemContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
     }
 
-    public static int getIdentifierById(XC_MethodHook.MethodHookParam param , String id){
+    public static int getIdentifierById(XC_MethodHook.MethodHookParam param, String id) {
         return getActivity(param).getResources().getIdentifier(id, "id", "com.tellm.android.app");
     }
 

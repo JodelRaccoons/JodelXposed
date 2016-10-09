@@ -13,20 +13,11 @@ import android.widget.Toast;
 
 import com.jodelXposed.R;
 import com.jodelXposed.models.Beta;
-import com.jodelXposed.models.Hookvalues;
 import com.jodelXposed.models.Location;
 import com.jodelXposed.models.Theme;
 import com.jodelXposed.models.UDI;
-import com.jodelXposed.retrofit.Classes;
-import com.jodelXposed.retrofit.HooksResponse;
-import com.jodelXposed.retrofit.Methods;
-import com.jodelXposed.retrofit.RetrofitProvider;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Picker;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 @SuppressWarnings("deprecation")
 public class SettingsActivity extends AppCompatPreferenceActivity implements Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
@@ -63,39 +54,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity implements Pre
         findPreference("button_update").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                RetrofitProvider.getJodelXposedService().getHooks(Options.getInstance().getHooks().versionCode).enqueue(new Callback<HooksResponse>() {
-                    @Override
-                    public void onResponse(Call<HooksResponse> call, Response<HooksResponse> response) {
-                        Hookvalues hooks = Options.getInstance().getHooks();
-                        HooksResponse rhooks = response.body();
-                        Methods methods = rhooks.getMethods();
-                        Classes classes = rhooks.getClasses();
-                        hooks.BetaHook_UnlockFeatures = methods.getBetaHookUnlockFeatures();
-                        hooks.ImageHookValues_ImageView = methods.getImageHookValuesImageView();
-                        hooks.PostStuff_ColorField = methods.getPostStuffColorField();
-                        hooks.PostStuff_TrackPostsMethod = methods.getPostStuffTrackPostsMethod();
-                        hooks.Settings_AddEntriesMethod = methods.getSettingsAddEntriesMethod();
-                        hooks.Settings_HandleClickEventsMethod = methods.getSettingsHandleClickEventsMethod();
-                        hooks.Theme_GCMReceiverMethod = methods.getThemeGCMReceiverMethod();
-                        hooks.UDI_GetUdiMethod = methods.getUDIGetUdiMethod();
 
-                        hooks.Class_CreateTextPostFragment = classes.getClassCreateTextPostFragment();
-                        hooks.Class_MyGcmListenerService = classes.getClassMyGcmListenerService();
-                        hooks.Class_MyMenuPresenter = classes.getClassMyMenuPresenter();
-                        hooks.Class_PhotoEditFragment = classes.getClassPhotoEditFragment();
-                        hooks.Class_PostDetailRecyclerAdapter = classes.getClassPostDetailRecyclerAdapter();
-                        hooks.Class_Storage = classes.getClassStorage();
-                        hooks.Class_UniqueDeviceIdentifier = classes.getClassUniqueDeviceIdentifier();
-                        Options.getInstance().save();
-                        Toast.makeText(SettingsActivity.this, rhooks.getUpdatemessage(), Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<HooksResponse> call, Throwable t) {
-                        Toast.makeText(SettingsActivity.this, "Failed updating hooks, "+t.getLocalizedMessage()+" !", Toast.LENGTH_LONG).show();
-                        t.printStackTrace();
-                    }
-                });
                 return true;
             }
         });
