@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Jodel Xposed</string>
+    <string name="google_api_key">AIzaSyAFVzjW_nX6UTyeHPZz3xgRpOkoQ96WbUA</string>
     <string name="title_activity_share">Jodel Xposed</string>
     <string name="title_activity_settings">Jodel Xposed</string>
     <string name="title_choose_location">Choose your Location</string>
