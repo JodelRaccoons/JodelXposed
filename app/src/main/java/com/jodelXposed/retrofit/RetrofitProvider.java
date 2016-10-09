@@ -9,15 +9,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitProvider {
 
-    static Retrofit retrofit;
-    static JodelXposedService jodelXposedService;
+    private static JodelXposedService jodelXposedService;
 
     public static JodelXposedService getJodelXposedService() {
         return jodelXposedService;
     }
 
     static {
-        retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://api.spectre-app.de")
             .addConverterFactory(GsonConverterFactory.create())
             .build();

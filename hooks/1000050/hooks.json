@@ -1,0 +1,10 @@
+{
+"BetaHook_UnlockFeatures": "bp",
+"ImageHookValues_ImageView": "ayZ",
+"PostStuff_TrackPostsMethod": "a",
+"PostStuff_ColorField": "axJ",
+"Settings_AddEntriesMethod": "xh",
+"Settings_HandleClickEventsMethod": "a",
+"Theme_GCMReceiverMethod": "a",
+"UDI_GetUdiMethod": "za"
+}
