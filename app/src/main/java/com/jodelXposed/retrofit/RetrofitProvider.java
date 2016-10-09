@@ -17,7 +17,7 @@ public class RetrofitProvider {
 
     static {
         Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://api.spectre-app.de")
+            .baseUrl("https://raw.githubusercontent.com")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
