@@ -1,4 +1,4 @@
-package com.jodelXposed.activities;
+package com.jodelXposed;
 
 import android.Manifest;
 import android.app.Activity;

@@ -1,11 +1,11 @@
 package com.jodelXposed.utils;
 
 import com.jodelXposed.hooks.BetaStuff;
+import com.jodelXposed.hooks.GCMStuff;
 import com.jodelXposed.hooks.ImageStuff;
 import com.jodelXposed.hooks.LocationStuff;
 import com.jodelXposed.hooks.PostStuff;
 import com.jodelXposed.hooks.SettingsStuff;
-import com.jodelXposed.hooks.ThemeStuff;
 import com.jodelXposed.hooks.UniqueDeviceIdentifierStuff;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -79,12 +79,13 @@ public class Hooks {
         }
 
         try {
-            Log.dlog("#### Loading ThemeStuff hooks ####");
-            new ThemeStuff(lpparam);
-            Log.dlog("#### ThemeStuff hooks loaded! ####");
+            Log.dlog("#### Loading GCMStuff hooks ####");
+            new GCMStuff(lpparam);
+            Log.dlog("#### GCMStuff hooks loaded! ####");
         } catch (Throwable e) {
             e.printStackTrace();
-            Log.dlog("!!!! FAILED loading ThemeStuff hooks! !!!!\n\n");
+            Log.dlog("!!!! FAILED loading GCMStuff hooks! !!!!\n\n");
         }
+
     }
 }

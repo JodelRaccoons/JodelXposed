@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.jodelXposed.JXPreferenceActivity;
 import com.jodelXposed.models.Location;
 import com.schibstedspain.leku.LocationPickerActivity;
 
@@ -24,7 +25,7 @@ import java.io.InputStream;
 import static com.jodelXposed.utils.Log.xlog;
 
 
-public class Picker extends AppCompatActivity {
+public class Picker extends AppCompatActivity{
 
 
     private static final int GALLERY_REQUEST_CODE = 202;
@@ -60,14 +61,18 @@ public class Picker extends AppCompatActivity {
                 galleryPicker();
                 break;
             case 4:
-                syncHooks();
+                startActivity(new Intent(this, JXPreferenceActivity.class));
+                break;
             default:
                 finish();
         }
     }
 
-    private void syncHooks() {
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0, 0);
     }
 
     private void galleryPicker() {
@@ -136,5 +141,6 @@ public class Picker extends AppCompatActivity {
             }
         }
     }
+
 }
 

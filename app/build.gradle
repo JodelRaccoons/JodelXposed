@@ -48,13 +48,16 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'commons-io:commons-io:2.4'
-    compile 'com.schibstedspain.android:leku:2.0.0'
-    compile 'com.google.android.gms:play-services-maps:9.6.0'
-    compile 'com.google.android.gms:play-services-location:9.6.0'
+    compile 'com.schibstedspain.android:leku:2.2.0'
+    compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile 'com.google.android.gms:play-services-location:9.4.0'
     compile 'com.squareup.moshi:moshi:1.2.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.androidadvance:topsnackbar:1.1.1'
+    compile 'com.github.machinarius:preferencefragment:0.1.1'
+    compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 
 repositories {

@@ -7,7 +7,7 @@
     "Settings_AddEntriesMethod": "xt",
     "Settings_HandleClickEventsMethod": "a",
     "Theme_GCMReceiverMethod": "a",
-    "UDI_GetUdiMethod": "zh"
+    "UDI_GetUdiMethod": "zi"
   },
   "classes":{
     "Class_Storage": "com.jodelapp.jodelandroidv3.model.Storage",
@@ -18,5 +18,5 @@
     "Class_MyGcmListenerService": "com.jodelapp.jodelandroidv3.data.gcm.MyGcmListenerService",
     "Class_UniqueDeviceIdentifier": "com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier"
   },
-  "updatemessage":"Updated hooks for 100053 (4.22.1)"
+  "updatemessage":"Updated hooks for 1000054 (4.22.2)",
 }

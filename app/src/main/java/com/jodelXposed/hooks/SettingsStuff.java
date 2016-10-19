@@ -31,7 +31,9 @@ public class SettingsStuff {
             @SuppressWarnings("unchecked")
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                ((List) param.getResult()).add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedInfo", "XGeneral"));
+                ((List) param.getResult()).add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedLocation", "Change location"));
+                ((List) param.getResult()).add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedGeneralSettings", "JX Settings"));
+
             }
         });
 
@@ -44,10 +46,14 @@ public class SettingsStuff {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String selected = (String) getObjectField(param.args[0], "name");
 
-                if (selected.equalsIgnoreCase("xposedInfo"))
-                    getSystemContext().startActivity(getNewIntent("activities.SettingsActivity").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-
+                if (selected.equalsIgnoreCase("xposedLocation"))
+                    getSystemContext().startActivity(getNewIntent("utils.Picker").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION).putExtra("choice",1));
+                else if (selected.equalsIgnoreCase("xposedGeneralSettings"))
+                    getSystemContext().startActivity(getNewIntent("JXPreferenceActivity").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
             }
         });
     }
+
+
+
 }

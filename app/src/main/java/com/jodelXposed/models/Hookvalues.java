@@ -6,7 +6,7 @@ package com.jodelXposed.models;
 
 public class Hookvalues {
 
-    public int versionCode;
+    public int versionCode = 1;
 
     /*
     * package com.jodelapp.jodelandroidv3.model.Storage;

@@ -1,21 +1,22 @@
 package com.jodelXposed.hooks;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.jodelXposed.models.Hookvalues;
 import com.jodelXposed.utils.Log;
 import com.jodelXposed.utils.Options;
-import com.jodelXposed.utils.Utils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,8 +25,6 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
-import static android.R.layout.simple_list_item_1;
-import static com.jodelXposed.utils.Utils.Colors.Colors;
 import static com.jodelXposed.utils.Utils.getActivity;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
@@ -87,44 +86,64 @@ public class PostStuff {
             }
         });
 
-        /*
-         * Post-background color
-         * Instantiate a chooser button / dialog beside the Camera button
-         */
-        findAndHookMethod(hooks.Class_CreateTextPostFragment, lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
-            @SuppressWarnings("ResourceType")
+
+        findAndHookMethod("com.jodelapp.jodelandroidv3.view.PostDetailFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+                final SharedPreferences sharedPref = getActivity(param).getPreferences(Context.MODE_PRIVATE);
 
-                final Activity activity = getActivity(param);
-                final int id = Utils.getIdentifierById(param,"cameraButton");
+                final String postID = (String) XposedHelpers.getObjectField(param.thisObject,"postId");
 
-                final Button color = new Button(activity);
-                color.setText("Choose\ncolor");
-                color.setBackgroundColor(Color.TRANSPARENT);
-                color.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, simple_list_item_1, new String[]{"ORANGE", "YELLOW", "RED", "BLUE", "BLUEGRAYISH", "GREEN"});
-                        new AlertDialog.Builder(activity).setSingleChoiceItems(adapter, 0, new DialogInterface.OnClickListener() {
-                            @SuppressWarnings("ResourceType")
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Set background color
-                                ((View) ((View) param.getResult()).findViewById(id).getParent().getParent()).setBackgroundColor(Color.parseColor(Colors.get(which)));
-                                //set instance field
-                                XposedHelpers.setObjectField(param.thisObject, hooks.PostStuff_ColorField, Colors.get(which));
-                                dialog.dismiss();
+                final Switch sw = (Switch) ((View)param.getResult()).findViewWithTag("sw_gcm_notification");
+                sw.setVisibility(View.VISIBLE);
+                sw.setChecked(!Options.getInstance().getBetaObject().getNotificationList().contains(postID));
+
+                int color = 0;
+                try {
+                    color = Color.parseColor((String)getObjectField(param.thisObject,"ayf"));
+                    switchColor(sw,sw.isChecked(),color);
+                    final int finalColor = color;
+                    sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (!sharedPref.getBoolean("displayedNotificationExplanation", false)){
+                                showFeatureExplanation(sharedPref,param);
                             }
-                        }).show();
-                    }
-                });
-
-                LinearLayout linearLayout = (LinearLayout) ((View) param.getResult()).findViewById(id).getParent();
-                linearLayout.addView(color);
-                linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
+                            switchColor(sw,b, finalColor);
+                            if (b){
+                                Options.getInstance().getBetaObject().getNotificationList().remove(postID);
+                            }else{
+                                Options.getInstance().getBetaObject().getNotificationList().add(postID);
+                            }
+                            Options.getInstance().save();
+                        }
+                    });
+                }catch(IllegalArgumentException ignored){}
             }
         });
+
+    }
+
+    private void showFeatureExplanation(final SharedPreferences editor, XC_MethodHook.MethodHookParam param) {
+        new AlertDialog.Builder(getActivity(param))
+            .setTitle("You discovered a new Feature!")
+            .setMessage("You discovered a new JodelXposed feature, the disabling of notifications in single threads. So now you have the possibility to mute specific threads which get annoying.")
+            .setPositiveButton("Okay, dont display again", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    editor.edit().putBoolean("displayedNotificationExplanation", true).apply();
+                    dialogInterface.dismiss();
+                }
+            })
+            .setCancelable(false)
+            .show();
+    }
+
+    private void switchColor(Switch sw, boolean checked, int color) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            sw.getThumbDrawable().setColorFilter(checked ? color : Color.GRAY, PorterDuff.Mode.MULTIPLY);
+            sw.getTrackDrawable().setColorFilter(!checked ? color : Color.GRAY, PorterDuff.Mode.MULTIPLY);
+        }
+
     }
 }

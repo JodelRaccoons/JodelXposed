@@ -1,5 +1,5 @@
 
-package com.jodelXposed.retrofit;
+package com.jodelXposed.retrofit.Response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
