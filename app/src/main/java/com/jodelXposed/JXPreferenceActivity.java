@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.jodelXposed.models.Location;
-import com.jodelXposed.models.UDI;
 import com.jodelXposed.utils.Options;
 import com.mypopsy.maps.StaticMap;
 import com.squareup.picasso.Picasso;
@@ -28,7 +27,6 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
 
     final Options options = Options.getInstance();
     Location location = options.getLocationObject();
-    UDI udi = options.getUDIObject();
 
     @Override
     public void onCreate(Bundle paramBundle) {
@@ -52,18 +50,16 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
 
         addPreferencesFromResource(R.xml.jx_prefs);
         findPreference("switch_location").setOnPreferenceChangeListener(this);
-        findPreference("switch_udi").setOnPreferenceChangeListener(this);
-        findPreference("change_udi").setOnPreferenceChangeListener(this);
+        findPreference("change_location").setOnPreferenceChangeListener(this);
 
         ((SwitchPreference)findPreference("switch_location")).setChecked(location.isActive());
-        ((SwitchPreference)findPreference("switch_udi")).setChecked(udi.isActive());
     }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()){
-            case "change_udi":
-                editUDIDialog();
+            case "change_location":
+                changeLocation();
                 break;
             default:
                 break;
@@ -71,7 +67,8 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
         return true;
     }
 
-    private void editUDIDialog() {
+    private void changeLocation() {
+        // TODO: Open location dialog
     }
 
     @Override
@@ -79,10 +76,6 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
         switch (preference.getKey()){
             case "switch_location":
                 location.setActive(((SwitchPreference)preference).isChecked());
-                options.save();
-                break;
-            case "switch_udi":
-                udi.setActive(((SwitchPreference)preference).isChecked());
                 options.save();
                 break;
             default:
