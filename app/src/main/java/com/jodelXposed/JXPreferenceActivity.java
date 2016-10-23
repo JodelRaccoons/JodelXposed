@@ -1,17 +1,20 @@
 package com.jodelXposed;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.jodelXposed.models.Location;
 import com.jodelXposed.utils.Options;
+import com.jodelXposed.utils.Picker;
 import com.mypopsy.maps.StaticMap;
 import com.squareup.picasso.Picasso;
 
@@ -36,11 +39,12 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
         ImageView ivMap = (ImageView) findViewById(R.id.ivMap);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        final Drawable upArrow = getResources().getDrawable(R.drawable.abc_ic_ab_back_material);
-        upArrow.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+        if(getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_back_button);
+//        upArrow.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
-        toolbar.setTitleTextColor(Color.BLACK);
+        getSupportActionBar().setTitle("");
         try {
             Picasso.with(this).load(String.valueOf(map.toURL().toURI())).placeholder(R.drawable.progress_animation).into(ivMap);
         } catch (MalformedURLException | URISyntaxException e) {
@@ -50,7 +54,7 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
 
         addPreferencesFromResource(R.xml.jx_prefs);
         findPreference("switch_location").setOnPreferenceChangeListener(this);
-        findPreference("change_location").setOnPreferenceChangeListener(this);
+        findPreference("change_location").setOnPreferenceClickListener(this);
 
         ((SwitchPreference)findPreference("switch_location")).setChecked(location.isActive());
     }
@@ -59,16 +63,12 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()){
             case "change_location":
-                changeLocation();
+                startActivity(new Intent(this, Picker.class).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION).putExtra("choice",1));
                 break;
             default:
                 break;
         }
         return true;
-    }
-
-    private void changeLocation() {
-        // TODO: Open location dialog
     }
 
     @Override
