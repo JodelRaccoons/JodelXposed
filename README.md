@@ -3,6 +3,20 @@ Jodel Enhancements
 
 This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR0Flqx9M8) to add features to [Jodel](https://jodel-app.com/).
 
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
+
+- [Jodel Enhancements](#)
+	- [Install](#)
+	- [Features](#)
+		- [Upload custom images](#)
+		- [Increased control over account](#)
+	- [OTA Hook updates](#)
+	- [How can i help / update the hooks?](#)
+	- [Version compatibility](#)
+	- [Support](#)
+	- [Contributions](#)
+- [Special thanks](#)
+
 ## Install
 1. Install via the Xposed Installer
 2. Disable automatic Jodel updates via Play Store
