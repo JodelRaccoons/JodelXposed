@@ -31,7 +31,7 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
     @Override
     public void onCreate(Bundle paramBundle) {
         super.onCreate(paramBundle);
-        Location location = options.getLocationObject();
+        Location location = options.getLocation();
         setContentView(R.layout.layout_jx_prefs);
         StaticMap map = new StaticMap().marker(location.getLat(),location.getLng()).size(1280, 480);
         ImageView ivMap = (ImageView) findViewById(R.id.ivMap);
@@ -74,7 +74,7 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
         switch (preference.getKey()){
             case "switch_location":
                 if(newValue instanceof Boolean){
-                    options.getLocationObject().setActive((Boolean)newValue);
+                    options.getLocation().setActive((Boolean)newValue);
                 }
                 options.save();
                 break;

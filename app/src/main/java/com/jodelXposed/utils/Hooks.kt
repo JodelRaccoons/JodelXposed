@@ -6,14 +6,11 @@ import com.jodelXposed.hooks.LocationStuff
 import com.jodelXposed.hooks.PostStuff
 import com.jodelXposed.hooks.SettingsStuff
 import com.jodelXposed.hooks.UniqueDeviceIdentifierStuff
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 
-import de.robv.android.xposed.callbacks.XC_LoadPackage
-
-class Hooks(private val loadPackageParam: XC_LoadPackage.LoadPackageParam) {
+class Hooks(private val lpparam: LoadPackageParam) {
 
     fun hook() {
-        val lpparam = loadPackageParam
-
         try {
             Log.dlog("#### Loading BetaStuff hooks ####")
             BetaStuff(lpparam)
@@ -67,6 +64,5 @@ class Hooks(private val loadPackageParam: XC_LoadPackage.LoadPackageParam) {
             e.printStackTrace()
             Log.dlog("!!!! FAILED loading UniqueDeviceIdentifierStuff hooks! !!!!\n\n")
         }
-
     }
 }

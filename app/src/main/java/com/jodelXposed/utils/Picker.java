@@ -81,7 +81,7 @@ public class Picker extends AppCompatActivity{
     }
 
     private void startLocationPicker() {
-        Location location = Options.INSTANCE.getLocationObject();
+        Location location = Options.INSTANCE.getLocation();
         Intent intent = new Intent(this, LocationPickerActivity.class);
         intent.putExtra(LocationPickerActivity.LATITUDE, location.getLat());
         intent.putExtra(LocationPickerActivity.LONGITUDE, location.getLng());
@@ -102,8 +102,8 @@ public class Picker extends AppCompatActivity{
             switch (requestCode){
                 case PLACEPICKER_REQUEST_CODE:
                     Options op = Options.INSTANCE;
-                    op.getLocationObject().setLat(data.getDoubleExtra(LocationPickerActivity.LATITUDE, 0));
-                    op.getLocationObject().setLng(data.getDoubleExtra(LocationPickerActivity.LONGITUDE, 0));
+                    op.getLocation().setLat(data.getDoubleExtra(LocationPickerActivity.LATITUDE, 0));
+                    op.getLocation().setLng(data.getDoubleExtra(LocationPickerActivity.LONGITUDE, 0));
                     op.save();
                     Toast.makeText(Picker.this, "Success, please refresh your feed!", Toast.LENGTH_LONG).show();
                     break;

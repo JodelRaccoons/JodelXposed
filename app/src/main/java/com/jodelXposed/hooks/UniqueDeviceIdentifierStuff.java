@@ -21,7 +21,7 @@ public class UniqueDeviceIdentifierStuff {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String realUDI = (String) param.getResult();
-                UDI udiOptions = Options.INSTANCE.getUDIObject();
+                UDI udiOptions = Options.INSTANCE.getUdi();
                 if (udiOptions.getUdi().length() == 0) {
                     udiOptions.setUdi(realUDI);
                     xlog("Backing up UDI");

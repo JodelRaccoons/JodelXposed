@@ -13,12 +13,12 @@ import java.io.IOException
 
 object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
 
-    private val moshi = Moshi.Builder().build()
-    private val jsonAdapter = moshi.adapter<OptionsObject>(OptionsObject::class.java)
+    private val jsonAdapter = Moshi.Builder().build().adapter<OptionsObject>(OptionsObject::class.java)
     private val settingsFile = File(SettingsPath)
     private var options = OptionsObject()
 
     init {
+        xlog("Init options")
         if (!settingsFile.exists())
             save()
         else
@@ -43,20 +43,12 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
         try {
             val json = FileUtils.readFileToString(settingsFile, org.apache.commons.io.Charsets.UTF_8)
             xlog("Loading json from settings")
-            xlog(json)
             options = jsonAdapter.fromJson(json)
-
         } catch (e: IOException) {
             xlog("Could not load options file")
         }
 
     }
-
-    fun getHooks() = options.hooks
-
-    fun getLocationObject() = options.location
-
-    fun getUDIObject() = options.udi
 
     fun resetLocation() {
         // TODO: Consider this
@@ -64,8 +56,12 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
 
     override fun onEvent(event: Int, path: String?) = load()
 
+    val udi: UDI get() = options.udi
+    val location: Location get() = options.location
+    val hooks: Hookvalues get() = options.hooks
+
     /**
      * The JSON conversion object
      */
-    private class OptionsObject(val udi: UDI = UDI(), val location: Location = Location(), val hooks: Hookvalues = Hookvalues())
+    class OptionsObject(var udi: UDI = UDI(), var location: Location = Location(), var hooks: Hookvalues = Hookvalues())
 }
