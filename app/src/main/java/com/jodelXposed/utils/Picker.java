@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.location.Address;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -54,7 +53,7 @@ public class Picker extends AppCompatActivity{
                 startLocationPicker();
                 break;
             case 2:
-                Options.getInstance().resetLocation();
+                Options.INSTANCE.resetLocation();
                 finish();
                 break;
             case 3:
@@ -82,7 +81,7 @@ public class Picker extends AppCompatActivity{
     }
 
     private void startLocationPicker() {
-        Location location = Options.getInstance().getLocationObject();
+        Location location = Options.INSTANCE.getLocationObject();
         Intent intent = new Intent(this, LocationPickerActivity.class);
         intent.putExtra(LocationPickerActivity.LATITUDE, location.getLat());
         intent.putExtra(LocationPickerActivity.LONGITUDE, location.getLng());
@@ -102,7 +101,7 @@ public class Picker extends AppCompatActivity{
         if (resultCode == Activity.RESULT_OK){
             switch (requestCode){
                 case PLACEPICKER_REQUEST_CODE:
-                    Options op = Options.getInstance();
+                    Options op = Options.INSTANCE;
                     op.getLocationObject().setLat(data.getDoubleExtra(LocationPickerActivity.LATITUDE, 0));
                     op.getLocationObject().setLng(data.getDoubleExtra(LocationPickerActivity.LONGITUDE, 0));
                     op.save();

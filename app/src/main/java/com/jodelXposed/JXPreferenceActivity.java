@@ -19,8 +19,6 @@ import com.squareup.picasso.Picasso;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
-import static com.jodelXposed.utils.Log.xlog;
-
 /**
  * Created by Admin on 14.10.2016.
  */
@@ -28,7 +26,7 @@ import static com.jodelXposed.utils.Log.xlog;
 @SuppressWarnings("deprecation")
 public class JXPreferenceActivity extends AppCompatPreferenceActivity implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
 
-    final Options options = Options.getInstance();
+    final Options options = Options.INSTANCE;
 
     @Override
     public void onCreate(Bundle paramBundle) {
@@ -56,7 +54,7 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
         findPreference("switch_location").setOnPreferenceChangeListener(this);
         findPreference("change_location").setOnPreferenceClickListener(this);
 
-        ((SwitchPreference)findPreference("switch_location")).setChecked(location.isActive());
+        ((SwitchPreference)findPreference("switch_location")).setChecked(location.getActive());
     }
 
     @Override

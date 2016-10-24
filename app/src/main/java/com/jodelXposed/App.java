@@ -61,7 +61,7 @@ public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit {
                 xlog("Information cannot be gathered");
             }
             try {
-                Options.getInstance();
+                Options.INSTANCE.load();
             }catch (Exception e){
                 e.printStackTrace();
                 xlog("Options cannot be loaded");
@@ -76,7 +76,7 @@ public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit {
                 checkPermissions();
             }
 
-            if (Options.getInstance().getHooks().versionCode!=pkgInfo.versionCode){
+            if (Options.INSTANCE.getHooks().versionCode!=pkgInfo.versionCode){
                 updateHooks(pkgInfo.versionCode);
             }
 
@@ -94,7 +94,7 @@ public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit {
 
 
     private void updateHooks(final int versionCode) {
-        final Hookvalues hooks = Options.getInstance().getHooks();
+        final Hookvalues hooks = Options.INSTANCE.getHooks();
 
         RetrofitProvider.getJodelXposedService().getHooks(versionCode).enqueue(new Callback<HooksResponse>() {
             @Override
@@ -121,11 +121,11 @@ public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit {
                     hooks.Class_Storage = classes.getClassStorage();
                     hooks.Class_UniqueDeviceIdentifier = classes.getClassUniqueDeviceIdentifier();
                     //Success updating hooks, lets update the local version code
-                    Options.getInstance().getHooks().versionCode = versionCode;
+                    Options.INSTANCE.getHooks().versionCode = versionCode;
 
                     Toast.makeText(getSystemContext(), rhooks.getUpdatemessage()+" Please soft-reboot your device!", Toast.LENGTH_LONG).show();
 
-                    Options.getInstance().save();
+                    Options.INSTANCE.save();
                 }catch (Exception e){
                     Toast.makeText(getSystemContext(), "Your Jodel version isnt supported by JodelXposed yet.", Toast.LENGTH_LONG).show();
                     e.printStackTrace();

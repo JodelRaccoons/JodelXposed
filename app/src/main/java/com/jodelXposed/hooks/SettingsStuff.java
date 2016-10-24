@@ -21,7 +21,7 @@ public class SettingsStuff {
 
     public SettingsStuff(final XC_LoadPackage.LoadPackageParam lpparam) {
 
-        Hookvalues hooks = Options.getInstance().getHooks();
+        Hookvalues hooks = Options.INSTANCE.getHooks();
 
         /*
          * Add JodelXposed entries in ListView
@@ -41,7 +41,7 @@ public class SettingsStuff {
          * Add JodelXposed entries in ListView - Handle clicks on Items
          * Seamless integration #2
          */
-        findAndHookMethod(hooks.Class_MyMenuPresenter, lpparam.classLoader, Options.getInstance().getHooks().Settings_HandleClickEventsMethod, "com.jodelapp.jodelandroidv3.view.MyMenuItem", new XC_MethodHook() {
+        findAndHookMethod(hooks.Class_MyMenuPresenter, lpparam.classLoader, hooks.Settings_HandleClickEventsMethod, "com.jodelapp.jodelandroidv3.view.MyMenuItem", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 String selected = (String) getObjectField(param.args[0], "name");

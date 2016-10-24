@@ -19,7 +19,7 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 public class PostStuff {
 
     public PostStuff(XC_LoadPackage.LoadPackageParam lpparam) {
-        final Hookvalues hooks = Options.getInstance().getHooks();
+        final Hookvalues hooks = Options.INSTANCE.getHooks();
 
         /*
          * Track posts #1
