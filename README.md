@@ -3,8 +3,6 @@ Jodel Enhancements
 
 This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR0Flqx9M8) to add features to [Jodel](https://jodel-app.com/).
 
-**Table of Contents**
-
 - [Install](#)
 - [Features](#)
 	- [Upload custom images](#)
