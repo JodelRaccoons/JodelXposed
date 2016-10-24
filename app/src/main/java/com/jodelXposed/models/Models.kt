@@ -1,5 +1,9 @@
 package com.jodelXposed.models
 
+class Location(var active: Boolean = false, var lat: Double = 0.0, var lng: Double = 0.0)
+
+class UDI(var active: Boolean = true, var udi: String = "")
+
 class Hookvalues {
 
     @JvmField var versionCode = 1
