@@ -25,6 +25,23 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
 - The UID can be manually changed to change account
 - **PS**: Clear all Jodel app data after changing the UID
 
+### OTA Hook updates
+- When Jodel is updated (version code change) JodelXposed is requesting a new hooks.json file from the Github repository
+
+What the user needs to do for it to work:
+
+1. When your Jodel was updated, JX will search automatically for new hooks. 
+2. In case someone already has pushed new hooks to the github repo, you will get a toast message that your hooks have been updated and you should soft-reboot your device.
+3. If up-to-date hooks arent available you will get an error message and you'll have to wait for it (or update it by yourself). 
+4. Profit.
+
+JX will search for new hooks when starting Jodel.
+
+### How can i help / update the hooks? 
+If you want to help the development you just can make a pull request containing a new hooks.json in a folder with a matching version code. You can find the version code folders in here: https://github.com/krokofant/JodelXposed/tree/master/hooks . 
+
+If you need help with finding the hooks (methods / fields) you should take a look at [the hookvalue object](https://github.com/krokofant/JodelXposed/blob/master/app/src/main/java/com/jodelXposed/models/Models.kt) , in there you can find for every method/field a brief explanation where it should be located and how to find the right one.
+
 ## Version compatibility
 The module aims for compatibility with the latest Jodel version. Jodel apks are usually linked in [the thread on XDA](http://forum.xda-developers.com/xposed/modules/mod-jodelxposed-enhancements-t3350019/).
 
