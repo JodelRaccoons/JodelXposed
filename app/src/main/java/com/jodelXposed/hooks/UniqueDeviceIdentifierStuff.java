@@ -25,7 +25,7 @@ public class UniqueDeviceIdentifierStuff {
                     Options.getInstance().save();
                 }
                 if (udiOptions.active) {
-                    if (udiOptions.udi.equals(realUDI)) {
+                    if (udiOptions.udi.equals(realUDI) || udiOptions.udi.length() == 0) {
                         xlog("Using real UDI");
                     } else {
                         String spoofUDI = udiOptions.udi;

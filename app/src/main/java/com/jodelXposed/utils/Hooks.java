@@ -1,7 +1,6 @@
 package com.jodelXposed.utils;
 
 import com.jodelXposed.hooks.BetaStuff;
-import com.jodelXposed.hooks.GCMStuff;
 import com.jodelXposed.hooks.ImageStuff;
 import com.jodelXposed.hooks.LocationStuff;
 import com.jodelXposed.hooks.PostStuff;
@@ -77,15 +76,5 @@ public class Hooks {
             e.printStackTrace();
             Log.dlog("!!!! FAILED loading UniqueDeviceIdentifierStuff hooks! !!!!\n\n");
         }
-
-        try {
-            Log.dlog("#### Loading GCMStuff hooks ####");
-            new GCMStuff(lpparam);
-            Log.dlog("#### GCMStuff hooks loaded! ####");
-        } catch (Throwable e) {
-            e.printStackTrace();
-            Log.dlog("!!!! FAILED loading GCMStuff hooks! !!!!\n\n");
-        }
-
     }
 }

@@ -105,10 +105,6 @@ public class Picker extends AppCompatActivity{
                     Options op = Options.getInstance();
                     op.getLocationObject().setLat(data.getDoubleExtra(LocationPickerActivity.LATITUDE, 0));
                     op.getLocationObject().setLng(data.getDoubleExtra(LocationPickerActivity.LONGITUDE, 0));
-                    Address fullAddress = data.getParcelableExtra(LocationPickerActivity.ADDRESS);
-                    op.getLocationObject().setCity(fullAddress.getLocality());
-                    op.getLocationObject().setCountry(fullAddress.getCountryName());
-                    op.getLocationObject().setCountryCode(fullAddress.getCountryCode());
                     op.save();
                     Toast.makeText(Picker.this, "Success, please refresh your feed!", Toast.LENGTH_LONG).show();
                     break;

@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.widget.Toast;
 
-import com.jodelXposed.hooks.LayoutHooks;
 import com.jodelXposed.models.Hookvalues;
 import com.jodelXposed.retrofit.Response.Classes;
 import com.jodelXposed.retrofit.Response.HooksResponse;
@@ -16,10 +15,8 @@ import com.jodelXposed.retrofit.RetrofitProvider;
 import com.jodelXposed.utils.Hooks;
 import com.jodelXposed.utils.Options;
 
-import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.IXposedHookZygoteInit;
-import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,7 +27,7 @@ import static com.jodelXposed.utils.Log.xlog;
 import static com.jodelXposed.utils.Utils.getNewIntent;
 import static com.jodelXposed.utils.Utils.getSystemContext;
 
-public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit, IXposedHookInitPackageResources {
+public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit {
 
     public static String MODULE_PATH = null;
 
@@ -147,13 +144,5 @@ public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit, IXpose
     @Override
     public void initZygote(StartupParam startupParam) throws Throwable {
         MODULE_PATH = startupParam.modulePath;
-    }
-
-    @Override
-    public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam resparam) throws Throwable {
-        if (!resparam.packageName.equals("com.tellm.android.app"))
-                      return;
-        xlog("Adding resources");
-        new LayoutHooks(resparam);
     }
 }

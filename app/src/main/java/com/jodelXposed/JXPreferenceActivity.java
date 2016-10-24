@@ -1,8 +1,6 @@
 package com.jodelXposed;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -21,6 +19,8 @@ import com.squareup.picasso.Picasso;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
+import static com.jodelXposed.utils.Log.xlog;
+
 /**
  * Created by Admin on 14.10.2016.
  */
@@ -29,11 +29,11 @@ import java.net.URISyntaxException;
 public class JXPreferenceActivity extends AppCompatPreferenceActivity implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
 
     final Options options = Options.getInstance();
-    Location location = options.getLocationObject();
 
     @Override
     public void onCreate(Bundle paramBundle) {
         super.onCreate(paramBundle);
+        Location location = options.getLocationObject();
         setContentView(R.layout.layout_jx_prefs);
         StaticMap map = new StaticMap().marker(location.getLat(),location.getLng()).size(1280, 480);
         ImageView ivMap = (ImageView) findViewById(R.id.ivMap);
@@ -75,7 +75,9 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
     public boolean onPreferenceChange(Preference preference, Object newValue) {
         switch (preference.getKey()){
             case "switch_location":
-                location.setActive(((SwitchPreference)preference).isChecked());
+                if(newValue instanceof Boolean){
+                    options.getLocationObject().setActive((Boolean)newValue);
+                }
                 options.save();
                 break;
             default:

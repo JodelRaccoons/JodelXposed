@@ -2,10 +2,8 @@ package com.jodelXposed.utils;
 
 import android.os.FileObserver;
 
-import com.jodelXposed.models.Beta;
 import com.jodelXposed.models.Hookvalues;
 import com.jodelXposed.models.Location;
-import com.jodelXposed.models.Theme;
 import com.jodelXposed.models.UDI;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
@@ -67,14 +65,6 @@ public class Options extends FileObserver {
         return this.options.udi;
     }
 
-    public Beta getBetaObject(){
-        return this.options.beta;
-    }
-
-    public Theme getThemeObject(){
-        return this.options.theme;
-    }
-
     private void writeFile()  {
         String settingsJson = jsonAdapter.toJson(options);
         try {
@@ -97,28 +87,16 @@ public class Options extends FileObserver {
         try {
             String json = FileUtils.readFileToString(settingsFile, Charsets.UTF_8);
             options = jsonAdapter.fromJson(json);
-//            if (!options.udi.getUdis().containsKey("default")){
-//                options.udi.getUdis().put("default",options.udi.getUdi());
-//            }
 
             dlog(
-                    "++++ Beta: ++++"
-                        + "\nEnabled: " + options.beta.isActive()
-
-                        + "\n++++ Location: ++++"
+                        "++++ Location: ++++"
                         + "\nEnabled: " + options.location.isActive()
-                        + "\nCountry: " + options.location.getCountry()
-                        + "\nCountrycode: " + options.location.getCountryCode()
-                        + "\nCity: " + options.location.getCity()
                         + "\nLatitude: " + options.location.getLat()
                         + "\nLongitude: " + options.location.getLng()
 
                         + "\n++++ UDI: ++++"
                         + "\nEnabled: " + options.udi.isActive()
                         + "\nUDI: " + options.udi.getUdi()
-
-                        + "\n++++ THEME: ++++"
-                        + "\nEnabled: " + options.theme.isActive()
             );
 
         } catch (IOException e) {
@@ -133,8 +111,6 @@ public class Options extends FileObserver {
     public static class OptionsObject {
         public UDI udi = new UDI();
         public Location location = new Location();
-        public Beta beta = new Beta();
-        public Theme theme = new Theme();
         public Hookvalues hookvalues = new Hookvalues();
     }
 

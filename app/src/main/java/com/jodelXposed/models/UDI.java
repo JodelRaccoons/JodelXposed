@@ -2,7 +2,7 @@ package com.jodelXposed.models;
 
 public class UDI {
 
-    public boolean active = false;
+    public boolean active = true;
     public String udi = "";
 
     public boolean isActive() {

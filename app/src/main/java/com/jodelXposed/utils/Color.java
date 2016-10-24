@@ -1,7 +1,5 @@
 package com.jodelXposed.utils;
 
-import com.jodelXposed.models.Theme;
-
 public class Color {
     public static boolean compareColor(String color, String color2) {
         return normalizeColor(color).equalsIgnoreCase(normalizeColor(color2));
@@ -40,22 +38,6 @@ public class Color {
         if (color.length() == 9) {
             color = color.substring(0, 1) + color.substring(3, 9);
         }
-        return color;
-    }
-
-    /**
-     * Get the replacement color
-     * @param color a normalized color
-     * @return
-     */
-    public static String getReplacementColor(String color) {
-        Theme t = Options.getInstance().getThemeObject();
-        if (color.equalsIgnoreCase(normalizeColor(Utils.Colors.Colors.get(0)))) return t.orange;
-        else if (color.equalsIgnoreCase(normalizeColor(Utils.Colors.Colors.get(1)))) return t.yellow;
-        else if (color.equalsIgnoreCase(normalizeColor(Utils.Colors.Colors.get(2)))) return t.red;
-        else if (color.equalsIgnoreCase(normalizeColor(Utils.Colors.Colors.get(3)))) return t.blue;
-        else if (color.equalsIgnoreCase(normalizeColor(Utils.Colors.Colors.get(4)))) return t.bluegrayish;
-        else if (color.equalsIgnoreCase(normalizeColor(Utils.Colors.Colors.get(5)))) return t.green;
         return color;
     }
 }
