@@ -68,6 +68,12 @@ The latest supported Jodel version is noted [here](https://github.com/krokofant/
 * Are you sure your version is compatible?
 * Have you read [the thread on XDA](http://forum.xda-developers.com/xposed/modules/mod-jodelxposed-enhancements-t3350019/)?
 
+### You dont have Google play services? No problem!
+Just edit the file file /sdcard/.jodel-settings-v2 and edit your lat/lng coordinates manually.
+```json
+"location":{"active":true,"lat":52.5200066,"lng":13.404954}
+```
+
 ## Contributions
 Pull requests are welcome if you would like to provide additional features or just update the hooks.
 
