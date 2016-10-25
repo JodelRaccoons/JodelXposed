@@ -1,6 +1,6 @@
 package com.jodelXposed.models
 
-data class Location(@JvmField var active: Boolean = false, var lat: Double = 0.0, var lng: Double = 0.0)
+data class Location(var active: Boolean = false, var lat: Double = 0.0, var lng: Double = 0.0)
 
 data class UDI(var active: Boolean = true, var udi: String = "")
 
