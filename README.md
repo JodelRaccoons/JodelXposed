@@ -13,6 +13,7 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
     + [How can i help / update the hooks?](#how-can-i-help--update-the-hooks)
   * [Version compatibility](#version-compatibility)
   * [Support](#support)
+    + [You dont have Google play services? No problem!](#you-dont-have-google-play-services-no-problem)
   * [Contributions](#contributions)
 - [Special thanks](#special-thanks)
 
