@@ -22,7 +22,7 @@ public class PostStuff {
         final Hookvalues hooks = Options.INSTANCE.getHooks();
 
         /*
-         * Track posts #1
+         * Track posts #1P
          * Set additional data on the TimeView of each Post to track the
          * user_handle / poster
          * Apply darker shade to OP's posts in a thread
@@ -34,7 +34,7 @@ public class PostStuff {
                 List posts = (List) getObjectField(param.thisObject, "posts");
                 HashMap<String, String> ids = new HashMap<>(posts.size());
 
-                Log.dlog("Postsize: " + posts.size());
+                Log.xlog("Postsize: " + posts.size());
 
                 for (Object post : posts) {
                     String user_handle = (String) getObjectField(post, "userHandle");
@@ -42,7 +42,7 @@ public class PostStuff {
                         ids.put(user_handle, String.valueOf(ids.size()));
                     }
                     setAdditionalInstanceField(post, "updateExtraPost", ids.get(user_handle));
-                    Log.dlog("User handle: " + user_handle + " Id: " + ids.get(user_handle));
+                    Log.xlog("User handle: " + user_handle + " Id: " + ids.get(user_handle));
                 }
 
                 try {

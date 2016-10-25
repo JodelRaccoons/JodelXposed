@@ -22,7 +22,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.jodelXposed.utils.Log.dlog;
 import static com.jodelXposed.utils.Log.xlog;
 import static com.jodelXposed.utils.Utils.getNewIntent;
 import static com.jodelXposed.utils.Utils.getSystemContext;
@@ -43,7 +42,7 @@ public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit {
             final PackageInfo pkgInfo = getSystemContext().getPackageManager().getPackageInfo(lpparam.packageName, 0);
 
             try {
-                dlog(String.format("----------%n" +
+                xlog(String.format("----------%n" +
                         "Starting JodelXposed%n" +
                         "Version %s (%d)%n" +
                         "JodelTarget %s (%d)%n" +
@@ -69,7 +68,7 @@ public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit {
 
             Hooks hooks = new Hooks(lpparam);
 
-            dlog("#### Loading hooks ####");
+            xlog("#### Loading hooks ####");
             hooks.hook();
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

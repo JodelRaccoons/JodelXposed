@@ -61,7 +61,7 @@ public class ImageStuff {
                 final FileObserver imageFileObserver = new FileObserver(jodelImagePath, CLOSE_WRITE) {
                     @Override
                     public void onEvent(int i, String s) {
-                        Log.dlog("File Observer issued, loading image");
+                        Log.xlog("File Observer issued, loading image");
                         loadImage(loadBitmap(), param);
                         this.stopWatching();
                     }

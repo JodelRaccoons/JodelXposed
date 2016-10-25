@@ -12,57 +12,57 @@ class Hooks(private val lpparam: LoadPackageParam) {
 
     fun hook() {
         try {
-            Log.dlog("#### Loading BetaStuff hooks ####")
+            Log.xlog("#### Loading BetaStuff hooks ####")
             BetaStuff(lpparam)
-            Log.dlog("#### BetaStuff hooks loaded! ####")
+            Log.xlog("#### BetaStuff hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.dlog("!!!! FAILED loading BetaStuff hooks! !!!!\n\n")
+            Log.xlog("!!!! FAILED loading BetaStuff hooks! !!!!\n\n")
         }
 
         try {
-            Log.dlog("#### Loading ImageStuff hooks ####")
+            Log.xlog("#### Loading ImageStuff hooks ####")
             ImageStuff(lpparam)
-            Log.dlog("#### ImageStuff hooks loaded! ####")
+            Log.xlog("#### ImageStuff hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.dlog("!!!! FAILED loading ImageStuff hooks! !!!!\n" + "\n")
+            Log.xlog("!!!! FAILED loading ImageStuff hooks! !!!!\n" + "\n")
         }
 
         try {
-            Log.dlog("#### Loading LocationStuff hooks ####")
+            Log.xlog("#### Loading LocationStuff hooks ####")
             LocationStuff(lpparam)
-            Log.dlog("#### LocationStuff hooks loaded! ####")
+            Log.xlog("#### LocationStuff hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.dlog("!!!! FAILED loading LocationStuff hooks! !!!!\n" + "\n")
+            Log.xlog("!!!! FAILED loading LocationStuff hooks! !!!!\n" + "\n")
         }
 
         try {
-            Log.dlog("#### Loading PostStuff hooks ####")
+            Log.xlog("#### Loading PostStuff hooks ####")
             PostStuff(lpparam)
-            Log.dlog("#### PostStuff hooks loaded! ####")
+            Log.xlog("#### PostStuff hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.dlog("!!!! FAILED loading PostStuff hooks! !!!!\n" + "\n")
+            Log.xlog("!!!! FAILED loading PostStuff hooks! !!!!\n" + "\n")
         }
 
         try {
-            Log.dlog("#### Loading SettingsStuff hooks ####")
+            Log.xlog("#### Loading SettingsStuff hooks ####")
             SettingsStuff(lpparam)
-            Log.dlog("#### SettingsStuff hooks loaded! ####")
+            Log.xlog("#### SettingsStuff hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.dlog("!!!! FAILED loading SettingsStuff hooks! !!!!\n\n")
+            Log.xlog("!!!! FAILED loading SettingsStuff hooks! !!!!\n\n")
         }
 
         try {
-            Log.dlog("#### Loading UniqueDeviceIdentifierStuff hooks ####")
+            Log.xlog("#### Loading UniqueDeviceIdentifierStuff hooks ####")
             UniqueDeviceIdentifierStuff(lpparam)
-            Log.dlog("#### UniqueDeviceIdentifierStuff hooks loaded! ####")
+            Log.xlog("#### UniqueDeviceIdentifierStuff hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.dlog("!!!! FAILED loading UniqueDeviceIdentifierStuff hooks! !!!!\n\n")
+            Log.xlog("!!!! FAILED loading UniqueDeviceIdentifierStuff hooks! !!!!\n\n")
         }
     }
 }
