@@ -3,16 +3,20 @@ Jodel Enhancements
 
 This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR0Flqx9M8) to add features to [Jodel](https://jodel-app.com/).
 
-- [Install](#)
-- [Features](#)
-	- [Upload custom images](#)
-	- [Increased control over account](#)
-- [OTA Hook updates](#)
-- [How can i help / update the hooks?](#)
-- [Version compatibility](#)
-- [Support](#)
-- [Contributions](#)
-- [Special thanks](#)
+<!-- toc -->
+
+  * [Install](#install)
+  * [Features](#features)
+    + [Upload custom images](#upload-custom-images)
+    + [Increased control over account](#increased-control-over-account)
+    + [OTA Hook updates](#ota-hook-updates)
+    + [How can i help / update the hooks?](#how-can-i-help--update-the-hooks)
+  * [Version compatibility](#version-compatibility)
+  * [Support](#support)
+  * [Contributions](#contributions)
+- [Special thanks](#special-thanks)
+
+<!-- tocstop -->
 
 ## Install
 1. Install via the Xposed Installer
