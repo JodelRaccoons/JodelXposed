@@ -11,5 +11,6 @@
   "Class_PhotoEditFragment": "com.jodelapp.jodelandroidv3.view.PhotoEditFragment",
   "Class_PostDetailRecyclerAdapter": "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter",
   "Class_MyMenuPresenter": "com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter",
-  "Class_UniqueDeviceIdentifier": "com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier"
+  "Class_UniqueDeviceIdentifier": "com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier",
+  "Class_LocationChangeListener": "com.jodelapp.jodelandroidv3.data.googleservices.location.LocationUpdatesOnSubscribe$$Lambda$1"
 }
