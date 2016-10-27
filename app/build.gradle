@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 
 project.ext {
     versionCode = 17
-    versionName = "2.0.1"
+    versionName = "2.1.0"
     jodelVersionCode = 1000062
     jodelVersionName = "4.24.2"
 }
