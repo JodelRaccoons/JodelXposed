@@ -76,7 +76,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
                     xlog("Could not read asset")
                     ex.printStackTrace()
                 }
-            } else {
+            } else if (pkgInfo.versionCode != Options.hooks.versionCode) {
                 updateHooks(pkgInfo.versionCode)
             }
 
