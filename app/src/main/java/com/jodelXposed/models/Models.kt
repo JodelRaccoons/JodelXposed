@@ -19,8 +19,8 @@ data class HookValues(
         * modifier: public
         * search term: features
         * */
-        @JvmField @Expose var Class_Storage: String,
-        @JvmField @Expose var Method_BetaHook_UnlockFeatures: String,
+        @JvmField @Expose var Class_Storage: String = "",
+        @JvmField @Expose var Method_BetaHook_UnlockFeatures: String = "",
 
         /*
         * package com.jodelapp.jodelandroidv3.view.PhotoEditFragment;
@@ -28,8 +28,8 @@ data class HookValues(
         * class: ImageView.class
         * search term: setImageBitmap
         * */
-        @JvmField @Expose var Class_PhotoEditFragment: String,
-        @JvmField @Expose var Method_ImageHookValues_ImageView: String,
+        @JvmField @Expose var Class_PhotoEditFragment: String = "",
+        @JvmField @Expose var Method_ImageHookValues_ImageView: String = "",
 
         /*
         * package com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter;
@@ -40,8 +40,8 @@ data class HookValues(
         * modifier: public
         * search term:  postViewHolder.AP();
         * */
-        @JvmField @Expose var Class_PostDetailRecyclerAdapter: String,
-        @JvmField @Expose var Method_PostStuff_TrackPostsMethod: String,
+        @JvmField @Expose var Class_PostDetailRecyclerAdapter: String = "",
+        @JvmField @Expose var Method_PostStuff_TrackPostsMethod: String = "",
 
         /*
         * package com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter;
@@ -60,9 +60,9 @@ data class HookValues(
         *       modifier: public
         *       search term: String str = myMenuItem.name;
         * */
-        @JvmField @Expose var Class_MyMenuPresenter: String,
-        @JvmField @Expose var Method_Settings_AddEntriesMethod: String,
-        @JvmField @Expose var Method_Settings_HandleClickEventsMethod: String,
+        @JvmField @Expose var Class_MyMenuPresenter: String = "",
+        @JvmField @Expose var Method_Settings_AddEntriesMethod: String = "",
+        @JvmField @Expose var Method_Settings_HandleClickEventsMethod: String = "",
 
         /*
         * package com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier;
@@ -72,8 +72,8 @@ data class HookValues(
         * modifier: public
         * search term: (getValue()); //method call to getValue
         * */
-        @JvmField @Expose var Class_UniqueDeviceIdentifier: String,
-        @JvmField @Expose var Method_UDI_GetUdiMethod: String,
+        @JvmField @Expose var Class_UniqueDeviceIdentifier: String = "",
+        @JvmField @Expose var Method_UDI_GetUdiMethod: String = "",
 
-        @JvmField @Expose var Class_LocationChangeListener: String
+        @JvmField @Expose var Class_LocationChangeListener: String = ""
 )
