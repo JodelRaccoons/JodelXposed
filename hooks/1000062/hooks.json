@@ -6,7 +6,7 @@
   "Method_PostStuff_TrackPostsMethod": "a",
   "Method_Settings_AddEntriesMethod": "xo",
   "Method_Settings_HandleClickEventsMethod": "a",
-  "Method_UDI_GetUdiMethod": "zi",
+  "Method_UDI_GetUdiMethod": "zA",
   "Class_Storage": "com.jodelapp.jodelandroidv3.model.Storage",
   "Class_PhotoEditFragment": "com.jodelapp.jodelandroidv3.view.PhotoEditFragment",
   "Class_PostDetailRecyclerAdapter": "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter",
