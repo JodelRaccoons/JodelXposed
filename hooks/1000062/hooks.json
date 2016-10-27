@@ -1,22 +1,15 @@
 {
-"methods":{
-    "BetaHook_UnlockFeatures": "bo",
-    "ImageHookValues_ImageView": "aAb",
-    "PostStuff_TrackPostsMethod": "a",
-    "PostStuff_ColorField": "ayf",
-    "Settings_AddEntriesMethod": "xo",
-    "Settings_HandleClickEventsMethod": "a",
-    "Theme_GCMReceiverMethod": "a",
-    "UDI_GetUdiMethod": "zi"
-  },
-  "classes":{
-    "Class_Storage": "com.jodelapp.jodelandroidv3.model.Storage",
-    "Class_PhotoEditFragment": "com.jodelapp.jodelandroidv3.view.PhotoEditFragment",
-    "Class_PostDetailRecyclerAdapter": "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter",
-    "Class_CreateTextPostFragment": "com.jodelapp.jodelandroidv3.view.CreateTextPostFragment",
-    "Class_MyMenuPresenter": "com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter",
-    "Class_MyGcmListenerService": "com.jodelapp.jodelandroidv3.data.gcm.MyGcmListenerService",
-    "Class_UniqueDeviceIdentifier": "com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier"
-  },
-  "updatemessage":"Updated hooks for 1000062 (4.24.2)"
+  "versionCode": 1000062,
+  "updateMessage": "Updated hooks for 1000062 (4.24.2)",
+  "Method_BetaHook_UnlockFeatures": "bo",
+  "Method_ImageHookValues_ImageView": "aAb",
+  "Method_PostStuff_TrackPostsMethod": "a",
+  "Method_Settings_AddEntriesMethod": "xo",
+  "Method_Settings_HandleClickEventsMethod": "a",
+  "Method_UDI_GetUdiMethod": "zi",
+  "Class_Storage": "com.jodelapp.jodelandroidv3.model.Storage",
+  "Class_PhotoEditFragment": "com.jodelapp.jodelandroidv3.view.PhotoEditFragment",
+  "Class_PostDetailRecyclerAdapter": "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter",
+  "Class_MyMenuPresenter": "com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter",
+  "Class_UniqueDeviceIdentifier": "com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier"
 }

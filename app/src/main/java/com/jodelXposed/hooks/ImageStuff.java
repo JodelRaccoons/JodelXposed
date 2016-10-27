@@ -48,8 +48,7 @@ public class ImageStuff {
      * Remove blur effect
      */
     public ImageStuff(XC_LoadPackage.LoadPackageParam lpparam) {
-        Hookvalues hooks = Options.INSTANCE.getHooks();
-        findAndHookMethod(hooks.Class_PhotoEditFragment, lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
+        findAndHookMethod(Options.INSTANCE.getHooks().Class_PhotoEditFragment, lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 
@@ -122,7 +121,7 @@ public class ImageStuff {
     }
 
     private void loadImage(final Bitmap bitmap, XC_MethodHook.MethodHookParam param) {
-        final ImageView a = (ImageView) getObjectField(param.thisObject, Options.INSTANCE.getHooks().ImageHookValues_ImageView);
+        final ImageView a = (ImageView) getObjectField(param.thisObject, Options.INSTANCE.getHooks().Method_ImageHookValues_ImageView);
         ((Activity) callMethod(param.thisObject, "getActivity"))
             .runOnUiThread(new Runnable() {
                 @Override

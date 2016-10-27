@@ -21,7 +21,7 @@ class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: Class
          * Add JodelXposed entries in ListView
          * Seamless integration #1
          */
-        findAndHookMethod(Options.hooks.Class_MyMenuPresenter, classLoader, Options.hooks.Settings_AddEntriesMethod, object : XC_MethodHook() {
+        findAndHookMethod(Options.hooks.Class_MyMenuPresenter, classLoader, Options.hooks.Method_Settings_AddEntriesMethod, object : XC_MethodHook() {
             @Suppress("UNCHECKED_CAST")
             @Throws(Throwable::class)
             override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam) {
@@ -34,7 +34,7 @@ class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: Class
          * Add JodelXposed entries in ListView - Handle clicks on Items
          * Seamless integration #2
          */
-        findAndHookMethod(Options.hooks.Class_MyMenuPresenter, classLoader, Options.hooks.Settings_HandleClickEventsMethod, "com.jodelapp.jodelandroidv3.view.MyMenuItem", object : XC_MethodHook() {
+        findAndHookMethod(Options.hooks.Class_MyMenuPresenter, classLoader, Options.hooks.Method_Settings_HandleClickEventsMethod, "com.jodelapp.jodelandroidv3.view.MyMenuItem", object : XC_MethodHook() {
             @Throws(Throwable::class)
             override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {
                 val selected = getObjectField(param!!.args[0], "name") as String

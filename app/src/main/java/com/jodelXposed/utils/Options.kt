@@ -47,7 +47,6 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
         } catch (e: IOException) {
             xlog("Could not load options file")
         }
-
     }
 
     fun resetLocation() {
@@ -58,7 +57,12 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
 
     val udi: UDI get() = options.udi
     val location: Location get() = options.location
-    val hooks: Hookvalues get() = options.hooks
+    var hooks: Hookvalues
+        get() = options.hooks
+        set(hooks) {
+            options.hooks = hooks
+        }
+
 
     /**
      * The JSON conversion object

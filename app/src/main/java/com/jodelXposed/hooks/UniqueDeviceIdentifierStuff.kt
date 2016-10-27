@@ -10,7 +10,7 @@ import de.robv.android.xposed.XposedHelpers.findAndHookMethod
 
 class UniqueDeviceIdentifierStuff(lpparam: LoadPackageParam) {
     init {
-        findAndHookMethod(Options.hooks.Class_UniqueDeviceIdentifier, lpparam.classLoader, Options.hooks.UDI_GetUdiMethod, object : XC_MethodHook() {
+        findAndHookMethod(Options.hooks.Class_UniqueDeviceIdentifier, lpparam.classLoader, Options.hooks.Method_UDI_GetUdiMethod, object : XC_MethodHook() {
             @Throws(Throwable::class)
             override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {
                 val realUDI = param!!.result as String

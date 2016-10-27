@@ -8,9 +8,6 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.jodelXposed.models.Hookvalues;
-import com.jodelXposed.retrofit.Response.Classes;
-import com.jodelXposed.retrofit.Response.HooksResponse;
-import com.jodelXposed.retrofit.Response.Methods;
 import com.jodelXposed.retrofit.RetrofitProvider;
 import com.jodelXposed.utils.Hooks;
 import com.jodelXposed.utils.Options;
@@ -93,36 +90,15 @@ public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit {
 
 
     private void updateHooks(final int versionCode) {
-        final Hookvalues hooks = Options.INSTANCE.getHooks();
 
-        RetrofitProvider.getJodelXposedService().getHooks(versionCode).enqueue(new Callback<HooksResponse>() {
+        RetrofitProvider.getJodelXposedService().getHooks(versionCode).enqueue(new Callback<Hookvalues>() {
             @Override
-            public void onResponse(Call<HooksResponse> call, Response<HooksResponse> response) {
+            public void onResponse(Call<Hookvalues> call, Response<Hookvalues> response) {
                 try {
-                    HooksResponse rhooks = response.body();
-                    Methods methods = rhooks.getMethods();
-                    Classes classes = rhooks.getClasses();
-
-                    hooks.BetaHook_UnlockFeatures = methods.getBetaHookUnlockFeatures();
-                    hooks.ImageHookValues_ImageView = methods.getImageHookValuesImageView();
-                    hooks.PostStuff_ColorField = methods.getPostStuffColorField();
-                    hooks.PostStuff_TrackPostsMethod = methods.getPostStuffTrackPostsMethod();
-                    hooks.Settings_AddEntriesMethod = methods.getSettingsAddEntriesMethod();
-                    hooks.Settings_HandleClickEventsMethod = methods.getSettingsHandleClickEventsMethod();
-                    hooks.Theme_GCMReceiverMethod = methods.getThemeGCMReceiverMethod();
-                    hooks.UDI_GetUdiMethod = methods.getUDIGetUdiMethod();
-
-                    hooks.Class_CreateTextPostFragment = classes.getClassCreateTextPostFragment();
-                    hooks.Class_MyGcmListenerService = classes.getClassMyGcmListenerService();
-                    hooks.Class_MyMenuPresenter = classes.getClassMyMenuPresenter();
-                    hooks.Class_PhotoEditFragment = classes.getClassPhotoEditFragment();
-                    hooks.Class_PostDetailRecyclerAdapter = classes.getClassPostDetailRecyclerAdapter();
-                    hooks.Class_Storage = classes.getClassStorage();
-                    hooks.Class_UniqueDeviceIdentifier = classes.getClassUniqueDeviceIdentifier();
+                    Options.INSTANCE.setHooks(response.body());
                     //Success updating hooks, lets update the local version code
-                    Options.INSTANCE.getHooks().versionCode = versionCode;
 
-                    Toast.makeText(getSystemContext(), rhooks.getUpdatemessage()+" Please soft-reboot your device!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getSystemContext(), Options.INSTANCE.getHooks().updateMessage+" Please soft-reboot your device!", Toast.LENGTH_LONG).show();
 
                     Options.INSTANCE.save();
                 }catch (Exception e){
@@ -133,7 +109,7 @@ public class App implements IXposedHookLoadPackage,IXposedHookZygoteInit {
             }
 
             @Override
-            public void onFailure(Call<HooksResponse> call, Throwable t) {
+            public void onFailure(Call<Hookvalues> call, Throwable t) {
                 Toast.makeText(getSystemContext(), "Failed updating hooks, "+t.getLocalizedMessage()+" !", Toast.LENGTH_LONG).show();
                 t.printStackTrace();
             }
