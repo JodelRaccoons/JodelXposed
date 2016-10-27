@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.jodelXposed.models.Hookvalues;
 import com.jodelXposed.utils.Log;
 import com.jodelXposed.utils.Options;
 

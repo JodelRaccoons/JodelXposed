@@ -1,7 +1,7 @@
 package com.jodelXposed.hooks
 
 import android.location.Location
-import com.jodelXposed.models.Hookvalues
+import com.jodelXposed.models.HookValues
 
 import com.jodelXposed.utils.Options
 

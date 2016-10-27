@@ -1,6 +1,6 @@
 package com.jodelXposed.hooks;
 
-import com.jodelXposed.models.Hookvalues;
+import com.jodelXposed.models.HookValues;
 import com.jodelXposed.utils.Log;
 import com.jodelXposed.utils.Options;
 
@@ -19,7 +19,7 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 public class PostStuff {
 
     public PostStuff(XC_LoadPackage.LoadPackageParam lpparam) {
-        final Hookvalues hooks = Options.INSTANCE.getHooks();
+        final HookValues hooks = Options.INSTANCE.getHooks();
 
         /*
          * Track posts #1P

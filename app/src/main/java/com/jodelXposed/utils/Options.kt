@@ -1,7 +1,7 @@
 package com.jodelXposed.utils
 
 import android.os.FileObserver
-import com.jodelXposed.models.Hookvalues
+import com.jodelXposed.models.HookValues
 import com.jodelXposed.models.Location
 import com.jodelXposed.models.UDI
 import com.jodelXposed.utils.Log.xlog
@@ -57,7 +57,7 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
 
     val udi: UDI get() = options.udi
     val location: Location get() = options.location
-    var hooks: Hookvalues
+    var hooks: HookValues
         get() = options.hooks
         set(hooks) {
             options.hooks = hooks
@@ -67,5 +67,5 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
     /**
      * The JSON conversion object
      */
-    class OptionsObject(var udi: UDI = UDI(), var location: Location = Location(), var hooks: Hookvalues = Hookvalues())
+    class OptionsObject(var udi: UDI = UDI(), var location: Location = Location(), var hooks: HookValues = HookValues())
 }

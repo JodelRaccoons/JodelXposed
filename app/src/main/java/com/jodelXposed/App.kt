@@ -11,7 +11,7 @@ import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 
-import com.jodelXposed.models.Hookvalues
+import com.jodelXposed.models.HookValues
 import com.jodelXposed.retrofit.RetrofitProvider
 import com.jodelXposed.utils.Hooks
 import com.jodelXposed.utils.Options
@@ -68,7 +68,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
                     val jxContext = getSystemContext().createPackageContext(
                             "com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
                     val ins = jxContext.assets.open("${pkgInfo.versionCode}/hooks.json")
-                    Options.hooks = Gson().fromJson(ins.reader().readText(), Hookvalues::class.java)
+                    Options.hooks = Gson().fromJson(ins.reader().readText(), HookValues::class.java)
                 } catch(ex: JsonSyntaxException) {
                     xlog("Hooks json syntax error")
                     ex.printStackTrace()
@@ -93,8 +93,8 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
 
     private fun updateHooks(versionCode: Int) {
 
-        RetrofitProvider.getJodelXposedService().getHooks(versionCode).enqueue(object : Callback<Hookvalues> {
-            override fun onResponse(call: Call<Hookvalues>, response: Response<Hookvalues>) {
+        RetrofitProvider.getJodelXposedService().getHooks(versionCode).enqueue(object : Callback<HookValues> {
+            override fun onResponse(call: Call<HookValues>, response: Response<HookValues>) {
                 try {
                     Options.hooks = response.body()
                     //Success updating hooks, lets update the local version code
@@ -109,7 +109,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
 
             }
 
-            override fun onFailure(call: Call<Hookvalues>, t: Throwable) {
+            override fun onFailure(call: Call<HookValues>, t: Throwable) {
                 Toast.makeText(getSystemContext(), "Failed updating hooks, " + t.message + " !", Toast.LENGTH_LONG).show()
                 t.printStackTrace()
             }
