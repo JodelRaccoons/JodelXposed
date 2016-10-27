@@ -43,7 +43,7 @@ android {
     }
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
-        main.resources.srcDirs += '../hooks'
+        main.assets.srcDirs += '../hooks'
     }
 }
 
