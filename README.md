@@ -19,11 +19,11 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
 
 <!-- tocstop -->
 
-## Install
+# Install
 1. Install via the Xposed Installer
 2. Disable automatic Jodel updates via Play Store
 
-## Features
+# Features
 * Spoof location
 * Disabled anti-xposed measures
 * Track posters within a thread
@@ -31,17 +31,17 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
 * Upload custom images
 * Change/manage account
 
-### Upload custom images
+## Upload custom images
 1. Take picture with Jodel camera
 2. Select *Replace image*
 3. Choose the image shared to Jodel or select from gallery
 
-### Increased control over account
+## Increased control over account
 - The account id (UID) is automatically backed upp in `.jodel-settings-v2`
 - The UID can be manually changed to change account
 - **PS**: Clear all Jodel app data after changing the UID
 
-### OTA Hook updates
+## OTA Hook updates
 - When Jodel is updated (version code change) JodelXposed is requesting a new hooks.json file from the Github repository
 
 What the user needs to do for it to work:
@@ -53,30 +53,25 @@ What the user needs to do for it to work:
 
 JX will search for new hooks when starting Jodel.
 
-### How can i help / update the hooks? 
-If you want to help the development you just can make a pull request containing a new hooks.json in a folder with a matching version code. You can find the version code folders in here: https://github.com/krokofant/JodelXposed/tree/master/hooks . 
-
-If you need help with finding the hooks (methods / fields) you should take a look at [the hookvalue object](https://github.com/krokofant/JodelXposed/blob/master/app/src/main/java/com/jodelXposed/models/Models.kt) , in there you can find for every method/field a brief explanation where it should be located and how to find the right one.
-
-## Version compatibility
+# Version compatibility
 The module aims for compatibility with the latest Jodel version. Jodel apks are usually linked in [the thread on XDA](http://forum.xda-developers.com/xposed/modules/mod-jodelxposed-enhancements-t3350019/).
 
 The latest supported Jodel version is noted [here](https://github.com/krokofant/JodelXposed/blob/master/app/build.gradle#L7).
 
-## Support
+# Support
 * Are you using Android?
 * Do you have Xposed working?
 * Are you sure your version is compatible?
 * Have you read [the thread on XDA](http://forum.xda-developers.com/xposed/modules/mod-jodelxposed-enhancements-t3350019/)?
 
-### You dont have Google play services? No problem!
+## You dont have Google play services? No problem!
 Just edit the file file /sdcard/.jodel-settings-v2 and edit your lat/lng coordinates manually.
 ```json
 "location":{"active":true,"lat":52.5200066,"lng":13.404954}
 ```
 
-## Contributions
-Pull requests are welcome if you would like to provide additional features or just update the hooks.
+# Contributions
+Take a look at [CONTRIBUTION.xd](CONTRIBUTION.md). Pull requests are welcome if you would like to provide additional features or just update the hooks.
 
 Please *test the PR* before you submit it.
 
