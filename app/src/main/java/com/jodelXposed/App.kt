@@ -1,6 +1,8 @@
 package com.jodelXposed
 
 import android.annotation.SuppressLint
+import android.app.AndroidAppHelper
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.os.Build
@@ -63,9 +65,10 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
             if (BuildConfig.JODEL_VERSION_CODE == pkgInfo.versionCode) {
                 xlog("Loading local hooks.json")
                 try {
-                    val ins = getSystemContext().assets.open("${pkgInfo.versionCode}/hooks.json")
-                    val hv: Hookvalues = Gson().fromJson(ins.reader().readText(), Hookvalues::class.java)
-                    Options.hooks = hv
+                    val jxContext = getSystemContext().createPackageContext(
+                            "com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
+                    val ins = jxContext.assets.open("${pkgInfo.versionCode}/hooks.json")
+                    Options.hooks = Gson().fromJson(ins.reader().readText(), Hookvalues::class.java)
                 } catch(ex: JsonSyntaxException) {
                     xlog("Hooks json syntax error")
                     ex.printStackTrace()
