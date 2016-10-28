@@ -69,6 +69,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
                             "com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
                     val ins = jxContext.assets.open("${pkgInfo.versionCode}/hooks.json")
                     Options.hooks = Gson().fromJson(ins.reader().readText(), HookValues::class.java)
+                    Options.save()
                 } catch(ex: JsonSyntaxException) {
                     xlog("Hooks json syntax error")
                     ex.printStackTrace()
