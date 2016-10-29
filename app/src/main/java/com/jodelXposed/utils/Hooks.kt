@@ -1,11 +1,6 @@
 package com.jodelXposed.utils
 
-import com.jodelXposed.hooks.BetaStuff
-import com.jodelXposed.hooks.ImageStuff
-import com.jodelXposed.hooks.LocationStuff
-import com.jodelXposed.hooks.PostStuff
-import com.jodelXposed.hooks.SettingsStuff
-import com.jodelXposed.hooks.UniqueDeviceIdentifierStuff
+import com.jodelXposed.hooks.*
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 
 class Hooks(private val lpparam: LoadPackageParam) {
@@ -63,6 +58,15 @@ class Hooks(private val lpparam: LoadPackageParam) {
         } catch (e: Throwable) {
             e.printStackTrace()
             Log.xlog("!!!! FAILED loading UniqueDeviceIdentifierStuff hooks! !!!!\n\n")
+        }
+
+        try {
+            Log.xlog("#### Loading SaveImages hooks ####")
+            SaveImages(lpparam)
+            Log.xlog("#### Loading SaveImages hooks loaded! ####")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.xlog("!!!! FAILED loading SaveImages hooks! !!!!\n\n")
         }
     }
 }
