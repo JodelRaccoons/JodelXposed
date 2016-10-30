@@ -7,7 +7,6 @@ import com.jodelXposed.models.UDI
 import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Utils.SettingsPath
 import com.squareup.moshi.Moshi
-import org.apache.commons.io.FileUtils
 import java.io.File
 import java.io.IOException
 
@@ -30,9 +29,7 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
         val settingsJson = jsonAdapter.toJson(options)
         try {
             xlog(String.format("Writing %s to file", settingsJson))
-            val output = FileUtils.openOutputStream(settingsFile)
-            output.write(settingsJson.toByteArray())
-            output.close()
+            settingsFile.writeText(settingsJson)
         } catch (e: IOException) {
             xlog("Could not write to file")
             xlog(e.message)
@@ -41,8 +38,8 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
 
     fun load() {
         try {
-            val json = FileUtils.readFileToString(settingsFile, org.apache.commons.io.Charsets.UTF_8)
             xlog("Loading json from settings")
+            val json = settingsFile.readText()
             options = jsonAdapter.fromJson(json)
         } catch (e: IOException) {
             xlog("Could not load options file")
