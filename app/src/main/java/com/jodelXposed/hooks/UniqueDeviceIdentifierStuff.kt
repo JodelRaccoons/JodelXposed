@@ -12,22 +12,17 @@ class UniqueDeviceIdentifierStuff(lpparam: LoadPackageParam) {
     init {
         findAndHookMethod(Options.hooks.Class_UniqueDeviceIdentifier, lpparam.classLoader, Options.hooks.Method_UDI_GetUdiMethod, object : XC_MethodHook() {
             @Throws(Throwable::class)
-            override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {
-                val realUDI = param!!.result as String
+            override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam) {
+                val realUDI = param.result as String
                 if (Options.udi.udi.length == 0) {
                     Options.udi.udi = realUDI
                     xlog("Backing up UDI")
                     Options.save()
+                    return
                 }
-                if (Options.udi.active) {
-                    if (Options.udi.udi == realUDI || Options.udi.udi.length == 0) {
-                        xlog("Using real UDI")
-                    } else {
-                        val spoofUDI = Options.udi.udi
-                        xlog("UDI spoof = " + spoofUDI)
-                        param.result = spoofUDI
-                    }
-                }
+
+                xlog("UDI spoof = ${Options.udi.udi}")
+                param.result = Options.udi.udi
             }
         })
     }

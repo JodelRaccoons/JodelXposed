@@ -28,7 +28,7 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
     fun save() {
         val settingsJson = jsonAdapter.toJson(options)
         try {
-            xlog(String.format("Writing %s to file", settingsJson))
+            xlog("Writing $settingsJson to file")
             settingsFile.writeText(settingsJson)
         } catch (e: IOException) {
             xlog("Could not write to file")
@@ -39,8 +39,7 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
     fun load() {
         try {
             xlog("Loading json from settings")
-            val json = settingsFile.readText()
-            options = jsonAdapter.fromJson(json)
+            options = jsonAdapter.fromJson(settingsFile.readText())
         } catch (e: IOException) {
             xlog("Could not load options file")
         }
