@@ -15,6 +15,14 @@ object Bitmap {
     }
 
     @JvmStatic
+    fun loadBitmap(inputStream: InputStream): android.graphics.Bitmap {
+        xlog("Loading bitmap image")
+        val byteArray: ByteArray = inputStream.readBytes()
+        inputStream.close()
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+    }
+
+    @JvmStatic
     fun saveBitmap(bitmap: android.graphics.Bitmap) {
         try {
             xlog("Saving bitmap of size: ${bitmap.byteCount}")

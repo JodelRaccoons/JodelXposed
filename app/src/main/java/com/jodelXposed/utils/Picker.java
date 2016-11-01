@@ -20,13 +20,15 @@ import com.jodelXposed.models.Location;
 import com.schibstedspain.leku.LocationPickerActivity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import id.zelory.compressor.Compressor;
 
 import static com.jodelXposed.utils.Log.xlog;
 
 
-public class Picker extends AppCompatActivity{
+public class Picker extends AppCompatActivity {
 
 
     private static final int GALLERY_REQUEST_CODE = 202;
@@ -40,17 +42,15 @@ public class Picker extends AppCompatActivity{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!permissionsGranted()) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-            }
-        }
-
-        if (permissionsGranted()) {
+            } else
+                getAction();
+        } else {
             getAction();
         }
-
     }
 
-    private void getAction(){
-        switch (getIntent().getIntExtra("choice",0)){
+    private void getAction() {
+        switch (getIntent().getIntExtra("choice", 0)) {
             case 1:
                 startLocationPicker();
                 break;
@@ -80,7 +80,7 @@ public class Picker extends AppCompatActivity{
 //        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
 //        photoPickerIntent.setType("image/*");
 //        startActivityForResult(photoPickerIntent, GALLERY_REQUEST_CODE);
-        Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, GALLERY_REQUEST_CODE);
     }
 
@@ -102,8 +102,8 @@ public class Picker extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         xlog("ActivityResult called");
-        if (resultCode == Activity.RESULT_OK){
-            switch (requestCode){
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
                 case PLACEPICKER_REQUEST_CODE:
                     Options op = Options.INSTANCE;
                     op.getLocation().setLat(data.getDoubleExtra(LocationPickerActivity.LATITUDE, 0));
@@ -113,13 +113,19 @@ public class Picker extends AppCompatActivity{
                     break;
                 case GALLERY_REQUEST_CODE:
                     Uri selectedImage = data.getData();
-                    String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                    Cursor cursor = getContentResolver().query(selectedImage,filePathColumn, null, null, null);
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String picturePath = cursor.getString(columnIndex);
-                    cursor.close();
-                    Bitmap.saveBitmap(Compressor.getDefault(this).compressToBitmap(new File(picturePath)));
+                    xlog("SelectedImage:" + selectedImage.toString());
+                    try {
+                        InputStream is = getContentResolver().openInputStream(selectedImage);
+                        if(is == null) {
+                            xlog("input stream for image is null");
+                            break;
+                        }
+                        android.graphics.Bitmap bitmap = Bitmap.loadBitmap(is);
+                        Bitmap.saveBitmap(bitmap);
+                    } catch (FileNotFoundException e) {
+                        xlog("Could not load gallery image");
+                        xlog(e.getMessage());
+                    }
                     break;
             }
         }
