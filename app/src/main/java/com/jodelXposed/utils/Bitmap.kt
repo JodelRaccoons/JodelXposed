@@ -3,6 +3,7 @@ package com.jodelXposed.utils
 import android.graphics.BitmapFactory
 import android.os.Environment
 import com.jodelXposed.utils.Log.xlog
+import com.jodelXposed.utils.Log.dlog
 import java.io.*
 
 object Bitmap {
@@ -10,13 +11,13 @@ object Bitmap {
 
     @JvmStatic
     fun loadBitmap(): android.graphics.Bitmap {
-        xlog("Loading bitmap image")
+        dlog("Loading bitmap image")
         return BitmapFactory.decodeFile(File(jodelImagePath).absolutePath)
     }
 
     @JvmStatic
     fun loadBitmap(inputStream: InputStream): android.graphics.Bitmap {
-        xlog("Loading bitmap image")
+        dlog("Loading bitmap image")
         val byteArray: ByteArray = inputStream.readBytes()
         inputStream.close()
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
@@ -25,14 +26,14 @@ object Bitmap {
     @JvmStatic
     fun saveBitmap(bitmap: android.graphics.Bitmap) {
         try {
-            xlog("Saving bitmap of size: ${bitmap.byteCount}")
+            dlog("Saving bitmap of size: ${bitmap.byteCount}")
             val fos = FileOutputStream(File(jodelImagePath))
             bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 100, fos)
             fos.close()
         } catch (e: FileNotFoundException) {
-            xlog("File not found: ${e.message}")
+            xlog("File not found", e)
         } catch (e: IOException) {
-            xlog("Error accessing file: ${e.message}")
+            xlog("Error accessing file", e)
         }
 
     }

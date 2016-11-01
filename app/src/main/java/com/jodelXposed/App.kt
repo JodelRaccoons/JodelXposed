@@ -24,6 +24,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 import com.jodelXposed.utils.Log.xlog
+import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Utils.getNewIntent
 import com.jodelXposed.utils.Utils.getSystemContext
 import java.io.File
@@ -57,13 +58,12 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
             try {
                 Options.load()
             } catch (e: Exception) {
-                xlog("Options cannot be loaded")
-                e.printStackTrace()
+                xlog("Options cannot be loaded", e)
             }
 
 
             if (BuildConfig.JODEL_VERSION_CODE == pkgInfo.versionCode) {
-                xlog("Loading local hooks.json")
+                dlog("Loading local hooks.json")
                 try {
                     val jxContext = getSystemContext().createPackageContext(
                             "com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
@@ -71,11 +71,9 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
                     Options.hooks = Gson().fromJson(ins.reader().readText(), HookValues::class.java)
                     Options.save()
                 } catch(ex: JsonSyntaxException) {
-                    xlog("Hooks json syntax error")
-                    ex.printStackTrace()
+                    xlog("Hooks json syntax error", ex)
                 } catch (ex: IOException) {
-                    xlog("Could not read asset")
-                    ex.printStackTrace()
+                    xlog("Could not read asset", ex)
                 }
             } else if (pkgInfo.versionCode != Options.hooks.versionCode) {
                 updateHooks(pkgInfo.versionCode)
@@ -104,15 +102,15 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
 
                     Options.save()
                 } catch (e: Exception) {
+                    xlog("Your Jodel version is not supported by JodelXposed yet")
                     Toast.makeText(getSystemContext(), "Your Jodel version isnt supported by JodelXposed yet.", Toast.LENGTH_LONG).show()
-                    e.printStackTrace()
                 }
 
             }
 
             override fun onFailure(call: Call<HookValues>, t: Throwable) {
+                xlog("Failed fethcing new hooks", t)
                 Toast.makeText(getSystemContext(), "Failed updating hooks, " + t.message + " !", Toast.LENGTH_LONG).show()
-                t.printStackTrace()
             }
         })
     }

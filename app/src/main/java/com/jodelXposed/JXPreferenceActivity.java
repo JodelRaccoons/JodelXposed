@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.jodelXposed.models.Location;
 import com.jodelXposed.utils.AppCompatPreferenceActivity;
+import com.jodelXposed.utils.Log;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Picker;
 import com.mypopsy.maps.StaticMap;
@@ -46,7 +47,7 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
         try {
             Picasso.with(this).load(String.valueOf(map.toURL().toURI())).placeholder(R.drawable.progress_animation).into(ivMap);
         } catch (MalformedURLException | URISyntaxException e) {
-            e.printStackTrace();
+            Log.xlog("Failed to load map", e);
         }
 
 

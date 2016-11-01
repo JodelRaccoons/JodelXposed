@@ -45,7 +45,7 @@ public class Utils {
                                 Utils.getIdentifierById(param, "mainCoordinatorLayout"))
                         , message, 1));
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.xlog("Could not create snackbar", e);
         }
     }
 

@@ -5,6 +5,7 @@ import com.jodelXposed.models.HookValues
 import com.jodelXposed.models.Location
 import com.jodelXposed.models.UDI
 import com.jodelXposed.utils.Log.xlog
+import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Utils.SettingsPath
 import com.squareup.moshi.Moshi
 import java.io.File
@@ -17,7 +18,7 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
     private var options = OptionsObject()
 
     init {
-        xlog("Init options")
+        dlog("Init options")
         if (!settingsFile.exists())
             save()
         else
@@ -26,22 +27,21 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
     }
 
     fun save() {
-        val settingsJson = jsonAdapter.toJson(options)
         try {
-            xlog("Writing $settingsJson to file")
+            val settingsJson = jsonAdapter.toJson(options)
+            dlog("Writing $settingsJson to file")
             settingsFile.writeText(settingsJson)
         } catch (e: IOException) {
-            xlog("Could not write to file")
-            xlog(e.message)
+            xlog("Could not write to file", e)
         }
     }
 
     fun load() {
+        dlog("Loading json from settings")
         try {
-            xlog("Loading json from settings")
             options = jsonAdapter.fromJson(settingsFile.readText())
         } catch (e: IOException) {
-            xlog("Could not load options file")
+            xlog("Could not load options file", e)
         }
     }
 

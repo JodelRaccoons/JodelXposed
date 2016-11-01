@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.jodelXposed.JXPreferenceActivity
 import com.jodelXposed.utils.Log.xlog
+import com.jodelXposed.utils.Log.dlog
 import com.schibstedspain.leku.LocationPickerActivity
 import java.io.FileNotFoundException
 
@@ -85,18 +86,17 @@ class Picker : AppCompatActivity() {
             }
             GALLERY_REQUEST_CODE -> {
                 val selectedImage = data.data
-                xlog("SelectedImage:$selectedImage")
+                dlog("SelectedImage:$selectedImage")
                 try {
                     val inputStream = contentResolver.openInputStream(selectedImage)
                     if (inputStream == null) {
-                        xlog("input stream for image is null")
+                        dlog("input stream for image is null")
                     } else {
                         val bitmap = Bitmap.loadBitmap(inputStream)
                         Bitmap.saveBitmap(bitmap)
                     }
                 } catch (e: FileNotFoundException) {
-                    xlog("Could not load gallery image")
-                    xlog(e.message)
+                    xlog("Could not load gallery image", e)
                 }
             }
         }

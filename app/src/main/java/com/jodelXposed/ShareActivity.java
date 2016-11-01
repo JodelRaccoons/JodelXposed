@@ -19,6 +19,7 @@ import java.io.IOException;
 
 import static com.jodelXposed.utils.Bitmap.saveBitmap;
 import static com.jodelXposed.utils.Log.xlog;
+import static com.jodelXposed.utils.Log.dlog;
 
 public class ShareActivity extends Activity {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
@@ -42,14 +43,14 @@ public class ShareActivity extends Activity {
                 verifyStoragePermissions();
             }
         } else {
-            xlog("What the fudge is this? (I should only accept images)");
+            dlog("What the fudge is this? (I should only accept images)");
         }
     }
 
     void handleSendImage(Intent intent) {
         Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
 
-        xlog("Got shared image URI " + imageUri.getPath());
+        dlog("Got shared image URI " + imageUri.getPath());
 
         if (imageUri != null) {
             try {
@@ -57,7 +58,7 @@ public class ShareActivity extends Activity {
                 saveBitmap(bitmap);
                 ImageStuff.imageShared = true;
             } catch (IOException e) {
-                xlog("Error accessing file: " + e.getLocalizedMessage());
+                xlog("Error accessing file: ", e);
             }
         }
         Utils.openApp(this, "com.tellm.android.app");
@@ -70,7 +71,7 @@ public class ShareActivity extends Activity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        xlog("onRequestPermissionResult enter");
+        dlog("onRequestPermissionResult enter");
         switch (requestCode) {
             case REQUEST_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0
@@ -78,7 +79,7 @@ public class ShareActivity extends Activity {
                     xlog("Permission granted");
                     handleSendImage(getIntent());
                 } else {
-                    xlog("Permission not granted");
+                    xlog("Failed to get permissions");
                     Toast.makeText(this, "Failed to get permissions",
                         Toast.LENGTH_LONG).show();
                     finish();
@@ -91,19 +92,19 @@ public class ShareActivity extends Activity {
      * Verify permissions
      */
     public void verifyStoragePermissions() {
-        xlog("Verify permission storage entered");
+        dlog("Verify permission storage entered");
 
         int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            xlog("Prompting user for permission");
+            dlog("Prompting user for permission");
             ActivityCompat.requestPermissions(
                 this,
                 PERMISSIONS_STORAGE,
                 REQUEST_EXTERNAL_STORAGE
             );
         } else {
-            xlog("We have permission");
+            dlog("We have permission");
             handleSendImage(getIntent());
         }
     }
