@@ -91,10 +91,9 @@ class Picker : AppCompatActivity() {
                     if (inputStream == null) {
                         xlog("input stream for image is null")
                     } else {
-
+                        val bitmap = Bitmap.loadBitmap(inputStream)
+                        Bitmap.saveBitmap(bitmap)
                     }
-                    val bitmap = Bitmap.loadBitmap(inputStream)
-                    Bitmap.saveBitmap(bitmap)
                 } catch (e: FileNotFoundException) {
                     xlog("Could not load gallery image")
                     xlog(e.message)
