@@ -45,10 +45,6 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
         }
     }
 
-    fun resetLocation() {
-        // TODO: Consider this
-    }
-
     override fun onEvent(event: Int, path: String?) = load()
 
     val udi: UDI get() = options.udi

@@ -44,10 +44,6 @@ class Picker : AppCompatActivity() {
     private fun getAction() {
         when (intent.getIntExtra("choice", 0)) {
             1 -> startLocationPicker()
-            2 -> {
-                Options.resetLocation()
-                finish()
-            }
             3 -> galleryPicker()
             4 -> startActivity(Intent(this, JXPreferenceActivity::class.java))
             else -> finish()
@@ -119,6 +115,7 @@ class Picker : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             PERMISSION_REQUEST_CODE -> {
+                grantResults[0] == 1
                 if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getAction()
                 } else {
