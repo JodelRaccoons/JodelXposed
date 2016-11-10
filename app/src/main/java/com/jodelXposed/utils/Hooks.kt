@@ -11,14 +11,14 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 class Hooks(private val lpparam: LoadPackageParam) {
 
     fun hook() {
-        try {
-            Log.xlog("#### Loading BetaStuff hooks ####")
-            BetaStuff(lpparam)
-            Log.xlog("#### BetaStuff hooks loaded! ####")
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading BetaStuff hooks! !!!!\n\n")
-        }
+//        try {
+//            Log.xlog("#### Loading BetaStuff hooks ####")
+//            BetaStuff(lpparam)
+//            Log.xlog("#### BetaStuff hooks loaded! ####")
+//        } catch (e: Throwable) {
+//            e.printStackTrace()
+//            Log.xlog("!!!! FAILED loading BetaStuff hooks! !!!!\n\n")
+//        }
 
         try {
             Log.xlog("#### Loading ImageStuff hooks ####")
