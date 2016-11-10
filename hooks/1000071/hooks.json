@@ -1,0 +1,16 @@
+{
+  "versionCode": 1000071,
+  "updateMessage": "Partially updated hooks for 1000071 (4.26.1). Image share not working.",
+  "Method_BetaHook_UnlockFeatures": "by",
+  "Method_ImageHookValues_ImageView": "",
+  "Method_PostStuff_TrackPostsMethod": "a",
+  "Method_Settings_AddEntriesMethod": "xs",
+  "Method_Settings_HandleClickEventsMethod": "a",
+  "Method_UDI_GetUdiMethod": "Av",
+  "Class_Storage": "com.jodelapp.jodelandroidv3.model.Storage",
+  "Class_PhotoEditFragment": "",
+  "Class_PostDetailRecyclerAdapter": "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter",
+  "Class_MyMenuPresenter": "com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter",
+  "Class_UniqueDeviceIdentifier": "com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier",
+  "Class_LocationChangeListener": "com.jodelapp.jodelandroidv3.data.googleservices.location.LocationUpdatesOnSubscribe$$Lambda$1"
+}
