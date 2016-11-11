@@ -98,19 +98,19 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
                     Options.hooks = response.body()
                     //Success updating hooks, lets update the local version code
 
-                    Toast.makeText(getSystemContext(), Options.hooks.updateMessage + " Please soft-reboot your device!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(AndroidAppHelper.currentApplication(), Options.hooks.updateMessage + " Please soft-reboot your device!", Toast.LENGTH_LONG).show()
 
                     Options.save()
                 } catch (e: Exception) {
                     xlog("Your Jodel version is not supported by JodelXposed yet")
-                    Toast.makeText(getSystemContext(), "Your Jodel version isnt supported by JodelXposed yet.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(AndroidAppHelper.currentApplication(), "Your Jodel version isnt supported by JodelXposed yet.", Toast.LENGTH_LONG).show()
                 }
 
             }
 
             override fun onFailure(call: Call<HookValues>, t: Throwable) {
                 xlog("Failed fethcing new hooks", t)
-                Toast.makeText(getSystemContext(), "Failed updating hooks, " + t.message + " !", Toast.LENGTH_LONG).show()
+                Toast.makeText(AndroidAppHelper.currentApplication(), "Failed updating hooks, " + t.message + " !", Toast.LENGTH_LONG).show()
             }
         })
     }
