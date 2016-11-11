@@ -61,12 +61,12 @@ class Hooks(private val lpparam: LoadPackageParam) {
         }
 
         try {
-            Log.xlog("#### Loading SaveImages hooks ####")
-            SaveImages(lpparam)
-            Log.xlog("#### Loading SaveImages hooks loaded! ####")
+            Log.xlog("#### Loading SavePost hooks ####")
+            SavePost(lpparam)
+            Log.xlog("#### Loading SavePost hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.xlog("!!!! FAILED loading SaveImages hooks! !!!!\n\n")
+            Log.xlog("!!!! FAILED loading SavePost hooks! !!!!\n\n")
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.jodelXposed.hooks
 
 import android.app.AndroidAppHelper
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.view.MotionEvent
@@ -15,7 +18,7 @@ import de.robv.android.xposed.XposedHelpers.getObjectField
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import com.jodelXposed.utils.Bitmap as BitmapJX
 
-class SaveImages(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoader = loadPackageParam.classLoader) {
+class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoader = loadPackageParam.classLoader) {
     init {
         fun afterHookHandler(param: XC_MethodHook.MethodHookParam) {
             val post = getObjectField(param.thisObject, Options.hooks.Field_JodelGestureListener_Post)
@@ -24,6 +27,13 @@ class SaveImages(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader:
             var postImageUrl = getObjectField(post, "imageUrl")
             if (postImageUrl !is String) {
                 dlog("Post has no imageUrl")
+                dlog("Copying post message")
+                val postMessage = getObjectField(post, "message") as String
+
+                val clipboard = AndroidAppHelper.currentApplication().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("JodelPost", postMessage)
+                clipboard.primaryClip = clip
+
                 return
             }
             postImageUrl = if (postImageUrl.startsWith("//")) "https:${postImageUrl}" else postImageUrl
