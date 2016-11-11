@@ -109,7 +109,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
             }
 
             override fun onFailure(call: Call<HookValues>, t: Throwable) {
-                xlog("Failed fethcing new hooks", t)
+                xlog("Failed fetching new hooks", t)
                 Toast.makeText(AndroidAppHelper.currentApplication(), "Failed updating hooks, " + t.message + " !", Toast.LENGTH_LONG).show()
             }
         })
