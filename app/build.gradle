@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 project.ext {
-    versionCode = 19
-    versionName = "2.1.1"
-    jodelVersionCode = 1000062
-    jodelVersionName = "4.24.2"
+    versionCode = 20
+    versionName = "2.2.0"
+    jodelVersionCode = 1000071
+    jodelVersionName = "4.26.1"
 }
 
 android {
