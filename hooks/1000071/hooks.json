@@ -1,6 +1,6 @@
 {
   "versionCode": 1000071,
-  "updateMessage": "Partially updated hooks for 1000071 (4.26.1). Image share not working.",
+  "updateMessage": "Updated hooks for 1000071 (4.26.1)",
   /**
     * package com.jodelapp.jodelandroidv3.model.Storage;
     * type: method
@@ -18,8 +18,8 @@
     * search term: setImageBitmap
     *
   **/
-  "Class_PhotoEditFragment": "",
-  "Method_ImageHookValues_ImageView": "",
+  "Class_PhotoEditFragment": "com.jodelapp.jodelandroidv3.features.photoedit.PhotoEditFragment",
+  "Method_ImageHookValues_ImageView": "picPreview",
   /**
     * package com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter;
     * type: method
