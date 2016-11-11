@@ -98,7 +98,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
                     Options.hooks = response.body()
                     //Success updating hooks, lets update the local version code
 
-                    Toast.makeText(AndroidAppHelper.currentApplication(), Options.hooks.updateMessage + " Please soft-reboot your device!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(AndroidAppHelper.currentApplication(), Options.hooks.updateMessage + " Please force restart Jodel", Toast.LENGTH_LONG).show()
 
                     Options.save()
                 } catch (e: Exception) {
