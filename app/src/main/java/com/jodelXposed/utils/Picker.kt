@@ -73,9 +73,13 @@ class Picker : AppCompatActivity() {
         return this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode != Activity.RESULT_OK)
             return finish()
+        if (data == null) {
+            dlog("No ActivityResult data")
+            return finish()
+        }
 
         when (requestCode) {
             PLACEPICKER_REQUEST_CODE -> {
