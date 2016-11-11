@@ -1,5 +1,7 @@
 package com.jodelXposed.retrofit;
 
+import com.google.gson.GsonBuilder;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -18,7 +20,7 @@ public class RetrofitProvider {
     static {
         Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://raw.githubusercontent.com/krokofant/JodelXposed/")
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
             .build();
 
         jodelXposedService = retrofit.create(JodelXposedService.class);
