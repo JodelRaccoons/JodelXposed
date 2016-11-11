@@ -75,5 +75,9 @@ data class HookValues(
         @JvmField @Expose var Class_UniqueDeviceIdentifier: String = "",
         @JvmField @Expose var Method_UDI_GetUdiMethod: String = "",
 
-        @JvmField @Expose var Class_LocationChangeListener: String = ""
+        @JvmField @Expose var Class_LocationChangeListener: String = "",
+
+        @JvmField @Expose var Class_JodelGestureListener: String = "",
+        @JvmField @Expose var Field_JodelGestureListener_Post: String = ""
+
 )

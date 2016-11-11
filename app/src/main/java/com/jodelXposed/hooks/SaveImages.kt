@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.view.MotionEvent
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
+import com.jodelXposed.utils.Options
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import de.robv.android.xposed.XC_MethodHook
@@ -17,7 +18,7 @@ import com.jodelXposed.utils.Bitmap as BitmapJX
 class SaveImages(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoader = loadPackageParam.classLoader) {
     init {
         fun afterHookHandler(param: XC_MethodHook.MethodHookParam) {
-            val post = getObjectField(param.thisObject, "aDh")
+            val post = getObjectField(param.thisObject, Options.hooks.Field_JodelGestureListener_Post)
             val context = AndroidAppHelper.currentApplication()
 
             var postImageUrl = getObjectField(post, "imageUrl")
@@ -46,7 +47,7 @@ class SaveImages(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader:
         }
 
         XposedHelpers.findAndHookMethod(
-                "com.jodelapp.jodelandroidv3.view.gesture.JodelGestureListener",
+                Options.hooks.Class_JodelGestureListener,
                 classLoader,
                 "onDoubleTap",
                 MotionEvent::class.java,
