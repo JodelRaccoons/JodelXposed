@@ -13,6 +13,7 @@ data class HookValues(
 
         @JvmField @Expose var Class_Storage: String = "",
         @JvmField @Expose var Method_BetaHook_UnlockFeatures: String = "",
+        @JvmField @Expose var Array_FeaturesEnabled: Array<String> = arrayOf<String>(),
 
         @JvmField @Expose var Class_PhotoEditFragment: String = "",
         @JvmField @Expose var Method_ImageHookValues_ImageView: String = "",
