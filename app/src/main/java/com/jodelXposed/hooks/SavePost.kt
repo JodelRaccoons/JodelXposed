@@ -10,6 +10,7 @@ import android.view.MotionEvent
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Options
+import com.jodelXposed.utils.Utils
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import de.robv.android.xposed.XC_MethodHook
@@ -34,6 +35,8 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
                 val clip = ClipData.newPlainText("JodelPost", postMessage)
                 clipboard.primaryClip = clip
 
+                Utils.makeSnackbarWithNoCtx(loadPackageParam, "Copied to clipboard!")
+
                 return
             }
             postImageUrl = if (postImageUrl.startsWith("//")) "https:${postImageUrl}" else postImageUrl
@@ -50,8 +53,12 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
 
                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
                     dlog("Loaded image")
-                    // TODO: Save to dedicated folder
-                    BitmapJX.saveBitmap(bitmap)
+                    // DONE: Save to dedicated folder
+                    //TODO images saving failes at first try when jodel is opened, second try is needed
+                    //TODO start media scanner after saving to make the image visible in the gallery
+                    BitmapJX.saveBitmap(bitmap, Utils.getSaveImagesPath())
+
+                    Utils.makeSnackbarWithNoCtx(loadPackageParam, "Saved image!")
                 }
             })
         }

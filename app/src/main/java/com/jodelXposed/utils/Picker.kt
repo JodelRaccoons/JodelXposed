@@ -8,12 +8,15 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.jodelXposed.JXPreferenceActivity
-import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Log.dlog
+import com.jodelXposed.utils.Log.xlog
 import com.schibstedspain.leku.LocationPickerActivity
+import id.zelory.compressor.Compressor
+import java.io.File
 import java.io.FileNotFoundException
 
 
@@ -53,6 +56,7 @@ class Picker : AppCompatActivity() {
     }
 
     private fun galleryPicker() {
+        //TODO only google photos works for me, a third party gallery app crashes / is not seen as such
         startActivityForResult(
                 Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
                 GALLERY_REQUEST_CODE
@@ -89,15 +93,18 @@ class Picker : AppCompatActivity() {
                 Toast.makeText(this@Picker, "Success, please refresh your feed!", Toast.LENGTH_LONG).show()
             }
             GALLERY_REQUEST_CODE -> {
-                val selectedImage = data.data
-                dlog("SelectedImage:$selectedImage")
                 try {
-                    val inputStream = contentResolver.openInputStream(selectedImage)
-                    if (inputStream == null) {
-                        dlog("input stream for image is null")
+                    val selectedImage = data.data
+                    dlog("SelectedImage:$selectedImage")
+                    if (selectedImage.path.contains("contentprovider") || selectedImage.path.contains("content:")) {
+                        val cursor = contentResolver.query(selectedImage, arrayOf<String>(MediaStore.Images.Media.DATA), null, null, null)
+                        cursor.moveToFirst()
+                        val columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
+                        val picturePath = cursor.getString(columnIndex)
+                        cursor.close()
+                        Bitmap.saveBitmap(Compressor.getDefault(this).compressToBitmap(File(picturePath)))
                     } else {
-                        val bitmap = Bitmap.loadBitmap(inputStream)
-                        Bitmap.saveBitmap(bitmap)
+                        Bitmap.saveBitmap(Compressor.getDefault(this).compressToBitmap(File(selectedImage.path)))
                     }
                 } catch (e: FileNotFoundException) {
                     xlog("Could not load gallery image", e)

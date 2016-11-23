@@ -2,8 +2,8 @@ package com.jodelXposed.utils
 
 import android.graphics.BitmapFactory
 import android.os.Environment
-import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Log.dlog
+import com.jodelXposed.utils.Log.xlog
 import java.io.*
 
 object Bitmap {
@@ -25,9 +25,19 @@ object Bitmap {
 
     @JvmStatic
     fun saveBitmap(bitmap: android.graphics.Bitmap) {
+        saveBitmap(bitmap, null)
+    }
+
+    @JvmStatic
+    fun saveBitmap(bitmap: android.graphics.Bitmap, path: String?) {
         try {
             dlog("Saving bitmap of size: ${bitmap.byteCount}")
-            val fos = FileOutputStream(File(jodelImagePath))
+            var fos: FileOutputStream? = null
+            if (path == null) {
+                fos = FileOutputStream(File(jodelImagePath))
+            } else {
+                fos = FileOutputStream(File(path))
+            }
             bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 100, fos)
             fos.close()
         } catch (e: FileNotFoundException) {
@@ -37,4 +47,5 @@ object Bitmap {
         }
 
     }
+
 }

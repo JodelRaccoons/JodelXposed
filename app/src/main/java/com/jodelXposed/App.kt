@@ -10,27 +10,33 @@ import android.os.Handler
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-
+import com.jodelXposed.hooks.LayoutHooks
 import com.jodelXposed.models.HookValues
 import com.jodelXposed.retrofit.RetrofitProvider
 import com.jodelXposed.utils.Hooks
+import com.jodelXposed.utils.Log.dlog
+import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Options
-
+import com.jodelXposed.utils.Utils
+import com.jodelXposed.utils.Utils.getNewIntent
+import com.jodelXposed.utils.Utils.getSystemContext
+import de.robv.android.xposed.IXposedHookInitPackageResources
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
+import de.robv.android.xposed.callbacks.XC_InitPackageResources
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-import com.jodelXposed.utils.Log.xlog
-import com.jodelXposed.utils.Log.dlog
-import com.jodelXposed.utils.Utils.getNewIntent
-import com.jodelXposed.utils.Utils.getSystemContext
-import java.io.File
 import java.io.IOException
 
-class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
+class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackageResources {
+
+    override fun handleInitPackageResources(resparam: XC_InitPackageResources.InitPackageResourcesParam?) {
+        val layoutHooks = LayoutHooks(resparam, MODULE_PATH)
+        layoutHooks.addResources()
+        layoutHooks.hook()
+    }
 
 
     @SuppressLint("DefaultLocale")
@@ -40,6 +46,8 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
             return
 
         if (lpparam.packageName == "com.tellm.android.app") {
+
+            App.Companion.lpparam = lpparam;
 
             val pkgInfo: PackageInfo = getSystemContext().packageManager.getPackageInfo(lpparam.packageName, 0)
 
@@ -98,7 +106,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
                     Options.hooks = response.body()
                     //Success updating hooks, lets update the local version code
 
-                    Toast.makeText(AndroidAppHelper.currentApplication(), Options.hooks.updateMessage + " Please force restart Jodel", Toast.LENGTH_LONG).show()
+                    Utils.makeSnackbarWithNoCtx(App.Companion.lpparam, "Updated hooks, please force restart Jodel", -2)
 
                     Options.save()
                 } catch (e: Exception) {
@@ -122,5 +130,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit {
 
     companion object {
         var MODULE_PATH: String? = null
+        val PACKAGE_NAME: String = "com.tellm.android.app"
+        var lpparam: LoadPackageParam? = null
     }
 }

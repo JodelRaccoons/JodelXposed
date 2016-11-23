@@ -3,7 +3,6 @@ package com.jodelXposed.hooks;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,14 +10,11 @@ import android.os.FileObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.jodelXposed.utils.Log;
-import com.jodelXposed.utils.Options;
+import com.jodelXposed.utils.Utils;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -26,12 +22,10 @@ import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
-import static android.R.layout.simple_list_item_1;
 import static android.os.FileObserver.CLOSE_WRITE;
 import static com.jodelXposed.utils.Bitmap.jodelImagePath;
 import static com.jodelXposed.utils.Bitmap.loadBitmap;
 import static com.jodelXposed.utils.Utils.getActivity;
-import static com.jodelXposed.utils.Utils.getIdentifierById;
 import static com.jodelXposed.utils.Utils.getNewIntent;
 import static com.jodelXposed.utils.Utils.getSystemContext;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -46,65 +40,79 @@ public class ImageStuff {
      * Add features on ImageView - load custom stored image, adjust ScaleType
      * Remove blur effect
      */
-    public ImageStuff(XC_LoadPackage.LoadPackageParam lpparam) {
-        findAndHookMethod(Options.INSTANCE.getHooks().Class_PhotoEditFragment, lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
+    public ImageStuff(final XC_LoadPackage.LoadPackageParam lpparam) {
+
+        findAndHookMethod("com.jodelapp.jodelandroidv3.view.CreateTextPostFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 
-                if (imageShared) {
-                    loadImage(loadBitmap(), param);
-                    imageShared = false;
-                }
 
                 final FileObserver imageFileObserver = new FileObserver(jodelImagePath, CLOSE_WRITE) {
                     @Override
                     public void onEvent(int i, String s) {
                         Log.dlog("File Observer issued, loading image");
-                        loadImage(loadBitmap(), param);
                         this.stopWatching();
+                        Log.dlog("Image loading, FileObserver stopped!");
+
+                        Object eventBus = getObjectField(param.thisObject, "bus");
+
+                        Class PictureTakenEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.PictureTakenEvent", lpparam.classLoader);
+                        Object pictureTakenEvent = XposedHelpers.newInstance(PictureTakenEvent, loadBitmap());
+
+                        callMethod(eventBus, "aS", pictureTakenEvent);
                     }
                 };
 
                 final Activity activity = getActivity(param);
 
-                final int id = getIdentifierById(param, "save_to_gallery_button");
+                String colorField = null;
+                for (Field f : param.thisObject.getClass().getDeclaredFields()) {
+                    f.setAccessible(true);
+                    if (f.getType().getName().equals(String.class.getName())) {
+                        if (((String) f.get(param.thisObject)).contains("#")) {
+                            colorField = f.getName();
+                            break;
+                        }
+                    }
+                }
+                final String finalColorField = colorField;
 
-                final Button addImage = new Button(activity);
-                addImage.setText("Replace\nImage");
-                addImage.setTextColor(Color.BLACK);
-                addImage.setBackgroundColor(Color.TRANSPARENT);
-
-                addImage.setOnClickListener(new View.OnClickListener() {
+                (((View) param.getResult()).findViewWithTag("gallery_button"))
+                    .setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, simple_list_item_1, new String[]{"Shared Image", "Gallery"});
-                        new AlertDialog.Builder(activity).setSingleChoiceItems(adapter, 0, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                switch (which) {
-                                    case 0:
-                                        loadImage(loadBitmap(), param);
-                                        break;
-                                    case 1:
-                                        imageFileObserver.startWatching();
-                                        getSystemContext().startActivity(getNewIntent("utils.Picker").putExtra("choice", 3));
-                                        break;
-                                }
-                                dialog.dismiss();
-                            }
-                        }).show();
+                        imageFileObserver.startWatching();
+                        getSystemContext().startActivity(getNewIntent("utils.Picker").putExtra("choice", 3));
                     }
                 });
 
-                /*
-                * Apply layout params
-                * */
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                params.addRule(RelativeLayout.RIGHT_OF, id);
-                params.addRule(RelativeLayout.ALIGN_BOTTOM);
-                addImage.setLayoutParams(params);
-                RelativeLayout relativeLayout = (RelativeLayout) ((View) param.getResult()).findViewById(id).getParent();
-                relativeLayout.addView(addImage);
+                final View create_post_layout = ((View) param.getResult()).findViewById(activity.getResources().getIdentifier("create_post_layout", "id", "com.tellm.android.app"));
+
+                (((View) param.getResult()).findViewWithTag("color_chooser"))
+                    .setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            View dialoglayout = activity.getLayoutInflater().inflate(LayoutHooks.JodelResIDs.layout_color_picker, null);
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                            builder.setTitle("Pick your desired color");
+                            builder.setView(dialoglayout);
+
+                            AlertDialog alertDialog = builder.create();
+
+                            ColorPickerOnClickListener colorPickerOnClickListener = new ColorPickerOnClickListener(create_post_layout, param, finalColorField, alertDialog);
+
+                            dialoglayout.findViewWithTag("cp_orange").setOnClickListener(colorPickerOnClickListener);
+                            dialoglayout.findViewWithTag("cp_yellow").setOnClickListener(colorPickerOnClickListener);
+                            dialoglayout.findViewWithTag("cp_red").setOnClickListener(colorPickerOnClickListener);
+                            dialoglayout.findViewWithTag("cp_blue").setOnClickListener(colorPickerOnClickListener);
+                            dialoglayout.findViewWithTag("cp_bluegrayish").setOnClickListener(colorPickerOnClickListener);
+                            dialoglayout.findViewWithTag("cp_green").setOnClickListener(colorPickerOnClickListener);
+
+                            alertDialog.show();
+                        }
+                    });
             }
         });
 
@@ -119,15 +127,49 @@ public class ImageStuff {
 
     }
 
-    private void loadImage(final Bitmap bitmap, XC_MethodHook.MethodHookParam param) {
-        final ImageView a = (ImageView) getObjectField(param.thisObject, Options.INSTANCE.getHooks().Method_ImageHookValues_ImageView);
-        ((Activity) callMethod(param.thisObject, "getActivity"))
-            .runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    a.setImageBitmap(bitmap);
-                    a.requestFocus();
-                }
-            });
+    private class ColorPickerOnClickListener implements View.OnClickListener {
+        private View create_post_layout;
+        private XC_MethodHook.MethodHookParam param;
+        private String finalColorField;
+        private AlertDialog alertDialog;
+
+        ColorPickerOnClickListener(View view, XC_MethodHook.MethodHookParam param, String string, AlertDialog alertDialog) {
+            this.create_post_layout = view;
+            this.param = param;
+            this.finalColorField = string;
+            this.alertDialog = alertDialog;
+        }
+
+        @Override
+        public void onClick(View v) {
+            final String tag = (String) v.getTag();
+            switch (tag) {
+                case "cp_orange":
+                    create_post_layout.setBackgroundColor(Color.parseColor(Utils.Colors.Colors.get(0)));
+                    XposedHelpers.setObjectField(param.thisObject, finalColorField, Utils.Colors.Colors.get(0));
+                    break;
+                case "cp_yellow":
+                    create_post_layout.setBackgroundColor(Color.parseColor(Utils.Colors.Colors.get(1)));
+                    XposedHelpers.setObjectField(param.thisObject, finalColorField, Utils.Colors.Colors.get(1));
+                    break;
+                case "cp_red":
+                    create_post_layout.setBackgroundColor(Color.parseColor(Utils.Colors.Colors.get(2)));
+                    XposedHelpers.setObjectField(param.thisObject, finalColorField, Utils.Colors.Colors.get(2));
+                    break;
+                case "cp_blue":
+                    create_post_layout.setBackgroundColor(Color.parseColor(Utils.Colors.Colors.get(3)));
+                    XposedHelpers.setObjectField(param.thisObject, finalColorField, Utils.Colors.Colors.get(3));
+                    break;
+                case "cp_bluegrayish":
+                    create_post_layout.setBackgroundColor(Color.parseColor(Utils.Colors.Colors.get(4)));
+                    XposedHelpers.setObjectField(param.thisObject, finalColorField, Utils.Colors.Colors.get(4));
+                    break;
+                case "cp_green":
+                    create_post_layout.setBackgroundColor(Color.parseColor(Utils.Colors.Colors.get(5)));
+                    XposedHelpers.setObjectField(param.thisObject, finalColorField, Utils.Colors.Colors.get(5));
+                    break;
+            }
+            alertDialog.dismiss();
+        }
     }
 }

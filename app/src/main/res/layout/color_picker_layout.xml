@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:tag="ll_color_picker_upper_row"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:background="#FFFF9908"
+            android:layout_margin="20dp"
+            android:tag="cp_orange"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+        <ImageView
+            android:background="#FFFFBA00"
+            android:layout_margin="20dp"
+            android:tag="cp_yellow"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+        <ImageView
+            android:background="#FFDD5F5F"
+            android:layout_margin="20dp"
+            android:tag="cp_red"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:tag="ll_color_picker_bottom_row"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:background="#FF06A3CB"
+            android:layout_margin="20dp"
+            android:tag="cp_blue"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+        <ImageView
+            android:background="#FF8ABDB0"
+            android:layout_margin="20dp"
+            android:tag="cp_bluegrayish"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+        <ImageView
+            android:background="#FF9EC41C"
+            android:layout_margin="20dp"
+            android:tag="cp_green"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

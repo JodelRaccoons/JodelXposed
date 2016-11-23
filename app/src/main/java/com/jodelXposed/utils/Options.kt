@@ -4,8 +4,9 @@ import android.os.FileObserver
 import com.jodelXposed.models.HookValues
 import com.jodelXposed.models.Location
 import com.jodelXposed.models.UDI
-import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Log.dlog
+import com.jodelXposed.utils.Log.xlog
+import com.jodelXposed.utils.Utils.OldSettingsPath
 import com.jodelXposed.utils.Utils.SettingsPath
 import com.squareup.moshi.Moshi
 import java.io.File
@@ -15,10 +16,15 @@ object Options : FileObserver(SettingsPath, CLOSE_WRITE) {
 
     private val jsonAdapter = Moshi.Builder().build().adapter<OptionsObject>(OptionsObject::class.java)
     private val settingsFile = File(SettingsPath)
+    private val oldSettingsFile = File(OldSettingsPath)
     private var options = OptionsObject()
 
     init {
         dlog("Init options")
+        if (!settingsFile.exists() && oldSettingsFile.exists()) {
+            dlog("Migrating settings file to new directory")
+            oldSettingsFile.renameTo(settingsFile)
+        }
         if (!settingsFile.exists())
             save()
         else
