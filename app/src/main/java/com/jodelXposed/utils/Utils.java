@@ -31,8 +31,8 @@ import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 
 public class Utils {
-    public static String SettingsPath = Environment.getExternalStorageDirectory() + "/JodelXposed/jodel-settings-v2";
-    public static String OldSettingsPath = Environment.getExternalStorageDirectory() + "/.jodel-settings-v2";
+    private static final String JXFolderPath = Environment.getExternalStorageDirectory() + File.separator + "JodelXposed";
+    public static final String OldSettingsPath = Environment.getExternalStorageDirectory() + File.separator + ".jodel-settings-v2";
     public static Activity snackbarUtilActivity;
 
     public static Context getSystemContext() {
@@ -44,12 +44,24 @@ public class Utils {
         return (Activity) callMethod(param.thisObject, "getActivity");
     }
 
-    public static String getSaveImagesPath() {
-        File folder = new File(Environment.getExternalStorageDirectory() + "/JodelXposed/SavedImages");
+    public static String getJXFolder() {
+        File folder = new File(JXFolderPath);
         if (!folder.exists()) {
             folder.mkdir();
         }
-        return Environment.getExternalStorageDirectory() + "/JodelXposed/savedImages/" + System.currentTimeMillis() + ".jpg";
+        return folder.getAbsolutePath();
+    }
+
+    public static String getJXSettingsFile() {
+        return getJXFolder() + File.separator + "jodel-settings-v2.json";
+    }
+
+    public static String getSaveImagesFolder() {
+        File folder = new File(getJXFolder() + File.separator + "SavedImages");
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+        return folder.getAbsolutePath();
     }
 
     public static void makeSnackbar(XC_LoadPackage.LoadPackageParam lpparam, XC_MethodHook.MethodHookParam param, String message) {

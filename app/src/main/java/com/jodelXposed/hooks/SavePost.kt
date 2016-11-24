@@ -17,6 +17,7 @@ import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.XposedHelpers.getObjectField
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import java.io.File
 import com.jodelXposed.utils.Bitmap as BitmapJX
 
 class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoader = loadPackageParam.classLoader) {
@@ -25,7 +26,7 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
             val post = getObjectField(param.thisObject, Options.hooks.Field_JodelGestureListener_Post)
             val context = AndroidAppHelper.currentApplication()
 
-            var postImageUrl = getObjectField(post, "imageUrl")
+            val postImageUrl =getObjectField(post, "imageUrl")
             if (postImageUrl !is String) {
                 dlog("Post has no imageUrl")
                 dlog("Copying post message")
@@ -39,8 +40,8 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
 
                 return
             }
-            postImageUrl = if (postImageUrl.startsWith("//")) "https:${postImageUrl}" else postImageUrl
-            xlog("Saving image from ${postImageUrl}")
+            val imageUrl = if (postImageUrl.startsWith("//")) "https:${postImageUrl}" else postImageUrl
+            xlog("Saving image from ${imageUrl}")
 
             Picasso.with(context).load(postImageUrl).into(object : Target {
                 override fun onBitmapFailed(errorDrawable: Drawable?) {
@@ -56,7 +57,7 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
                     // DONE: Save to dedicated folder
                     //TODO images saving failes at first try when jodel is opened, second try is needed
                     //TODO start media scanner after saving to make the image visible in the gallery
-                    BitmapJX.saveBitmap(bitmap, Utils.getSaveImagesPath())
+                    BitmapJX.saveBitmap(bitmap, Utils.getSaveImagesFolder() + File.separator + File(imageUrl))
 
                     Utils.makeSnackbarWithNoCtx(loadPackageParam, "Saved image!")
                 }
