@@ -56,6 +56,10 @@ public class Utils {
         return getJXFolder() + File.separator + "jodel-settings-v2.json";
     }
 
+    public static String getJXSharedImage() {
+        return getJXFolder() + File.separator + ".jodel-input.jpg";
+    }
+
     public static String getSaveImagesFolder() {
         File folder = new File(getJXFolder() + File.separator + "SavedImages");
         if (!folder.exists()) {

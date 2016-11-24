@@ -1,18 +1,17 @@
 package com.jodelXposed.utils
 
 import android.graphics.BitmapFactory
-import android.os.Environment
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
+import com.jodelXposed.utils.Utils.getJXSharedImage
+
 import java.io.*
 
 object Bitmap {
-    @JvmField var jodelImagePath = Environment.getExternalStorageDirectory().toString() + "/.jodel-input.jpg"
-
     @JvmStatic
     fun loadBitmap(): android.graphics.Bitmap {
         dlog("Loading bitmap image")
-        return BitmapFactory.decodeFile(File(jodelImagePath).absolutePath)
+        return BitmapFactory.decodeFile(getJXSharedImage())
     }
 
     @JvmStatic
@@ -34,7 +33,7 @@ object Bitmap {
             dlog("Saving bitmap of size: ${bitmap.byteCount}")
             var fos: FileOutputStream? = null
             if (path == null) {
-                fos = FileOutputStream(File(jodelImagePath))
+                fos = FileOutputStream(File(getJXSharedImage()))
             } else {
                 fos = FileOutputStream(File(path))
             }

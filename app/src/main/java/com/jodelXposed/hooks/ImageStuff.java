@@ -23,9 +23,9 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 import static android.os.FileObserver.CLOSE_WRITE;
-import static com.jodelXposed.utils.Bitmap.jodelImagePath;
 import static com.jodelXposed.utils.Bitmap.loadBitmap;
 import static com.jodelXposed.utils.Utils.getActivity;
+import static com.jodelXposed.utils.Utils.getJXSharedImage;
 import static com.jodelXposed.utils.Utils.getNewIntent;
 import static com.jodelXposed.utils.Utils.getSystemContext;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -47,7 +47,7 @@ public class ImageStuff {
             protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
 
 
-                final FileObserver imageFileObserver = new FileObserver(jodelImagePath, CLOSE_WRITE) {
+                final FileObserver imageFileObserver = new FileObserver(getJXSharedImage(), CLOSE_WRITE) {
                     @Override
                     public void onEvent(int i, String s) {
                         Log.dlog("File Observer issued, loading image");
