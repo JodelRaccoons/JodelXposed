@@ -41,6 +41,7 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
                 return
             }
             val imageUrl = if (postImageUrl.startsWith("//")) "https:${postImageUrl}" else postImageUrl
+            val filename = File(imageUrl).name
             xlog("Saving image from ${imageUrl}")
 
             Picasso.with(context).load(postImageUrl).into(object : Target {
@@ -57,7 +58,7 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
                     // DONE: Save to dedicated folder
                     //TODO images saving failes at first try when jodel is opened, second try is needed
                     //TODO start media scanner after saving to make the image visible in the gallery
-                    BitmapJX.saveBitmap(bitmap, Utils.getSaveImagesFolder() + File.separator + File(imageUrl))
+                    BitmapJX.saveBitmap(bitmap, Utils.getSaveImagesFolder() + File.separator + filename)
 
                     Utils.makeSnackbarWithNoCtx(loadPackageParam, "Saved image!")
                 }
