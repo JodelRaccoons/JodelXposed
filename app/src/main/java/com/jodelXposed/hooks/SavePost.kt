@@ -44,7 +44,7 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
             val filename = File(imageUrl).name
             xlog("Saving image from ${imageUrl}")
 
-            Picasso.with(context).load(postImageUrl).into(object : Target {
+            Picasso.with(context).load(imageUrl).into(object : Target {
                 override fun onBitmapFailed(errorDrawable: Drawable?) {
                     xlog("Failed to load image")
                 }
