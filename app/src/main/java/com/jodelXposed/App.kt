@@ -33,6 +33,8 @@ import java.io.IOException
 class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackageResources {
 
     override fun handleInitPackageResources(resparam: XC_InitPackageResources.InitPackageResourcesParam?) {
+        if (resparam?.packageName != PACKAGE_NAME)
+            return
         val layoutHooks = LayoutHooks(resparam, MODULE_PATH)
         layoutHooks.addResources()
         layoutHooks.hook()
