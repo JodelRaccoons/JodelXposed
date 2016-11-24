@@ -16,6 +16,15 @@ class Hooks(private val lpparam: LoadPackageParam) {
         }
 
         try {
+            Log.xlog("#### Loading BetaStuff hooks ####")
+            BetaStuff(lpparam)
+            Log.xlog("#### BetaStuff hooks loaded! ####")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.xlog("!!!! FAILED loading BetaStuff hooks! !!!!\n\n")
+        }
+
+        try {
             Log.xlog("#### Loading ImageStuff hooks ####")
             ImageStuff(lpparam)
             Log.xlog("#### ImageStuff hooks loaded! ####")
