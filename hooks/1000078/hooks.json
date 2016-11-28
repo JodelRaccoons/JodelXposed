@@ -11,7 +11,7 @@
   **/
   "Class_Storage": "com.jodelapp.jodelandroidv3.model.Storage",
   "Method_BetaHook_UnlockFeatures": "bz",
-  "Array_FeaturesEnabled": ["channels", "hashtags","hometown","user_profiling"],
+  "Array_FeaturesEnabled": ["channels", "hashtags","hometown"],
   /**
     * package com.jodelapp.jodelandroidv3.view.PhotoEditFragment;
     * type: field
