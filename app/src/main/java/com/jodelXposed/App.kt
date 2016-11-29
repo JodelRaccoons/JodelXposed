@@ -71,23 +71,31 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
                 xlog("Options cannot be loaded", e)
             }
 
-
             if (BuildConfig.JODEL_VERSION_CODE == pkgInfo.versionCode) {
-                dlog("Loading local hooks.json")
+                dlog("Loading shipped hooks.json")
+                var shippedHooks = HookValues()
                 try {
                     val jxContext = getSystemContext().createPackageContext(
                             "com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
                     val ins = jxContext.assets.open("${pkgInfo.versionCode}/hooks.json")
-                    Options.hooks = Gson().fromJson(ins.reader().readText(), HookValues::class.java)
-                    Options.save()
+                    shippedHooks = Gson().fromJson(ins.reader().readText(), HookValues::class.java)
                 } catch(ex: JsonSyntaxException) {
                     xlog("Hooks json syntax error", ex)
                 } catch (ex: IOException) {
                     xlog("Could not read asset", ex)
                 }
-            } else if (pkgInfo.versionCode != Options.hooks.versionCode) {
-                updateHooks(pkgInfo.versionCode)
+
+                if (Options.hooks.version >= shippedHooks.version) {
+                    dlog("Using local hooks.json")
+                } else {
+                    dlog("Saving shipped hooks to local")
+                    Options.hooks = shippedHooks
+                    Options.save()
+                }
             }
+
+            // Check for hook updates
+            updateHooks(Options.hooks.version, pkgInfo.versionCode)
 
             xlog("#### Loading hooks ####")
             Hooks(lpparam).hook()
@@ -100,17 +108,19 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
     }
 
 
-    private fun updateHooks(versionCode: Int) {
+    private fun updateHooks(hooksVersion: Int, versionCode: Int) {
 
         RetrofitProvider.getJodelXposedService().getHooks(versionCode).enqueue(object : Callback<HookValues> {
             override fun onResponse(call: Call<HookValues>, response: Response<HookValues>) {
                 try {
-                    Options.hooks = response.body()
-                    //Success updating hooks, lets update the local version code
-
-                    Utils.makeSnackbarWithNoCtx(App.Companion.lpparam, "Updated hooks, please force restart Jodel", -2)
-
-                    Options.save()
+                    val repoHooks = response.body()
+                    if (repoHooks.version > hooksVersion) {
+                        dlog("Replacing local hooks with repo hooks")
+                        Options.save()
+                        Utils.makeSnackbarWithNoCtx(App.Companion.lpparam, "Updated hooks, please force restart Jodel", -2)
+                    } else {
+                        dlog("Repo hooks are of the same or older version. Not updating.")
+                    }
                 } catch (e: Exception) {
                     xlog("Your Jodel version is not supported by JodelXposed yet")
                     Toast.makeText(AndroidAppHelper.currentApplication(), "Your Jodel version isnt supported by JodelXposed yet.", Toast.LENGTH_LONG).show()

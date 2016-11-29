@@ -1,4 +1,11 @@
 {
+  /**
+    * The version of this file
+   **/
+  "version": 1,
+  /**
+    * The targeted Jodel version code
+   **/
   "versionCode": 1000081,
   "updateMessage": "Updated hooks for 1000081 (4.29.0)",
   /**
