@@ -36,7 +36,7 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
                 val clip = ClipData.newPlainText("JodelPost", postMessage)
                 clipboard.primaryClip = clip
 
-                Utils.makeSnackbarWithNoCtx(loadPackageParam, "Copied to clipboard!")
+                Utils.makeSnackbarWithNoCtx(loadPackageParam, "Copied to clipboard!", -1)
 
                 return
             }
@@ -60,7 +60,7 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
                     //TODO start media scanner after saving to make the image visible in the gallery
                     BitmapJX.saveBitmap(bitmap, Utils.getSaveImagesFolder() + File.separator + filename)
 
-                    Utils.makeSnackbarWithNoCtx(loadPackageParam, "Saved image!")
+                    Utils.makeSnackbarWithNoCtx(loadPackageParam, "Saved image!", -1)
                 }
             })
         }
