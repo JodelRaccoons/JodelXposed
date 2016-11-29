@@ -69,7 +69,8 @@ public class ImageStuff {
                 for (Field f : param.thisObject.getClass().getDeclaredFields()) {
                     f.setAccessible(true);
                     if (f.getType().getName().equals(String.class.getName())) {
-                        if (((String) f.get(param.thisObject)).contains("#")) {
+                        String field = ((String) f.get(param.thisObject));
+                        if (field != null && field.contains("#")) {
                             colorField = f.getName();
                             break;
                         }
