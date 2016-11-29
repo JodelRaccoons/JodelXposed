@@ -2,7 +2,7 @@
   /**
     * The version of this file
    **/
-  "version": 2,
+  "version": 3,
   /**
     * The targeted Jodel version code
    **/
@@ -17,7 +17,7 @@
     * search term: features
   **/
   "Class_Storage": "com.jodelapp.jodelandroidv3.model.Storage",
-  "Method_BetaHook_UnlockFeatures": "bA",
+  "Method_BetaHook_UnlockFeatures": "by",
   "Array_FeaturesEnabled": ["channels", "hashtags","hometown"],
   /**
     * package com.jodelapp.jodelandroidv3.view.PhotoEditFragment;
