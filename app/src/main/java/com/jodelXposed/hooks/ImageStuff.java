@@ -59,6 +59,7 @@ public class ImageStuff {
                         Class PictureTakenEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.PictureTakenEvent", lpparam.classLoader);
                         Object pictureTakenEvent = XposedHelpers.newInstance(PictureTakenEvent, loadBitmap());
 
+                        // TODO: Don't use hard coded name reference
                         callMethod(eventBus, "aS", pictureTakenEvent);
                     }
                 };
