@@ -118,7 +118,8 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
                         dlog("Replacing local hooks with repo hooks")
                         Options.hooks = repoHooks
                         Options.save()
-                        Utils.makeSnackbarWithNoCtx(App.Companion.lpparam, "Updated hooks, please force restart Jodel", -2)
+                        Toast.makeText(AndroidAppHelper.currentApplication(), "Updated hooks, please force restart Jodel", Toast.LENGTH_LONG).show()
+
                     } else {
                         dlog("Repo hooks are of the same or older version. Not updating.")
                     }
