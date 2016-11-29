@@ -13,12 +13,12 @@ class BetaStuff(lpparam: LoadPackageParam) {
             @Throws(Throwable::class)
             override fun afterHookedMethod(param: MethodHookParam) {
                 val requested: String = param.args[0] as String
-                Log.dlog("Requested feature: $requested")
-                Log.dlog("Default enabled: ${param.result}")
+                Log.vlog("Requested feature: $requested")
+                Log.vlog("Default enabled: ${param.result}")
                 for (feature in Options.hooks.Array_FeaturesEnabled) {
                     if (feature == requested) {
                         param.result = true
-                        Log.dlog("Override enabled")
+                        Log.vlog("Override enabled")
                     }
                 }
             }

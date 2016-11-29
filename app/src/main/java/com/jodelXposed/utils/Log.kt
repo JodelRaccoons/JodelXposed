@@ -42,4 +42,15 @@ object Log {
 
     @JvmStatic
     fun dlog(msg: String?) = dlog(msg, null)
+
+    @JvmStatic
+    fun vlog(msg: String?, t: Throwable? = null) {
+        if (t == null)
+            android.util.Log.v(TAG, msg)
+        else
+            android.util.Log.v(TAG, msg, t)
+    }
+
+    @JvmStatic
+    fun vlog(msg: String?) = dlog(msg, null)
 }

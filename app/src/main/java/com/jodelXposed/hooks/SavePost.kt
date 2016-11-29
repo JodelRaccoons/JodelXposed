@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.view.MotionEvent
 import com.jodelXposed.utils.Log.dlog
+import com.jodelXposed.utils.Log.vlog
 import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Options
 import com.jodelXposed.utils.Utils
@@ -28,8 +29,8 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
 
             val postImageUrl =getObjectField(post, "imageUrl")
             if (postImageUrl !is String) {
-                dlog("Post has no imageUrl")
-                dlog("Copying post message")
+                vlog("Post has no imageUrl")
+                vlog("Copying post message")
                 val postMessage = getObjectField(post, "message") as String
 
                 val clipboard = AndroidAppHelper.currentApplication().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -50,11 +51,11 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
                 }
 
                 override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                    dlog("Preparing to load image")
+                    vlog("Preparing to load image")
                 }
 
                 override fun onBitmapLoaded(bitmap: Bitmap, from: Picasso.LoadedFrom?) {
-                    dlog("Loaded image")
+                    vlog("Loaded image")
                     // DONE: Save to dedicated folder
                     //TODO images saving failes at first try when jodel is opened, second try is needed
                     //TODO start media scanner after saving to make the image visible in the gallery
