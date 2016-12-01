@@ -65,7 +65,6 @@ public class LayoutHooks {
 
     public void hook() {
 
-        //TODO crashes / layout not found but is still executed
         resparam.res.hookLayout(App.Companion.getPACKAGE_NAME(), "layout", "fragment_create_post", new XC_LayoutInflated() {
                 @Override
                 public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
