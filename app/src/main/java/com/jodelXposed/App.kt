@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.jodelXposed.hooks.LayoutHooks
 import com.jodelXposed.models.HookValues
+import com.jodelXposed.retrofit.JodelXposedAPI
 import com.jodelXposed.retrofit.RetrofitProvider
 import com.jodelXposed.utils.Hooks
 import com.jodelXposed.utils.Log.dlog
@@ -108,9 +109,9 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
     }
 
 
-    private fun updateHooks(hooksVersion: Int, versionCode: Int) {
+    private fun updateHooks(hooksVersion: Int, versionCode: Int, api: JodelXposedAPI = RetrofitProvider.JXAPI) {
 
-        RetrofitProvider.getJodelXposedService().getHooks(versionCode).enqueue(object : Callback<HookValues> {
+        api.getHooks(versionCode).enqueue(object : Callback<HookValues> {
             override fun onResponse(call: Call<HookValues>, response: Response<HookValues>) {
                 try {
                     val repoHooks = response.body()
