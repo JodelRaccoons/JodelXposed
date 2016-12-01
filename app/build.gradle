@@ -55,7 +55,6 @@ dependencies {
     compile 'com.schibstedspain.android:leku:2.2.0'
     compile 'com.google.android.gms:play-services-maps:9.4.0'
     compile 'com.google.android.gms:play-services-location:9.4.0'
-    compile 'com.squareup.moshi:moshi:1.2.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.androidadvance:topsnackbar:1.1.1'

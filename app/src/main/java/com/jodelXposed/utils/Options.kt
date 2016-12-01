@@ -1,6 +1,7 @@
 package com.jodelXposed.utils
 
 import android.os.FileObserver
+import com.google.gson.GsonBuilder
 import com.jodelXposed.models.HookValues
 import com.jodelXposed.models.Location
 import com.jodelXposed.models.UDI
@@ -8,13 +9,12 @@ import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Utils.OldSettingsPath
 import com.jodelXposed.utils.Utils.getJXSettingsFile
-import com.squareup.moshi.Moshi
 import java.io.File
 import java.io.IOException
 
 object Options : FileObserver(getJXSettingsFile(), CLOSE_WRITE) {
 
-    private val jsonAdapter = Moshi.Builder().build().adapter<OptionsObject>(OptionsObject::class.java)
+    private val gson = GsonBuilder().setLenient().setPrettyPrinting().create()
     private val settingsFile = File(getJXSettingsFile())
     private val oldSettingsFile = File(OldSettingsPath)
     private var options = OptionsObject()
@@ -34,7 +34,7 @@ object Options : FileObserver(getJXSettingsFile(), CLOSE_WRITE) {
 
     fun save() {
         try {
-            val settingsJson = jsonAdapter.toJson(options)
+            val settingsJson = gson.toJson(options)
             dlog("Writing $settingsJson to file")
             settingsFile.writeText(settingsJson)
         } catch (e: IOException) {
@@ -45,7 +45,7 @@ object Options : FileObserver(getJXSettingsFile(), CLOSE_WRITE) {
     fun load() {
         dlog("Loading json from settings")
         try {
-            options = jsonAdapter.fromJson(settingsFile.readText())
+            options = gson.fromJson(settingsFile.readText(),OptionsObject::class.java)
         } catch (e: IOException) {
             xlog("Could not load options file", e)
         }
