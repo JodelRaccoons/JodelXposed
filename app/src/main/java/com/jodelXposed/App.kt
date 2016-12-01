@@ -1,6 +1,5 @@
 package com.jodelXposed
 
-import android.annotation.SuppressLint
 import android.app.AndroidAppHelper
 import android.content.Context
 import android.content.Intent
@@ -18,7 +17,6 @@ import com.jodelXposed.utils.Hooks
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Options
-import com.jodelXposed.utils.Utils
 import com.jodelXposed.utils.Utils.getNewIntent
 import com.jodelXposed.utils.Utils.getSystemContext
 import de.robv.android.xposed.IXposedHookInitPackageResources
@@ -42,7 +40,6 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
     }
 
 
-    @SuppressLint("DefaultLocale")
     @Throws(Throwable::class)
     override fun handleLoadPackage(lpparam: LoadPackageParam) {
         if (lpparam.packageName != "com.tellm.android.app")
@@ -50,7 +47,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
 
         if (lpparam.packageName == "com.tellm.android.app") {
 
-            App.Companion.lpparam = lpparam;
+            App.Companion.lpparam = lpparam
 
             val pkgInfo: PackageInfo = getSystemContext().packageManager.getPackageInfo(lpparam.packageName, 0)
 
