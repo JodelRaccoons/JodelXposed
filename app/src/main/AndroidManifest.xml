@@ -38,18 +38,6 @@
 
         <activity
             android:excludeFromRecents="true"
-            android:name=".ShareActivity"
-            android:label="@string/title_activity_share">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-
-                <data android:mimeType="image/*"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:excludeFromRecents="true"
             android:label="@string/title_activity_share"
             android:name=".JXPreferenceActivity">
             <intent-filter>
