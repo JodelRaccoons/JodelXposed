@@ -33,9 +33,15 @@ object Bitmap {
             dlog("Saving bitmap of size: ${bitmap.byteCount}")
             var fos: FileOutputStream? = null
             if (path == null) {
-                fos = FileOutputStream(File(getJXSharedImage()))
+                val file = File(getJXSharedImage())
+                if (!file.exists())
+                    file.createNewFile()
+                fos = FileOutputStream(file)
             } else {
-                fos = FileOutputStream(File(path))
+                val file = File(path)
+                if (!file.exists())
+                    file.createNewFile()
+                fos = FileOutputStream(file)
             }
             bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 100, fos)
             fos.close()
