@@ -19,7 +19,6 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.jodelXposed.JXPreferenceActivity
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
-import com.schibstedspain.leku.LocationPickerActivity
 import id.zelory.compressor.Compressor
 import java.io.File
 import java.io.FileNotFoundException
