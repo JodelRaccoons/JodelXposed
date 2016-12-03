@@ -5,26 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
-
 import com.jodelXposed.App
-import com.jodelXposed.models.HookValues
 import com.jodelXposed.utils.Log
 import com.jodelXposed.utils.Options
 import com.jodelXposed.utils.Utils
-
-import java.util.ArrayList
-import java.util.HashMap
-
 import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XC_MethodHook.MethodHookParam
 import de.robv.android.xposed.XposedHelpers
+import de.robv.android.xposed.XposedHelpers.*
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import es.dmoral.prefs.Prefs
-
-import de.robv.android.xposed.XposedHelpers.callMethod
-import de.robv.android.xposed.XposedHelpers.findAndHookMethod
-import de.robv.android.xposed.XposedHelpers.getAdditionalInstanceField
-import de.robv.android.xposed.XposedHelpers.getObjectField
-import de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField
+import java.util.*
 
 class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoader = lpparam.classLoader) {
 
@@ -38,7 +29,7 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
          * user_handle / poster
          * Apply darker shade to OP's posts in a thread
          */
-        fun trackPoster1(param: XC_MethodHook.MethodHookParam) {
+        fun trackPoster1(param: MethodHookParam) {
             val textView = getObjectField(param.args[0], "created")
             val posts = getObjectField(param.thisObject, "posts") as List<*>
             val ids = HashMap<String, String>(posts.size)
@@ -68,12 +59,12 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
          * Use the additional data from the TimeView to insert the poster ID
          * next to the regular TimeView text
          */
-        fun trackPoster2(param: XC_MethodHook.MethodHookParam) {
+        fun trackPoster2(param: MethodHookParam) {
             val id = getAdditionalInstanceField(param.thisObject, "updateExtraView") as String?
             callMethod(param.thisObject, "append", " #" + id)
         }
 
-        fun stickyPost(param: XC_MethodHook.MethodHookParam) {
+        fun stickyPost(param: MethodHookParam) {
             if (Prefs.with(Utils.snackbarUtilActivity).readBoolean("displayJXchangelog", true)) {
                 val posts: MutableList<Any>? = param.result as MutableList<Any>?
 
@@ -94,7 +85,7 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
         /**
          * Enable pasting in PostEditText
          */
-        fun enablePasting(param: XC_MethodHook.MethodHookParam) {
+        fun enablePasting(param: MethodHookParam) {
             val rootView = param.result as View
             with((rootView.findViewById(rootView.resources.getIdentifier("scrollContainer", "id", App.PACKAGE_NAME)) as ScrollView).getChildAt(0)) {
                 isClickable = true
@@ -102,25 +93,45 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
             }
         }
 
-        findAndHookMethod(hooks.Class_PostDetailRecyclerAdapter, classLoader, hooks.Method_PostStuff_TrackPostsMethod, "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter\$PostViewHolder", Int::class.javaPrimitiveType, object : XC_MethodHook() {
-            @Throws(Throwable::class)
-            override fun afterHookedMethod(param: MethodHookParam) = trackPoster1(param)
-        })
+        findAndHookMethod(
+                hooks.Class_PostDetailRecyclerAdapter,
+                classLoader,
+                hooks.Method_PostStuff_TrackPostsMethod,
+                "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter\$PostViewHolder",
+                Int::class.javaPrimitiveType,
+                object : XC_MethodHook() {
+                    @Throws(Throwable::class)
+                    override fun afterHookedMethod(param: MethodHookParam) = trackPoster1(param)
+                })
 
+        findAndHookMethod(
+                "com.jodelapp.jodelandroidv3.view.TimeView",
+                classLoader,
+                "update",
+                object : XC_MethodHook() {
+                    @Throws(Throwable::class)
+                    override fun afterHookedMethod(param: MethodHookParam) = trackPoster2(param)
+                })
 
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.TimeView", classLoader, "update", object : XC_MethodHook() {
-            @Throws(Throwable::class)
-            override fun afterHookedMethod(param: MethodHookParam) = trackPoster2(param)
-        })
+        findAndHookMethod(
+                "com.jodelapp.jodelandroidv3.api.model.GetPostsComboResponse",
+                classLoader,
+                "getStickies",
+                object : XC_MethodHook() {
+                    @Throws(Throwable::class)
+                    override fun afterHookedMethod(param: MethodHookParam) = stickyPost(param)
+                })
 
-        findAndHookMethod("com.jodelapp.jodelandroidv3.api.model.GetPostsComboResponse", classLoader, "getStickies", object : XC_MethodHook() {
-            @Throws(Throwable::class)
-            override fun afterHookedMethod(param: MethodHookParam) = stickyPost(param)
-        })
-
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.CreateTextPostFragment", classLoader, "onCreateView", LayoutInflater::class.java, ViewGroup::class.java, Bundle::class.java, object : XC_MethodHook() {
-            @Throws(Throwable::class)
-            override fun afterHookedMethod(param: MethodHookParam) = enablePasting(param)
-        })
+        findAndHookMethod(
+                "com.jodelapp.jodelandroidv3.view.CreateTextPostFragment",
+                classLoader,
+                "onCreateView",
+                LayoutInflater::class.java,
+                ViewGroup::class.java,
+                Bundle::class.java,
+                object : XC_MethodHook() {
+                    @Throws(Throwable::class)
+                    override fun afterHookedMethod(param: MethodHookParam) = enablePasting(param)
+                })
     }
 }
