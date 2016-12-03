@@ -133,6 +133,7 @@ class Picker : AppCompatActivity() {
                     getAction()
                 } else {
                     Toast.makeText(applicationContext, "This app needs permissions in order to work", Toast.LENGTH_LONG).show()
+                    finish()
                 }
             }
         }
