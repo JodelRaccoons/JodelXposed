@@ -16,9 +16,14 @@ class BetaStuff(lpparam: LoadPackageParam) {
                 Log.vlog("Requested feature: $requested")
                 Log.vlog("Default enabled: ${param.result}")
                 for (feature in Options.hooks.Array_FeaturesEnabled) {
-                    if (feature == requested) {
-                        param.result = true
-                        Log.vlog("Override enabled")
+                    with(feature) {
+                        if (startsWith("!") && substring(1) == requested) {
+                            param.result = false
+                            Log.vlog("Feature disabled")
+                        } else if (param.result == false && equals(requested)) {
+                            param.result = true
+                            Log.vlog("Feature enabled")
+                        }
                     }
                 }
             }
