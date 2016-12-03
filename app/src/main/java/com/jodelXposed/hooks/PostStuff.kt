@@ -96,7 +96,10 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
          */
         fun enablePasting(param: XC_MethodHook.MethodHookParam) {
             val rootView = param.result as View
-            (rootView.findViewById(rootView.resources.getIdentifier("scrollContainer", "id", App.PACKAGE_NAME)) as ScrollView).getChildAt(0).isClickable = true
+            with((rootView.findViewById(rootView.resources.getIdentifier("scrollContainer", "id", App.PACKAGE_NAME)) as ScrollView).getChildAt(0)) {
+                isClickable = true
+                isLongClickable = true
+            }
         }
 
         findAndHookMethod(hooks.Class_PostDetailRecyclerAdapter, classLoader, hooks.Method_PostStuff_TrackPostsMethod, "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter\$PostViewHolder", Int::class.javaPrimitiveType, object : XC_MethodHook() {
