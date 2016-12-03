@@ -45,60 +45,58 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
         if (lpparam.packageName != "com.tellm.android.app")
             return
 
-        if (lpparam.packageName == "com.tellm.android.app") {
 
-            App.Companion.lpparam = lpparam
+        App.Companion.lpparam = lpparam
 
-            val pkgInfo: PackageInfo = getSystemContext().packageManager.getPackageInfo(lpparam.packageName, 0)
+        val pkgInfo: PackageInfo = getSystemContext().packageManager.getPackageInfo(lpparam.packageName, 0)
 
 
-            xlog("----------\n" +
-                    "Starting JodelXposed\n" +
-                    "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
-                    "JodelTarget ${BuildConfig.JODEL_VERSION_NAME} (${BuildConfig.JODEL_VERSION_CODE})\n" +
-                    "JodelLocal ${pkgInfo.versionName} (${pkgInfo.versionCode})\n" +
-                    "----------")
+        xlog("----------\n" +
+                "Starting JodelXposed\n" +
+                "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
+                "JodelTarget ${BuildConfig.JODEL_VERSION_NAME} (${BuildConfig.JODEL_VERSION_CODE})\n" +
+                "JodelLocal ${pkgInfo.versionName} (${pkgInfo.versionCode})\n" +
+                "----------")
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                checkPermissions()
-            }
-
-            try {
-                Options.load()
-            } catch (e: Exception) {
-                xlog("Options cannot be loaded", e)
-            }
-
-            if (BuildConfig.JODEL_VERSION_CODE == pkgInfo.versionCode) {
-                dlog("Loading shipped hooks.json")
-                var shippedHooks = HookValues()
-                try {
-                    val jxContext = getSystemContext().createPackageContext(
-                            "com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
-                    val ins = jxContext.assets.open("${pkgInfo.versionCode}/hooks.json")
-                    shippedHooks = Gson().fromJson(ins.reader().readText(), HookValues::class.java)
-                } catch(ex: JsonSyntaxException) {
-                    xlog("Hooks json syntax error", ex)
-                } catch (ex: IOException) {
-                    xlog("Could not read asset", ex)
-                }
-
-                if (Options.hooks.version >= shippedHooks.version) {
-                    dlog("Using local hooks.json")
-                } else {
-                    dlog("Saving shipped hooks to local")
-                    Options.hooks = shippedHooks
-                    Options.save()
-                }
-            }
-
-            // Check for hook updates
-            updateHooks(Options.hooks.version, pkgInfo.versionCode)
-
-            xlog("#### Loading hooks ####")
-            Hooks(lpparam).hook()
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermissions()
         }
+
+        try {
+            Options.load()
+        } catch (e: Exception) {
+            xlog("Options cannot be loaded", e)
+        }
+
+        if (BuildConfig.JODEL_VERSION_CODE == pkgInfo.versionCode) {
+            dlog("Loading shipped hooks.json")
+            var shippedHooks = HookValues()
+            try {
+                val jxContext = getSystemContext().createPackageContext(
+                        "com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
+                val ins = jxContext.assets.open("${pkgInfo.versionCode}/hooks.json")
+                shippedHooks = Gson().fromJson(ins.reader().readText(), HookValues::class.java)
+            } catch(ex: JsonSyntaxException) {
+                xlog("Hooks json syntax error", ex)
+            } catch (ex: IOException) {
+                xlog("Could not read asset", ex)
+            }
+
+            if (Options.hooks.version >= shippedHooks.version) {
+                dlog("Using local hooks.json")
+            } else {
+                dlog("Saving shipped hooks to local")
+                Options.hooks = shippedHooks
+                Options.save()
+            }
+        }
+
+        // Check for hook updates
+        updateHooks(Options.hooks.version, pkgInfo.versionCode)
+
+        xlog("#### Loading hooks ####")
+        Hooks(lpparam).hook()
+
     }
 
     private fun checkPermissions() {
