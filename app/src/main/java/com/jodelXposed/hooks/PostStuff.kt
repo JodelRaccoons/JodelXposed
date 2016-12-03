@@ -61,7 +61,8 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
          */
         fun trackPoster2(param: MethodHookParam) {
             val id = getAdditionalInstanceField(param.thisObject, "updateExtraView") as String?
-            callMethod(param.thisObject, "append", " #" + id)
+            if (id != null)
+                callMethod(param.thisObject, "append", " #" + id)
         }
 
         fun stickyPost(param: MethodHookParam) {
