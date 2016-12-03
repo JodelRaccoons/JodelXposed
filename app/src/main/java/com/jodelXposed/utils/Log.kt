@@ -52,5 +52,5 @@ object Log {
     }
 
     @JvmStatic
-    fun vlog(msg: String?) = dlog(msg, null)
+    fun vlog(msg: String?) = vlog(msg, null)
 }

@@ -11,6 +11,11 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
+import com.google.android.gms.location.places.ui.PlacePicker
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.jodelXposed.JXPreferenceActivity
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
@@ -64,11 +69,18 @@ class Picker : AppCompatActivity() {
     }
 
     private fun startLocationPicker() {
+        val builder = PlacePicker.IntentBuilder()
         val location = Options.location
-        val intent = Intent(this, LocationPickerActivity::class.java)
-        intent.putExtra(LocationPickerActivity.LATITUDE, location.lat)
-        intent.putExtra(LocationPickerActivity.LONGITUDE, location.lng)
-        startActivityForResult(intent, PLACEPICKER_REQUEST_CODE)
+        val latLngBounds = LatLngBounds.Builder().include(LatLng(location.lat, location.lng)).build()
+        builder.setLatLngBounds(latLngBounds)
+        try {
+            val intent = builder.build(this)
+            startActivityForResult(intent, PLACEPICKER_REQUEST_CODE)
+        } catch (e: GooglePlayServicesRepairableException) {
+            e.printStackTrace()
+        } catch (e: GooglePlayServicesNotAvailableException) {
+            e.printStackTrace()
+        }
     }
 
 
@@ -87,8 +99,9 @@ class Picker : AppCompatActivity() {
 
         when (requestCode) {
             PLACEPICKER_REQUEST_CODE -> {
-                Options.location.lat = data.getDoubleExtra(LocationPickerActivity.LATITUDE, 0.0)
-                Options.location.lng = data.getDoubleExtra(LocationPickerActivity.LONGITUDE, 0.0)
+                val place = PlacePicker.getPlace(data, this)
+                Options.location.lat = place.latLng.latitude
+                Options.location.lng = place.latLng.longitude
                 Options.save()
                 Toast.makeText(this@Picker, "Success, please refresh your feed!", Toast.LENGTH_LONG).show()
             }
