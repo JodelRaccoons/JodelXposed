@@ -66,21 +66,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name="com.schibstedspain.leku.LocationPickerActivity"
-            android:label="@string/title_activity_location_picker"
-            android:windowSoftInputMode="adjustPan"
-            android:parentActivityName=".utils.Picker"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".utils.Picker" />
-        </activity>
     </application>
 
 </manifest>
