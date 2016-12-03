@@ -36,7 +36,6 @@ class Picker : AppCompatActivity() {
                 else
                     requestPermissions(
                             arrayOf(
-                                    Manifest.permission.ACCESS_COARSE_LOCATION,
                                     Manifest.permission.WRITE_EXTERNAL_STORAGE
                             ), PERMISSION_REQUEST_CODE)
             }
