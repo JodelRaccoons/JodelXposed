@@ -92,7 +92,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
         }
 
         // Check for hook updates
-        updateHooks(Options.hooks.version, pkgInfo.versionCode)
+        updateHooks(Options.hooks, pkgInfo.versionCode)
 
         xlog("#### Loading hooks ####")
         Hooks(lpparam).hook()
@@ -104,13 +104,13 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
     }
 
 
-    private fun updateHooks(hooksVersion: Int, versionCode: Int, api: JodelXposedAPI = RetrofitProvider.JXAPI) {
+    private fun updateHooks(oldHooks: HookValues, installedVersionCode: Int, api: JodelXposedAPI = RetrofitProvider.JXAPI) {
 
-        api.getHooks(versionCode).enqueue(object : Callback<HookValues> {
+        api.getHooks(installedVersionCode).enqueue(object : Callback<HookValues> {
             override fun onResponse(call: Call<HookValues>, response: Response<HookValues>) {
                 try {
                     val repoHooks = response.body()
-                    if (repoHooks.version > hooksVersion) {
+                    if (repoHooks.versionCode > oldHooks.versionCode || (repoHooks.versionCode == oldHooks.versionCode && repoHooks.version > oldHooks.version)) {
                         dlog("Replacing local hooks with repo hooks")
                         Options.hooks = repoHooks
                         Options.save()
