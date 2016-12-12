@@ -73,28 +73,31 @@ public class LayoutHooks {
                     * child 1: galleryPicker
                     * */
 
-                    LinearLayout llParent = (LinearLayout) liparam.view.findViewById(liparam.res.getIdentifier("cameraButton", "id", "com.tellm.android.app")).getParent();
-                    llParent.setOrientation(LinearLayout.HORIZONTAL);
+                    RelativeLayout llParent = (RelativeLayout) liparam.view.findViewById(liparam.res.getIdentifier("cameraButton", "id", "com.tellm.android.app")).getParent();
 
                     //type-casting from AppCompatImageView to AppCompatImageView wont work so we have to call the methods manually -.-
                     LayoutInflater.from(liparam.view.getContext()).inflate(JodelResIDs.layout_appcompatimageview, llParent, true);
-                    XposedHelpers.callMethod(llParent.getChildAt(1), "setImageDrawable", liparam.res.getDrawable(JodelResIDs.drawable_gallery_chooser));
+                    XposedHelpers.callMethod(llParent.getChildAt(2), "setImageDrawable", liparam.res.getDrawable(JodelResIDs.drawable_gallery_chooser));
 
                     //due to wrap content, we have to measure the cameraButton and apply the measurements to the galleryButton
                     llParent.getChildAt(0).measure(0, 0);
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(llParent.getChildAt(0).getMeasuredWidth() + 2, llParent.getChildAt(0).getMeasuredHeight() + 2);
-                    XposedHelpers.callMethod(llParent.getChildAt(1), "setLayoutParams", layoutParams);
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(llParent.getChildAt(0).getMeasuredWidth() + 2, llParent.getChildAt(0).getMeasuredHeight() + 2);
+                    layoutParams.addRule(RelativeLayout.LEFT_OF, llParent.getChildAt(0).getId());
+                    XposedHelpers.callMethod(llParent.getChildAt(2), "setLayoutParams", layoutParams);
 
                     //set tag for later usage, see ImageStuff.class
-                    llParent.getChildAt(1).setTag("gallery_button");
+                    llParent.getChildAt(2).setTag("gallery_button");
 
                     //apply layout changes
-                    llParent.getChildAt(1).requestLayout();
+                    llParent.getChildAt(2).requestLayout();
 
 
                     View appCompatImageView = LayoutInflater.from(liparam.view.getContext()).inflate(JodelResIDs.layout_appcompatimageview, null, false);
                     XposedHelpers.callMethod(appCompatImageView, "setImageDrawable", liparam.res.getDrawable(JodelResIDs.ic_color_chooser));
-                    XposedHelpers.callMethod(appCompatImageView, "setLayoutParams", layoutParams);
+                    RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(llParent.getChildAt(0).getMeasuredWidth() + 2, llParent.getChildAt(0).getMeasuredHeight() + 2);
+                    layoutParams2.addRule(RelativeLayout.BELOW, llParent.getChildAt(0).getId());
+                    layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+                    XposedHelpers.callMethod(appCompatImageView, "setLayoutParams", layoutParams2);
                     appCompatImageView.requestLayout();
                     appCompatImageView.setTag("color_chooser");
 
