@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jodelXposed.utils.Log;
+import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Utils;
 
 import java.lang.reflect.Field;
@@ -59,8 +60,7 @@ public class ImageStuff {
                         Class PictureTakenEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.PictureTakenEvent", lpparam.classLoader);
                         Object pictureTakenEvent = XposedHelpers.newInstance(PictureTakenEvent, loadBitmap());
 
-                        // TODO: Don't use hard coded name reference
-                        callMethod(eventBus, "aS", pictureTakenEvent);
+                        callMethod(eventBus, Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event, pictureTakenEvent);
                     }
                 };
 

@@ -78,5 +78,14 @@
     * search term: Post
   **/
   "Class_JodelGestureListener": "com.jodelapp.jodelandroidv3.view.gesture.JodelGestureListener",
-  "Field_JodelGestureListener_Post": "aDE"
+  "Field_JodelGestureListener_Post": "aDE",
+  /**
+    * package com.squareup.otto.Bus;
+    * type: method
+    * arg 0: Object.class (Object obj)
+    * return: void.class
+    * modifier: public
+    * search term: Event to post must not be null
+  **/
+  "Method_Otto_Append_Bus_Event": "aT"
 }
