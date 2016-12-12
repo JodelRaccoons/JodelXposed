@@ -33,9 +33,8 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
 * OTA hook updates
 
 ## Upload custom images
-1. Take picture with Jodel camera
-2. Select *Replace image*
-3. Choose the image shared to Jodel or select from gallery
+1. Press the Gallery button next to the Jodel camera button
+2. Select an image and post
 
 ## Increased control over account
 - The account id (UID) is automatically backed upp in `.jodel-settings-v2`
