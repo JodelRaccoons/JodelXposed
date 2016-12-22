@@ -6,8 +6,8 @@
   /**
     * The targeted Jodel version code
    **/
-  "versionCode": 1000100,
-  "updateMessage": "Updated hooks for 1000100 (4.31.0)",
+  "versionCode": 1000101,
+  "updateMessage": "Updated hooks for 1000101 (4.31.1)",
   /**
     * package com.jodelapp.jodelandroidv3.model.Storage;
     * type: method
