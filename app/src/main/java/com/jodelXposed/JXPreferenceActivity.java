@@ -1,44 +1,52 @@
 package com.jodelXposed;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.SwitchPreference;
+import android.provider.SyncStateContract;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.jodelXposed.models.Location;
 import com.jodelXposed.utils.AppCompatPreferenceActivity;
-import com.jodelXposed.utils.Log;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Picker;
-import com.mypopsy.maps.StaticMap;
-import com.squareup.picasso.Picasso;
-
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
 /**
  * Created by Admin on 14.10.2016.
  */
 
 @SuppressWarnings("deprecation")
-public class JXPreferenceActivity extends AppCompatPreferenceActivity implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+public class JXPreferenceActivity extends AppCompatPreferenceActivity implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener, OnMapReadyCallback {
 
     final Options options = Options.INSTANCE;
 
     @Override
     public void onCreate(Bundle paramBundle) {
         super.onCreate(paramBundle);
-        Location location = options.getLocation();
         setContentView(R.layout.layout_jx_prefs);
-        StaticMap map = new StaticMap().marker(location.getLat(),location.getLng()).size(1280, 480);
-        ImageView ivMap = (ImageView) findViewById(R.id.ivMap);
+        setupToolbar();
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        addPreferencesFromResource(R.xml.jx_prefs);
+        findPreference("switch_location").setOnPreferenceChangeListener(this);
+        findPreference("change_location").setOnPreferenceClickListener(this);
+
+        ((SwitchPreference)findPreference("switch_location")).setChecked(options.getLocation().getActive());
+    }
+
+    private void setupToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null)
@@ -46,18 +54,6 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
         final Drawable upArrow = ContextCompat.getDrawable(this, R.drawable.ic_back_button);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
         getSupportActionBar().setTitle("");
-        try {
-            Picasso.with(this).load(String.valueOf(map.toURL().toURI())).placeholder(R.drawable.progress_animation).into(ivMap);
-        } catch (MalformedURLException | URISyntaxException e) {
-            Log.xlog("Failed to load map", e);
-        }
-
-
-        addPreferencesFromResource(R.xml.jx_prefs);
-        findPreference("switch_location").setOnPreferenceChangeListener(this);
-        findPreference("change_location").setOnPreferenceClickListener(this);
-
-        ((SwitchPreference)findPreference("switch_location")).setChecked(location.getActive());
     }
 
     @Override
@@ -93,5 +89,17 @@ public class JXPreferenceActivity extends AppCompatPreferenceActivity implements
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Location location = options.getLocation();
+        LatLng mLatLng = new LatLng(location.getLat(), location.getLng());
+        googleMap.addMarker(new MarkerOptions()
+            .position(mLatLng)
+            .title("Spoofed location"));
+        googleMap.getUiSettings().setAllGesturesEnabled(false);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng,12));
+
     }
 }

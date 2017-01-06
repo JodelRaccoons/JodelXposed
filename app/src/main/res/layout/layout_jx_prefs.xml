@@ -14,16 +14,17 @@
         android:id="@+id/toolbar"
         app:theme="@style/CustomActionBar"/>
 
-    <ImageView
-        android:id="@+id/ivMap"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="260dp" />
+        android:layout_height="230dp"/>
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ivMap">
+        android:layout_below="@+id/map">
     </ListView>
 
 </RelativeLayout>
