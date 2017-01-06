@@ -13,16 +13,16 @@ class BetaStuff(lpparam: LoadPackageParam) {
             @Throws(Throwable::class)
             override fun afterHookedMethod(param: MethodHookParam) {
                 val requested: String = param.args[0] as String
-                Log.vlog("Requested feature: $requested")
-                Log.vlog("Default enabled: ${param.result}")
+//                Log.vlog("Requested feature: $requested")
+//                Log.vlog("Default enabled: ${param.result}")
                 for (feature in Options.hooks.Array_FeaturesEnabled) {
                     with(feature) {
                         if (startsWith("!") && substring(1) == requested) {
                             param.result = false
-                            Log.vlog("Feature disabled")
+//                            Log.vlog("Feature disabled")
                         } else if (param.result == false && equals(requested)) {
                             param.result = true
-                            Log.vlog("Feature enabled")
+//                            Log.vlog("Feature enabled")
                         }
                     }
                 }

@@ -6,6 +6,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 class Hooks(private val lpparam: LoadPackageParam) {
 
     fun hook() {
+
         try {
             Log.xlog("#### Acquiring... JodelActivity for snackbar usage ####")
             Utils.getFirstJodelFragmentActivity(lpparam)

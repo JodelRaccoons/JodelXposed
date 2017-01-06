@@ -1,18 +1,14 @@
 package com.jodelXposed.hooks
 
 import android.content.Intent
-
 import com.jodelXposed.utils.Options
-
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedHelpers
-import de.robv.android.xposed.callbacks.XC_LoadPackage
-
 import com.jodelXposed.utils.Utils.getNewIntent
 import com.jodelXposed.utils.Utils.getSystemContext
-import de.robv.android.xposed.XposedHelpers.findAndHookMethod
-import de.robv.android.xposed.XposedHelpers.findClass
-import de.robv.android.xposed.XposedHelpers.getObjectField
+import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedHelpers
+import de.robv.android.xposed.XposedHelpers.*
+import de.robv.android.xposed.callbacks.XC_LoadPackage
+import git.unbrick.xposedhelpers.XposedUtils
 
 class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoader = lpparam.classLoader) {
 
@@ -27,6 +23,7 @@ class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: Class
             override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam) {
                 (param.result as MutableList<Any>).add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedLocation", "JX Change location"))
                 (param.result as MutableList<Any>).add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedGeneralSettings", "JX Settings"))
+                (param.result as MutableList<Any>).add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedReportBug", "JX Report a bug"))
             }
         })
 
@@ -43,9 +40,11 @@ class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: Class
                     getSystemContext().startActivity(getNewIntent("utils.Picker").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION).putExtra("choice", 1))
                 else if (selected.equals("xposedGeneralSettings", ignoreCase = true))
                     getSystemContext().startActivity(getNewIntent("JXPreferenceActivity").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
+                else if (selected.equals("xposedReportBug", ignoreCase = true)){
+                    XposedUtils.get().showBugReportDialog()
+                }
+
             }
         })
     }
-
-
 }

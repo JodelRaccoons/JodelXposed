@@ -13,9 +13,12 @@ android {
     compileSdkVersion 24
     buildToolsVersion "23.0.3"
 
+
     repositories {
+        mavenCentral()
         jcenter()
         maven { url "https://jitpack.io" }
+        flatDir { dirs 'libs' }
     }
     defaultConfig {
         applicationId "com.jodelXposed"
@@ -52,7 +55,7 @@ dependencies {
     provided 'de.robv.android.xposed:api:82:sources'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.google.android.gms:play-services-places:10.0.0'
+    compile 'com.google.android.gms:play-services-places:10.0.1'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -61,13 +64,8 @@ dependencies {
     compile 'com.androidadvance:topsnackbar:1.1.1'
     compile 'id.zelory:compressor:1.0.4'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-}
+    compile(name:'app-debug', ext:'aar')
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-    mavenCentral()
 }
 
 gradle.taskGraph.whenReady { taskGraph ->

@@ -17,6 +17,7 @@ import com.jodelXposed.utils.Hooks
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Options
+import com.jodelXposed.utils.Utils
 import com.jodelXposed.utils.Utils.getNewIntent
 import com.jodelXposed.utils.Utils.getSystemContext
 import de.robv.android.xposed.IXposedHookInitPackageResources
@@ -24,6 +25,8 @@ import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_InitPackageResources
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
+import es.dmoral.prefs.Prefs
+import git.unbrick.xposedhelpers.XposedUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -45,10 +48,15 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
         if (lpparam.packageName != "com.tellm.android.app")
             return
 
-
         App.Companion.lpparam = lpparam
 
         val pkgInfo: PackageInfo = getSystemContext().packageManager.getPackageInfo(lpparam.packageName, 0)
+
+        XposedUtils.Builder()
+                .withBaseUrl("http://spectre-app.de:8080")
+                .withLoadPackageParam(lpparam)
+                .disableAnalytics(true)
+                .build()
 
 
         xlog("----------\n" +
@@ -114,6 +122,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
                         dlog("Replacing local hooks with repo hooks")
                         Options.hooks = repoHooks
                         Options.save()
+                        Prefs.with(Utils.snackbarUtilActivity).writeBoolean("displayJXchangelog", true)
                         Toast.makeText(AndroidAppHelper.currentApplication(), "Updated hooks, please force restart Jodel", Toast.LENGTH_LONG).show()
 
                     } else {

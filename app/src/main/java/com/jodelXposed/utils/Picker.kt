@@ -4,21 +4,27 @@ package com.jodelXposed.utils
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
+import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.ui.PlacePicker
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.jodelXposed.App.Companion.lpparam
 import com.jodelXposed.JXPreferenceActivity
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
+import git.unbrick.xposedhelpers.XposedUtils
 import id.zelory.compressor.Compressor
 import java.io.File
 import java.io.FileNotFoundException
@@ -29,18 +35,16 @@ class Picker : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        when (Build.VERSION.SDK_INT) {
-            in Build.VERSION_CODES.M..Build.VERSION_CODES.CUR_DEVELOPMENT -> {
-                if (permissionsGranted())
-                    getAction()
-                else
-                    requestPermissions(
-                            arrayOf(
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                            ), PERMISSION_REQUEST_CODE)
-            }
-            else -> getAction()
-        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (permissionsGranted())
+                getAction()
+            else
+                requestPermissions(
+                        arrayOf(
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ), PERMISSION_REQUEST_CODE)
+        } else getAction()
+
     }
 
     private fun getAction() {
@@ -55,7 +59,12 @@ class Picker : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
+
+    }
+
+    override fun finish() {
         overridePendingTransition(0, 0)
+        super.finish()
     }
 
     private fun galleryPicker() {
@@ -84,7 +93,7 @@ class Picker : AppCompatActivity() {
 
     @TargetApi(Build.VERSION_CODES.M)
     private fun permissionsGranted(): Boolean {
-        return this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -105,6 +114,9 @@ class Picker : AppCompatActivity() {
             }
             GALLERY_REQUEST_CODE -> {
                 try {
+                    val compressor = Compressor.Builder(this@Picker)
+                            .setQuality(90)
+                            .build()
                     val selectedImage = data.data
                     dlog("SelectedImage:$selectedImage")
                     if (selectedImage.path.contains("contentprovider") || selectedImage.path.contains("content:")) {
@@ -113,9 +125,9 @@ class Picker : AppCompatActivity() {
                         val columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
                         val picturePath = cursor.getString(columnIndex)
                         cursor.close()
-                        Bitmap.saveBitmap(Compressor.getDefault(this).compressToBitmap(File(picturePath)))
+                        Bitmap.saveBitmap(compressor.compressToBitmap(File(picturePath)))
                     } else {
-                        Bitmap.saveBitmap(Compressor.getDefault(this).compressToBitmap(File(selectedImage.path)))
+                        Bitmap.saveBitmap(compressor.compressToBitmap(File(selectedImage.path)))
                     }
                 } catch (e: FileNotFoundException) {
                     xlog("Could not load gallery image", e)

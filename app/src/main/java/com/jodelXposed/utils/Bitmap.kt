@@ -1,11 +1,15 @@
 package com.jodelXposed.utils
 
 import android.graphics.BitmapFactory
+import android.media.MediaScannerConnection
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Utils.getJXSharedImage
 
 import java.io.*
+import android.net.Uri
+import com.jodelXposed.utils.Utils.getSystemContext
+
 
 object Bitmap {
     @JvmStatic
@@ -32,25 +36,44 @@ object Bitmap {
         try {
             dlog("Saving bitmap of size: ${bitmap.byteCount}")
             var fos: FileOutputStream? = null
+            var file: File? = null
             if (path == null) {
-                val file = File(getJXSharedImage())
+                file = File(getJXSharedImage())
                 if (!file.exists())
                     file.createNewFile()
                 fos = FileOutputStream(file)
             } else {
-                val file = File(path)
+                file = File(path)
                 if (!file.exists())
                     file.createNewFile()
                 fos = FileOutputStream(file)
             }
             bitmap.compress(android.graphics.Bitmap.CompressFormat.JPEG, 100, fos)
             fos.close()
+
+            scanFile(file)
+
         } catch (e: FileNotFoundException) {
             xlog("File not found", e)
         } catch (e: IOException) {
             xlog("Error accessing file", e)
         }
 
+    }
+
+    fun scanFile(file: File){
+        try {
+            MediaScannerConnection.scanFile(Utils.snackbarUtilActivity.applicationContext,
+                    arrayOf<String>(file.toString()), null,
+                    object : MediaScannerConnection.OnScanCompletedListener {
+                        override fun onScanCompleted(path: String, uri: Uri) {
+                            Log.dlog("ExternalStorage"+"Scanned $path:")
+                            Log.dlog("ExternalStorage"+"-> uri=" + uri)
+                        }
+                    })
+        }catch (e :Exception){
+            e.printStackTrace()
+        }
     }
 
 }

@@ -83,6 +83,23 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
             }
         }
 
+        fun stickyPost2(param: MethodHookParam){
+            val stickyViewHolder = param.args[0]
+            val closeButton = XposedHelpers.getObjectField(stickyViewHolder,"closeButton")
+            XposedHelpers.callMethod(closeButton,"setOnClickListener", View.OnClickListener {
+                Prefs.with(Utils.snackbarUtilActivity).writeBoolean("displayJXchangelog", false)
+                callMethod(XposedHelpers.getObjectField(param.thisObject, "atK"),"remove",0)
+                try {
+                    callMethod(param.thisObject,"bN",0)
+                }catch(e: Exception){
+                    callMethod(param.thisObject,"notifyDataSetChanged")
+                }
+
+            })
+
+
+        }
+
         /**
          * Enable pasting in PostEditText
          */
@@ -93,6 +110,15 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
                 isLongClickable = true
             }
         }
+
+        findAndHookMethod("com.jodelapp.jodelandroidv3.features.feed.FeedRecyclerAdapter",
+                classLoader,
+                "a",
+                "com.jodelapp.jodelandroidv3.features.feed.FeedRecyclerAdapter.StickyViewHolder",
+                object : XC_MethodHook() {
+                    @Throws(Throwable::class)
+                    override fun afterHookedMethod(param: MethodHookParam) = stickyPost2(param)
+                })
 
         findAndHookMethod(
                 hooks.Class_PostDetailRecyclerAdapter,

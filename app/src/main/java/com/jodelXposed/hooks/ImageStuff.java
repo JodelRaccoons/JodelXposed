@@ -10,6 +10,7 @@ import android.os.FileObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.jodelXposed.utils.Log;
 import com.jodelXposed.utils.Options;
@@ -45,7 +46,7 @@ public class ImageStuff {
 
         findAndHookMethod("com.jodelapp.jodelandroidv3.view.CreateTextPostFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
             @Override
-            protected void afterHookedMethod(final MethodHookParam param) throws Throwable {
+            protected void afterHookedMethod(final MethodHookParam param) throws IllegalAccessException {
 
 
                 final FileObserver imageFileObserver = new FileObserver(getJXSharedImage(), CLOSE_WRITE) {
@@ -69,8 +70,8 @@ public class ImageStuff {
                 String colorField = null;
                 for (Field f : param.thisObject.getClass().getDeclaredFields()) {
                     f.setAccessible(true);
-                    if (f.getType().getName().equals(String.class.getName())) {
-                        String field = ((String) f.get(param.thisObject));
+                    if (f.getType().getName().equals(String.class.getName()) && f.isAccessible()) {
+                        String field = (String) f.get(param.thisObject);
                         if (field != null && field.contains("#")) {
                             colorField = f.getName();
                             break;

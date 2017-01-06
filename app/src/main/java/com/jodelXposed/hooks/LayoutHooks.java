@@ -4,8 +4,13 @@ import android.content.res.XModuleResources;
 import android.content.res.XResources;
 import android.graphics.Color;
 import android.support.v7.widget.AppCompatImageButton;
+import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -14,10 +19,13 @@ import android.widget.RelativeLayout;
 import com.jodelXposed.App;
 import com.jodelXposed.R;
 
+import java.util.List;
+
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 
+import static android.widget.ImageView.ScaleType.CENTER;
 import static android.widget.ImageView.ScaleType.CENTER_CROP;
 import static android.widget.ImageView.ScaleType.FIT_CENTER;
 import static android.widget.ImageView.ScaleType.FIT_XY;
@@ -61,6 +69,12 @@ public class LayoutHooks {
 
         JodelResIDs.layout_color_picker = XResources.getFakeResId(modRes, R.layout.color_picker_layout);
         resparam.res.setReplacement(JodelResIDs.layout_color_picker, modRes.fwd(R.layout.color_picker_layout));
+
+        //Replace google_play_services_version
+        int resID = resparam.res.getIdentifier("google_play_services_version","integer","com.tellm.android.app");
+        Log.d("Jodel","RESID: "+resID);
+        resparam.res.setReplacement(resID,modRes.fwd(R.integer.google_play_services_version));
+
     }
 
     public void hook() {
@@ -68,40 +82,51 @@ public class LayoutHooks {
         resparam.res.hookLayout(App.Companion.getPACKAGE_NAME(), "layout", "fragment_create_post", new XC_LayoutInflated() {
                 @Override
                 public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
-                    /*
-                    * child 0: cameraButton
-                    * child 1: galleryPicker
-                    * */
 
-                    RelativeLayout llParent = (RelativeLayout) liparam.view.findViewById(liparam.res.getIdentifier("cameraButton", "id", "com.tellm.android.app")).getParent();
+                    //Parent relative layout
+                    RelativeLayout relativeLayoutParent = (RelativeLayout) liparam.view.findViewById(liparam.res.getIdentifier("cameraButton", "id", "com.tellm.android.app")).getParent();
+
+                    //free the cameraButtonView from its parent
+                    View cameraButton = liparam.view.findViewById(liparam.res.getIdentifier("cameraButton", "id", "com.tellm.android.app"));
+                    relativeLayoutParent.removeView(cameraButton);
+                    cameraButton.measure(0, 0);
+
+                    //Create new layoutparams for the color chooser and gallery picker
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(cameraButton.getMeasuredWidth() + 2, cameraButton.getMeasuredHeight() + 2);
+
+                    //Create a new LinearLayout
+                    LinearLayout llNew = new LinearLayout(liparam.view.getContext());
+                    llNew.setOrientation(LinearLayout.HORIZONTAL);
+                    llNew.setGravity(Gravity.CENTER_HORIZONTAL);
+                    LinearLayout.LayoutParams llNewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    llNew.setLayoutParams(llNewParams);
 
                     //type-casting from AppCompatImageView to AppCompatImageView wont work so we have to call the methods manually -.-
-                    LayoutInflater.from(liparam.view.getContext()).inflate(JodelResIDs.layout_appcompatimageview, llParent, true);
-                    XposedHelpers.callMethod(llParent.getChildAt(2), "setImageDrawable", liparam.res.getDrawable(JodelResIDs.drawable_gallery_chooser));
-
-                    //due to wrap content, we have to measure the cameraButton and apply the measurements to the galleryButton
-                    llParent.getChildAt(0).measure(0, 0);
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(llParent.getChildAt(0).getMeasuredWidth() + 2, llParent.getChildAt(0).getMeasuredHeight() + 2);
-                    layoutParams.addRule(RelativeLayout.LEFT_OF, llParent.getChildAt(0).getId());
-                    XposedHelpers.callMethod(llParent.getChildAt(2), "setLayoutParams", layoutParams);
+                    //Inflate the new gallery button, set image and apply layout params
+                    View galleryButton = LayoutInflater.from(liparam.view.getContext()).inflate(JodelResIDs.layout_appcompatimageview, null, false);
+                    XposedHelpers.callMethod(galleryButton, "setImageDrawable", liparam.res.getDrawable(JodelResIDs.drawable_gallery_chooser));
+                    XposedHelpers.callMethod(galleryButton, "setLayoutParams", layoutParams);
 
                     //set tag for later usage, see ImageStuff.class
-                    llParent.getChildAt(2).setTag("gallery_button");
+                    galleryButton.setTag("gallery_button");
 
                     //apply layout changes
-                    llParent.getChildAt(2).requestLayout();
+                    galleryButton.requestLayout();
 
+                    //Inflate view for color chooser and so on, see above for details
+                    View colorChooserButton = LayoutInflater.from(liparam.view.getContext()).inflate(JodelResIDs.layout_appcompatimageview, null, false);
+                    XposedHelpers.callMethod(colorChooserButton, "setImageDrawable", liparam.res.getDrawable(JodelResIDs.ic_color_chooser));
+                    XposedHelpers.callMethod(colorChooserButton, "setLayoutParams", layoutParams);
+                    colorChooserButton.setTag("color_chooser");
+                    colorChooserButton.requestLayout();
 
-                    View appCompatImageView = LayoutInflater.from(liparam.view.getContext()).inflate(JodelResIDs.layout_appcompatimageview, null, false);
-                    XposedHelpers.callMethod(appCompatImageView, "setImageDrawable", liparam.res.getDrawable(JodelResIDs.ic_color_chooser));
-                    RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(llParent.getChildAt(0).getMeasuredWidth() + 2, llParent.getChildAt(0).getMeasuredHeight() + 2);
-                    layoutParams2.addRule(RelativeLayout.BELOW, llParent.getChildAt(0).getId());
-                    layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
-                    XposedHelpers.callMethod(appCompatImageView, "setLayoutParams", layoutParams2);
-                    appCompatImageView.requestLayout();
-                    appCompatImageView.setTag("color_chooser");
+                    llNew.addView(galleryButton);
+                    llNew.addView(cameraButton);
+                    llNew.addView(colorChooserButton);
 
-                    llParent.addView(appCompatImageView, 0);
+                    llNew.requestLayout();
+
+                    relativeLayoutParent.addView(llNew, 0);
                 }
             }
         );

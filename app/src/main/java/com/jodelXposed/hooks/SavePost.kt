@@ -58,7 +58,7 @@ class SavePost(loadPackageParam: XC_LoadPackage.LoadPackageParam, classLoader: C
                     vlog("Loaded image")
                     // DONE: Save to dedicated folder
                     //TODO images saving failes at first try when jodel is opened, second try is needed
-                    //TODO start media scanner after saving to make the image visible in the gallery
+                    // DONE: start media scanner after saving to make the image visible in the gallery
                     BitmapJX.saveBitmap(bitmap, Utils.getSaveImagesFolder() + File.separator + filename)
 
                     Utils.makeSnackbarWithNoCtx(loadPackageParam, "Saved image!", -1)
