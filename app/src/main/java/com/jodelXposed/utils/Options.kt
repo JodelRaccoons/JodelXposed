@@ -6,6 +6,7 @@ import com.jodelXposed.models.HookValues
 import com.jodelXposed.models.Location
 import com.jodelXposed.models.UDI
 import com.jodelXposed.utils.Log.dlog
+import com.jodelXposed.utils.Log.vlog
 import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Utils.OldSettingsPath
 import com.jodelXposed.utils.Utils.getJXSettingsFile
@@ -35,7 +36,7 @@ object Options : FileObserver(getJXSettingsFile(), CLOSE_WRITE) {
     fun save() {
         try {
             val settingsJson = gson.toJson(options)
-            dlog("Writing $settingsJson to file")
+            vlog("Writing $settingsJson to file")
             settingsFile.writeText(settingsJson)
         } catch (e: IOException) {
             xlog("Could not write to file", e)

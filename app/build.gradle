@@ -64,7 +64,9 @@ dependencies {
     compile 'id.zelory:compressor:1.0.4'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile(name:'app-debug', ext:'aar')
-
+    compile "com.github.nisrulz:easydeviceinfo-base:2.3.2"
+    compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
@@ -102,4 +104,7 @@ gradle.taskGraph.whenReady { taskGraph ->
         android.signingConfigs.release.storePassword = storePass
         android.signingConfigs.release.keyPassword = keyPass
     }
+}
+repositories {
+    mavenCentral()
 }

@@ -78,8 +78,8 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
                 val stickyPost = XposedHelpers.newInstance(StickyPost, message, type, postid, color, locationName, null, null, null)
                 posts?.add(0, stickyPost)
 
-                //TODO set boolean to false when StickyPost is removed by user
-                //TODO set boolean to true when hooks are updated
+                //DONE set boolean to false when StickyPost is removed by user
+                //DONE set boolean to true when hooks are updated
             }
         }
 
@@ -88,7 +88,15 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
             val closeButton = XposedHelpers.getObjectField(stickyViewHolder,"closeButton")
             XposedHelpers.callMethod(closeButton,"setOnClickListener", View.OnClickListener {
                 Prefs.with(Utils.snackbarUtilActivity).writeBoolean("displayJXchangelog", false)
-                callMethod(XposedHelpers.getObjectField(param.thisObject, "atK"),"remove",0)
+                for (field in param.thisObject.javaClass.declaredFields) {
+                    if (field.type.toString().contains("List")) {
+                        try {
+                            callMethod(XposedHelpers.getObjectField(param.thisObject, field.name), "remove", 0)
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
                 try {
                     callMethod(param.thisObject,"bN",0)
                 }catch(e: Exception){

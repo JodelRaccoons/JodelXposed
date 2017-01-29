@@ -2,7 +2,20 @@ package com.jodelXposed.models
 
 import com.google.gson.annotations.Expose
 
-data class Location(var active: Boolean = false, var lat: Double = 0.0, var lng: Double = 0.0)
+data class Location(var active: Boolean = false, var lat: Double = 0.0, var lng: Double = 0.0,
+
+                    var namefastChange1: String = "", var latfastChange1: Double = 0.0, var lngfastChange1: Double = 0.0,
+
+                    var namefastChange2: String = "", var latfastChange2: Double = 0.0, var lngfastChange2: Double = 0.0,
+
+                    var namefastChange3: String = "", var latfastChange3: Double = 0.0, var lngfastChange3: Double = 0.0,
+
+                    var namefastChange4: String = "", var latfastChange4: Double = 0.0, var lngfastChange4: Double = 0.0,
+
+                    var overrideHometown: Boolean = false
+)
+
+
 
 data class UDI(var active: Boolean = true, var udi: String = "")
 

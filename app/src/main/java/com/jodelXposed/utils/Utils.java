@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -19,20 +21,25 @@ import android.widget.Toast;
 import com.jodelXposed.hooks.LayoutHooks;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
+import git.unbrick.xposedhelpers.XposedUtilHelpers;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.findMethodsByExactParameters;
+import static de.robv.android.xposed.XposedHelpers.newInstance;
+import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 
 public class Utils {
-    private static final String JXFolderPath = Environment.getExternalStorageDirectory() + File.separator + "JodelXposed";
     public static final String OldSettingsPath = Environment.getExternalStorageDirectory() + File.separator + ".jodel-settings-v2";
+    private static final String JXFolderPath = Environment.getExternalStorageDirectory() + File.separator + "JodelXposed";
     public static Activity snackbarUtilActivity;
 
     public static Context getSystemContext() {
@@ -137,7 +144,48 @@ public class Utils {
     }
 
     public static int dpToPx(int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, snackbarUtilActivity.getResources().getDisplayMetrics());
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, snackbarUtilActivity.getResources().getDisplayMetrics());
+    }
+
+    public static void updateFeedAndLocation(XC_LoadPackage.LoadPackageParam lpparam, double lat, double lng) {
+        Class JodelApp = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.JodelApp", lpparam.classLoader);
+
+        Location location = new Location("Jodel");
+        location.setLatitude(lat);
+        location.setLongitude(lng);
+
+        Activity activity = XposedUtilHelpers.getActivityFromActivityThread();
+        Class AppComponent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.api.AppComponent", lpparam.classLoader);
+
+
+        Method[] methods = findMethodsByExactParameters(JodelApp, AppComponent);
+
+        Object JodelAppObject = callStaticMethod(JodelApp, "V", activity.getApplicationContext());
+        Object AppComponentObject = callMethod(JodelAppObject, methods[0].getName());
+        final Object Bus = callMethod(AppComponentObject, "getBus");
+
+        Object LocationManager = callMethod(AppComponentObject, "getLocationManager");
+
+        callMethod(LocationManager, "j", location);
+        callMethod(LocationManager, "h", location);
+        callMethod(LocationManager, "i", location);
+
+        Class UpdateMyMenuEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", lpparam.classLoader);
+        final Class FeedUpdateEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.FeedUpdateEvent", lpparam.classLoader);
+
+        Object updateEvent = newInstance(UpdateMyMenuEvent);
+        setAdditionalInstanceField(updateEvent, "locationchange", true);
+
+        callMethod(Bus, Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event, updateEvent);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                callMethod(Bus,
+                    Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event,
+                    XposedHelpers.newInstance(FeedUpdateEvent));
+            }
+        }, 500);
     }
 
     public static int getDisplayHeight() {
@@ -154,6 +202,30 @@ public class Utils {
 
     public static int getIdentifierById(XC_MethodHook.MethodHookParam param, String id) {
         return getActivity(param).getResources().getIdentifier(id, "id", "com.tellm.android.app");
+    }
+
+    public static Object getEventBus(XC_LoadPackage.LoadPackageParam lpparam) {
+        Class JodelAppClass = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.JodelApp", lpparam.classLoader);
+        Class AppComponentClass = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.api.AppComponent", lpparam.classLoader);
+        Object JodelAppInstance = null;
+        Object AppComponentInstance = null;
+        for (Method m : JodelAppClass.getMethods()) {
+            if (m.getReturnType().equals(JodelAppClass)) {
+                JodelAppInstance = XposedHelpers.callStaticMethod(JodelAppClass, m.getName(), XposedUtilHelpers.getActivityFromActivityThread().getApplicationContext());
+            }
+        }
+
+        for (Method m : JodelAppClass.getMethods()) {
+            if (m.getReturnType().equals(AppComponentClass) && JodelAppInstance != null) {
+                AppComponentInstance = XposedHelpers.callMethod(JodelAppInstance, m.getName());
+            }
+        }
+
+        if (AppComponentInstance != null) {
+            return callMethod(AppComponentInstance, "getBus");
+        } else {
+            return null;
+        }
     }
 
     public static Intent getNewIntent(String path) {

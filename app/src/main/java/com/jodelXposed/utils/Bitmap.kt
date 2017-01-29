@@ -2,13 +2,12 @@ package com.jodelXposed.utils
 
 import android.graphics.BitmapFactory
 import android.media.MediaScannerConnection
+import android.net.Uri
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Utils.getJXSharedImage
-
+import git.unbrick.xposedhelpers.XposedUtilHelpers
 import java.io.*
-import android.net.Uri
-import com.jodelXposed.utils.Utils.getSystemContext
 
 
 object Bitmap {
@@ -63,7 +62,7 @@ object Bitmap {
 
     fun scanFile(file: File){
         try {
-            MediaScannerConnection.scanFile(Utils.snackbarUtilActivity.applicationContext,
+            MediaScannerConnection.scanFile(XposedUtilHelpers.getActivityFromActivityThread(),
                     arrayOf<String>(file.toString()), null,
                     object : MediaScannerConnection.OnScanCompletedListener {
                         override fun onScanCompleted(path: String, uri: Uri) {

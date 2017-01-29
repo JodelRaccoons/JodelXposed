@@ -1,12 +1,10 @@
 package com.jodelXposed.hooks;
 
+import android.content.Context;
 import android.content.res.XModuleResources;
 import android.content.res.XResources;
 import android.graphics.Color;
 import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.AppCompatImageView;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +16,12 @@ import android.widget.RelativeLayout;
 
 import com.jodelXposed.App;
 import com.jodelXposed.R;
-
-import java.util.List;
+import com.jodelXposed.utils.Utils;
 
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 
-import static android.widget.ImageView.ScaleType.CENTER;
 import static android.widget.ImageView.ScaleType.CENTER_CROP;
 import static android.widget.ImageView.ScaleType.FIT_CENTER;
 import static android.widget.ImageView.ScaleType.FIT_XY;
@@ -62,6 +58,17 @@ public class LayoutHooks {
         JodelResIDs.ic_toggle_scale = XResources.getFakeResId(modRes, R.drawable.ic_toggle_scale);
         resparam.res.setReplacement(JodelResIDs.ic_toggle_scale, modRes.fwd(R.drawable.ic_toggle_scale));
 
+        JodelResIDs.ic_scroll = XResources.getFakeResId(modRes, R.drawable.ic_scroll);
+        resparam.res.setReplacement(JodelResIDs.ic_scroll, modRes.fwd(R.drawable.ic_scroll));
+
+        JodelResIDs.ic_edit = XResources.getFakeResId(modRes, R.drawable.ic_mode_edit_black_24dp);
+        resparam.res.setReplacement(JodelResIDs.ic_edit, modRes.fwd(R.drawable.ic_mode_edit_black_24dp));
+
+        JodelResIDs.ic_map_location = XResources.getFakeResId(modRes, R.drawable.ic_map_location);
+        resparam.res.setReplacement(JodelResIDs.ic_map_location, modRes.fwd(R.drawable.ic_map_location));
+
+        JodelResIDs.ic_information = XResources.getFakeResId(modRes, R.drawable.ic_information);
+        resparam.res.setReplacement(JodelResIDs.ic_information, modRes.fwd(R.drawable.ic_information));
 
         //Add layout
         JodelResIDs.layout_appcompatimageview = XResources.getFakeResId(modRes, R.layout.image_view_gallery_chooser);
@@ -70,14 +77,21 @@ public class LayoutHooks {
         JodelResIDs.layout_color_picker = XResources.getFakeResId(modRes, R.layout.color_picker_layout);
         resparam.res.setReplacement(JodelResIDs.layout_color_picker, modRes.fwd(R.layout.color_picker_layout));
 
+        JodelResIDs.layout_tab_strip = XResources.getFakeResId(modRes, R.layout.xposed_tab);
+        resparam.res.setReplacement(JodelResIDs.layout_tab_strip, modRes.fwd(R.layout.xposed_tab));
+
+//        JodelResIDs.fragment_map = XResources.getFakeResId(modRes, R.layout.fragment_map);
+//        int headerId = resparam.res.getIdentifier("aboutme_header","layout","com.tellm.android.app");
+//        resparam.res.setReplacement(headerId, modRes.fwd(R.layout.fragment_map));
+
         //Replace google_play_services_version
         int resID = resparam.res.getIdentifier("google_play_services_version","integer","com.tellm.android.app");
-        Log.d("Jodel","RESID: "+resID);
         resparam.res.setReplacement(resID,modRes.fwd(R.integer.google_play_services_version));
 
     }
 
     public void hook() {
+        final XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, resparam.res);
 
         resparam.res.hookLayout(App.Companion.getPACKAGE_NAME(), "layout", "fragment_create_post", new XC_LayoutInflated() {
                 @Override
@@ -107,7 +121,7 @@ public class LayoutHooks {
                     XposedHelpers.callMethod(galleryButton, "setImageDrawable", liparam.res.getDrawable(JodelResIDs.drawable_gallery_chooser));
                     XposedHelpers.callMethod(galleryButton, "setLayoutParams", layoutParams);
 
-                    //set tag for later usage, see ImageStuff.class
+                    //set tag for later usage, see ColorPickerGalleryPhotos.class
                     galleryButton.setTag("gallery_button");
 
                     //apply layout changes
@@ -177,6 +191,71 @@ public class LayoutHooks {
             }
         });
 
+        resparam.res.hookLayout(App.Companion.getPACKAGE_NAME(), "layout", "fragment_post_detail", new XC_LayoutInflated() {
+            @Override
+            public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
+                Context ctx = liparam.view.getContext();
+                ViewGroup parent = (ViewGroup) liparam.view.findViewById(liparam.res.getIdentifier("post_detail_container", "id", App.Companion.getPACKAGE_NAME()));
+
+                //Add new linear layout
+                RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
+                rlParams.addRule(RelativeLayout.FOCUSABLES_TOUCH_MODE, RelativeLayout.TRUE);
+                LinearLayout newLl = new LinearLayout(ctx);
+                newLl.setId(XResources.getFakeResId("tv_fast_scroll_down"));
+                newLl.setOrientation(LinearLayout.HORIZONTAL);
+                newLl.setWeightSum(6);
+                newLl.setLayoutParams(rlParams);
+
+                //Define new LL below the post recyclerview
+                RelativeLayout.LayoutParams paramsitemRefresh = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                paramsitemRefresh.addRule(RelativeLayout.ABOVE, newLl.getId());
+                View itemRefresh = liparam.view.findViewById(liparam.res.getIdentifier("itemRefresh", "id", "com.tellm.android.app"));
+                itemRefresh.setLayoutParams(paramsitemRefresh);
+
+
+                //find reply button and apply new layoutparams
+                LinearLayout.LayoutParams rlParamsReplyButton = new LinearLayout.LayoutParams(Utils.getDisplayWidth() - dpToPx(80), ViewGroup.LayoutParams.WRAP_CONTENT);
+                rlParamsReplyButton.weight = 3;
+                View reply_button = liparam.view.findViewById(liparam.res.getIdentifier("create_reply_button", "id", App.Companion.getPACKAGE_NAME()));
+                reply_button.measure(0, 0);
+                reply_button.setPadding(0, Utils.dpToPx(20) - 2, 0, Utils.dpToPx(20) - 2);
+                reply_button.setLayoutParams(rlParamsReplyButton);
+                //remove reply button from current parent
+                ((RelativeLayout) reply_button.getParent()).removeView(reply_button);
+
+
+                //Add a new placeholder view between reply and scroll down button
+                LinearLayout.LayoutParams rlParamsPlaceholder = new LinearLayout.LayoutParams(3, reply_button.getMeasuredHeight() - 3);
+                rlParamsPlaceholder.weight = 1;
+                View placeholder = new View(ctx);
+                placeholder.setBackgroundColor(Color.LTGRAY);
+                placeholder.setPadding(0, Utils.dpToPx(20) - 2, 0, Utils.dpToPx(20) - 2);
+                placeholder.setLayoutParams(rlParamsPlaceholder);
+
+
+                //Add new fast scroll down button
+                LinearLayout.LayoutParams rlParamsFastScrollDown = new LinearLayout.LayoutParams(dpToPx(80), reply_button.getMeasuredHeight() - 3);
+                rlParamsFastScrollDown.weight = 2;
+                rlParamsFastScrollDown.gravity = Gravity.CENTER;
+                ImageView fast_scroll_down = new ImageView(ctx);
+                fast_scroll_down.setTag("tag_fast_scroll_down");
+                fast_scroll_down.setPadding(0, Utils.dpToPx(20) - 2, 0, Utils.dpToPx(20) - 2);
+                fast_scroll_down.setBackgroundColor(Color.WHITE);
+                fast_scroll_down.setLayoutParams(rlParamsFastScrollDown);
+                //set image in view
+                XposedHelpers.callMethod(fast_scroll_down, "setImageDrawable", liparam.res.getDrawable(JodelResIDs.ic_scroll));
+
+                //add all views to its new LL parent
+                newLl.addView(reply_button);
+                newLl.addView(placeholder);
+                newLl.addView(fast_scroll_down);
+
+                //add LL to parent RL
+                parent.addView(newLl);
+            }
+        });
+
     }
 
     public static class JodelResIDs {
@@ -186,5 +265,10 @@ public class LayoutHooks {
         public static int ic_jx_icon;
         public static int layout_color_picker;
         public static int ic_toggle_scale;
+        public static int ic_scroll;
+        public static int layout_tab_strip;
+        public static int ic_edit;
+        public static int ic_map_location;
+        public static int ic_information;
     }
 }

@@ -8,12 +8,12 @@ class Hooks(private val lpparam: LoadPackageParam) {
     fun hook() {
 
         try {
-            Log.xlog("#### Acquiring... JodelActivity for snackbar usage ####")
+            Log.xlog("#### Acquiring... JodelActivity ####")
             Utils.getFirstJodelFragmentActivity(lpparam)
-            Log.xlog("#### Acquired JodelActivity for snackbar usage! ####")
+            Log.xlog("#### Acquired JodelActivity! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.xlog("!!!! FAILED acquiring JodelActivity for snackbar usage! !!!!\n" + "\n")
+            Log.xlog("!!!! FAILED acquiring JodelActivity ! !!!!\n" + "\n")
         }
 
         try {
@@ -26,12 +26,12 @@ class Hooks(private val lpparam: LoadPackageParam) {
         }
 
         try {
-            Log.xlog("#### Loading ImageStuff hooks ####")
-            ImageStuff(lpparam)
-            Log.xlog("#### ImageStuff hooks loaded! ####")
+            Log.xlog("#### Loading ColorPickerGalleryPhotos hooks ####")
+            ColorPickerGalleryPhotos(lpparam)
+            Log.xlog("#### ColorPickerGalleryPhotos hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.xlog("!!!! FAILED loading ImageStuff hooks! !!!!\n" + "\n")
+            Log.xlog("!!!! FAILED loading ColorPickerGalleryPhotos hooks! !!!!\n" + "\n")
         }
 
         try {
@@ -77,6 +77,42 @@ class Hooks(private val lpparam: LoadPackageParam) {
         } catch (e: Throwable) {
             e.printStackTrace()
             Log.xlog("!!!! FAILED loading SavePost hooks! !!!!\n\n")
+        }
+
+        try {
+            Log.xlog("#### Loading FastScrollDownPostDetail hooks ####")
+            FastScrollDownPostDetail(lpparam)
+            Log.xlog("#### Loading FastScrollDownPostDetail hooks loaded! ####")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.xlog("!!!! FAILED loading FastScrollDownPostDetail hooks! !!!!\n\n")
+        }
+
+        try {
+            Log.xlog("#### Loading JodelMenu hooks ####")
+            JodelMenu(lpparam)
+            Log.xlog("#### Loading JodelMenu hooks loaded! ####")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.xlog("!!!! FAILED loading JodelMenu hooks! !!!!\n\n")
+        }
+
+        try {
+            Log.xlog("#### Loading FastLocationSwitcher hooks ####")
+            FastLocationSwitcher(lpparam)
+            Log.xlog("#### Loading FastLocationSwitcher hooks loaded! ####")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.xlog("!!!! FAILED loading FastLocationSwitcher hooks! !!!!\n\n")
+        }
+
+        try {
+            Log.xlog("#### Loading RemoveBlurFromImages hooks ####")
+            RemoveBlurFromImages(lpparam)
+            Log.xlog("#### Loading RemoveBlurFromImages hooks loaded! ####")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.xlog("!!!! FAILED loading RemoveBlurFromImages hooks! !!!!\n\n")
         }
     }
 }

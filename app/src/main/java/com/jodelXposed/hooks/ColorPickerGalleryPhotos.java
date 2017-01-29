@@ -2,25 +2,20 @@ package com.jodelXposed.hooks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.jodelXposed.utils.Log;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Utils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -32,17 +27,16 @@ import static com.jodelXposed.utils.Utils.getNewIntent;
 import static com.jodelXposed.utils.Utils.getSystemContext;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
-import static de.robv.android.xposed.XposedHelpers.findMethodsByExactParameters;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
-public class ImageStuff {
+public class ColorPickerGalleryPhotos {
     public static boolean imageShared = false;
 
     /**
      * Add features on ImageView - load custom stored image, adjust ScaleType
      * Remove blur effect
      */
-    public ImageStuff(final XC_LoadPackage.LoadPackageParam lpparam) {
+    public ColorPickerGalleryPhotos(final XC_LoadPackage.LoadPackageParam lpparam) {
 
         findAndHookMethod("com.jodelapp.jodelandroidv3.view.CreateTextPostFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
             @Override
@@ -118,16 +112,6 @@ public class ImageStuff {
                     });
             }
         });
-
-        Class<?> JodelImageHelper = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.utilities.JodelImageHelper", lpparam.classLoader);
-        Method[] methods = findMethodsByExactParameters(JodelImageHelper, Bitmap.class, Context.class, Bitmap.class);
-        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.JodelImageHelper", lpparam.classLoader, methods[0].getName(), Context.class, Bitmap.class, new XC_MethodReplacement() {
-            @Override
-            protected Bitmap replaceHookedMethod(MethodHookParam param) throws Throwable {
-                return (Bitmap) param.args[1];
-            }
-        });
-
     }
 
     private class ColorPickerOnClickListener implements View.OnClickListener {

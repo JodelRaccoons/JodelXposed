@@ -4,33 +4,28 @@ package com.jodelXposed.utils
 import android.Manifest
 import android.annotation.TargetApi
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
-import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
-import android.widget.Toast.LENGTH_LONG
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.ui.PlacePicker
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.jodelXposed.App.Companion.lpparam
 import com.jodelXposed.JXPreferenceActivity
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
-import git.unbrick.xposedhelpers.XposedUtils
 import id.zelory.compressor.Compressor
 import java.io.File
 import java.io.FileNotFoundException
 
 
 class Picker : AppCompatActivity() {
+    private var fastLocationPickerChoice = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +45,16 @@ class Picker : AppCompatActivity() {
     private fun getAction() {
         when (intent.getIntExtra("choice", 0)) {
             1 -> startLocationPicker()
+            2 -> fastChangeLocationPicker(intent)
             3 -> galleryPicker()
             4 -> startActivity(Intent(this, JXPreferenceActivity::class.java))
             else -> finish()
         }
+    }
+
+    private fun fastChangeLocationPicker(intent: Intent) {
+        fastLocationPickerChoice = intent.getIntExtra("fastChange", 0)
+        startLocationPicker()
     }
 
     override fun onBackPressed() {
@@ -63,8 +64,9 @@ class Picker : AppCompatActivity() {
     }
 
     override fun finish() {
-        overridePendingTransition(0, 0)
+//        overridePendingTransition(0, 0)
         super.finish()
+        overridePendingTransition(0, 0)
     }
 
     private fun galleryPicker() {
@@ -80,8 +82,8 @@ class Picker : AppCompatActivity() {
         val location = Options.location
         val latLngBounds = LatLngBounds.Builder().include(LatLng(location.lat, location.lng)).build()
         builder.setLatLngBounds(latLngBounds)
+        val intent = builder.build(this)
         try {
-            val intent = builder.build(this)
             startActivityForResult(intent, PLACEPICKER_REQUEST_CODE)
         } catch (e: GooglePlayServicesRepairableException) {
             e.printStackTrace()
@@ -107,10 +109,41 @@ class Picker : AppCompatActivity() {
         when (requestCode) {
             PLACEPICKER_REQUEST_CODE -> {
                 val place = PlacePicker.getPlace(data, this)
-                Options.location.lat = place.latLng.latitude
-                Options.location.lng = place.latLng.longitude
+                val name = place.name
+                val lat = place.latLng.latitude
+                val lng = place.latLng.longitude
+                if (fastLocationPickerChoice != 0) {
+                    when (fastLocationPickerChoice) {
+                        1 -> {
+                            Options.location.namefastChange1 = name.toString()
+                            Options.location.latfastChange1 = lat
+                            Options.location.lngfastChange1 = lng
+                        }
+                        2 -> {
+                            Options.location.namefastChange2 = name.toString()
+                            Options.location.latfastChange2 = lat
+                            Options.location.lngfastChange2 = lng
+                        }
+                        3 -> {
+                            Options.location.namefastChange3 = name.toString()
+                            Options.location.latfastChange3 = lat
+                            Options.location.lngfastChange3 = lng
+                        }
+                        4 -> {
+                            Options.location.namefastChange4 = name.toString()
+                            Options.location.latfastChange4 = lat
+                            Options.location.lngfastChange4 = lng
+                        }
+                    }
+                    fastLocationPickerChoice = 0
+                    Toast.makeText(this@Picker, "Saved successfully!", Toast.LENGTH_LONG).show()
+                } else {
+                    Options.location.lat = lat
+                    Options.location.lng = lng
+                    Toast.makeText(this@Picker, "Success, please refresh your feed!", Toast.LENGTH_LONG).show()
+                }
+
                 Options.save()
-                Toast.makeText(this@Picker, "Success, please refresh your feed!", Toast.LENGTH_LONG).show()
             }
             GALLERY_REQUEST_CODE -> {
                 try {
@@ -119,7 +152,7 @@ class Picker : AppCompatActivity() {
                             .build()
                     val selectedImage = data.data
                     dlog("SelectedImage:$selectedImage")
-                    if (selectedImage.path.contains("contentprovider") || selectedImage.path.contains("content:")) {
+                    if (selectedImage.path.contains("content") || selectedImage.path.contains("content:")) {
                         val cursor = contentResolver.query(selectedImage, arrayOf<String>(MediaStore.Images.Media.DATA), null, null, null)
                         cursor.moveToFirst()
                         val columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA)

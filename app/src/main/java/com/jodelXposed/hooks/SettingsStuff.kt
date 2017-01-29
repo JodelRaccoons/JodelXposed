@@ -5,7 +5,6 @@ import com.jodelXposed.utils.Options
 import com.jodelXposed.utils.Utils.getNewIntent
 import com.jodelXposed.utils.Utils.getSystemContext
 import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.XposedHelpers.*
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import git.unbrick.xposedhelpers.XposedUtils
@@ -14,22 +13,8 @@ class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: Class
 
     init {
         /*
-         * Add JodelXposed entries in ListView
-         * Seamless integration #1
-         */
-        findAndHookMethod(Options.hooks.Class_MyMenuPresenter, classLoader, Options.hooks.Method_Settings_AddEntriesMethod, object : XC_MethodHook() {
-            @Suppress("UNCHECKED_CAST")
-            @Throws(Throwable::class)
-            override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam) {
-                (param.result as MutableList<Any>).add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedLocation", "JX Change location"))
-                (param.result as MutableList<Any>).add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedGeneralSettings", "JX Settings"))
-                (param.result as MutableList<Any>).add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedReportBug", "JX Report a bug"))
-            }
-        })
-
-        /*
          * Add JodelXposed entries in ListView - Handle clicks on Items
-         * Seamless integration #2
+         * Seamless integration #1
          */
         findAndHookMethod(Options.hooks.Class_MyMenuPresenter, classLoader, Options.hooks.Method_Settings_HandleClickEventsMethod, "com.jodelapp.jodelandroidv3.view.MyMenuItem", object : XC_MethodHook() {
             @Throws(Throwable::class)
@@ -42,6 +27,9 @@ class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: Class
                     getSystemContext().startActivity(getNewIntent("JXPreferenceActivity").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
                 else if (selected.equals("xposedReportBug", ignoreCase = true)){
                     XposedUtils.get().showBugReportDialog()
+                } else if (selected.equals("xposedLink", ignoreCase = true)) {
+                    //setCurrentItem(int,boolean)
+                    callMethod(JodelMenu.viewPagerReference, "e", 4, true)
                 }
 
             }
