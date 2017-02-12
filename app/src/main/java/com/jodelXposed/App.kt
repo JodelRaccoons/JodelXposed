@@ -37,7 +37,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
         XposedUtils.Builder()
                 .withLoadPackageParam(lpparam)
                 .withBaseUrl("http://spectre-app.de:8080")
-                .disableAnalytics(true)
+                .disableAnalytics(false)
                 .withResparam(Companion.resparam, Companion.MODULE_PATH)
                 .build()
     }
@@ -51,7 +51,6 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
         App.Companion.lpparam = lpparam
 
         val pkgInfo: PackageInfo = getSystemContext().packageManager.getPackageInfo(lpparam.packageName, 0)
-
 
 
         xlog("----------\n" +
@@ -75,8 +74,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
             dlog("Loading shipped hooks.json")
             var shippedHooks = HookValues()
             try {
-                val jxContext = getSystemContext().createPackageContext(
-                        "com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
+                val jxContext = getSystemContext().createPackageContext("com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
                 val ins = jxContext.assets.open("${pkgInfo.versionCode}/hooks.json")
                 shippedHooks = Gson().fromJson(ins.reader().readText(), HookValues::class.java)
             } catch(ex: JsonSyntaxException) {

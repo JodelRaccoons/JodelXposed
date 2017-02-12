@@ -19,7 +19,6 @@ import com.jodelXposed.App;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Utils;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -31,10 +30,8 @@ import static android.view.View.GONE;
 import static com.jodelXposed.utils.Utils.dpToPx;
 import static com.jodelXposed.utils.Utils.getNewIntent;
 import static com.jodelXposed.utils.Utils.getSystemContext;
-import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findMethodsByExactParameters;
-import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
 /**
  * Created by Admin on 26.01.2017.
@@ -237,29 +234,6 @@ public class FastLocationSwitcher {
                 if (Options.INSTANCE.getLocation().getOverrideHometown()) {
                     ((View) param.args[0]).setId(viewIdBackup[0]);
                 }
-            }
-        });
-
-
-        //handle a manual refresh by Utils.class
-        findAndHookMethod("com.jodelapp.jodelandroidv3.features.feed.FeedFragmentPresenter", lpparam.classLoader, "handle", "com.jodelapp.jodelandroidv3.events.LocationUpdateEvent", new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                Class FeedFragmentClass = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.features.feed.FeedFragment", lpparam.classLoader);
-                for (Field f : param.thisObject.getClass().getFields()) {
-                    if (f.getType().toString().contains("FeedFragment")) {
-                        Object feedFragment = XposedHelpers.getObjectField(param.thisObject, f.getName());
-                        final Object refreshLayout = getObjectField(feedFragment, "refreshLayout");
-                        callMethod(refreshLayout, "post", new Runnable() {
-                            @Override
-                            public void run() {
-                                callMethod(refreshLayout, "setRefreshing", true);
-                            }
-                        });
-                        break;
-                    }
-                }
-
             }
         });
     }

@@ -6,11 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.util.TypedValue;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
@@ -33,14 +31,12 @@ import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
-import static de.robv.android.xposed.XposedHelpers.findMethodsByExactParameters;
-import static de.robv.android.xposed.XposedHelpers.newInstance;
-import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
+import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
 public class Utils {
     public static final String OldSettingsPath = Environment.getExternalStorageDirectory() + File.separator + ".jodel-settings-v2";
     private static final String JXFolderPath = Environment.getExternalStorageDirectory() + File.separator + "JodelXposed";
-    public static Activity snackbarUtilActivity;
+    public static Activity mainActivity;
 
     public static Context getSystemContext() {
         Object activityThread = callStaticMethod(findClass("android.app.ActivityThread", null), "currentActivityThread");
@@ -100,7 +96,7 @@ public class Utils {
         findAndHookMethod("com.jodelapp.jodelandroidv3.view.MainActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                snackbarUtilActivity = (Activity) param.thisObject;
+                mainActivity = (Activity) param.thisObject;
             }
         });
     }
@@ -110,10 +106,10 @@ public class Utils {
     }
 
     public static void makeSnackbarWithNoCtx(XC_LoadPackage.LoadPackageParam lpparam, String message, int length) {
-        if (snackbarUtilActivity != null) {
+        if (mainActivity != null) {
             try {
                 Class TSnackbar = XposedHelpers.findClass("com.androidadvance.topsnackbar.TSnackbar", lpparam.classLoader);
-                Object contentView = snackbarUtilActivity.findViewById(android.R.id.content);
+                Object contentView = mainActivity.findViewById(android.R.id.content);
                 Object subContentView = XposedHelpers.callMethod(contentView, "getChildAt", 0);
                 Object snackbar = null;
                 switch (length) {
@@ -128,8 +124,8 @@ public class Utils {
                         break;
                 }
                 View snackbarview = (View) XposedHelpers.callMethod(snackbar, "getView");
-                snackbarview.setBackgroundColor(snackbarUtilActivity.getResources().getColor(snackbarUtilActivity.getResources().getIdentifier("background_floating_material_light", "color", "com.tellm.android.app")));
-                TextView snackbarTextView = (TextView) snackbarview.findViewById(snackbarUtilActivity.getResources().getIdentifier("snackbar_text", "id", "com.tellm.android.app"));
+                snackbarview.setBackgroundColor(mainActivity.getResources().getColor(mainActivity.getResources().getIdentifier("background_floating_material_light", "color", "com.tellm.android.app")));
+                TextView snackbarTextView = (TextView) snackbarview.findViewById(mainActivity.getResources().getIdentifier("snackbar_text", "id", "com.tellm.android.app"));
                 snackbarTextView.setTextColor(Color.BLACK);
                 snackbarTextView.setGravity(Gravity.CENTER);
                 XposedHelpers.callMethod(snackbar, "ay", LayoutHooks.JodelResIDs.ic_jx_icon, 256);
@@ -144,48 +140,63 @@ public class Utils {
     }
 
     public static int dpToPx(int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, snackbarUtilActivity.getResources().getDisplayMetrics());
+        DisplayMetrics displayMetrics = mainActivity.getResources().getDisplayMetrics();
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+    public static int pxToDp(int px) {
+        DisplayMetrics displayMetrics = getSystemContext().getResources().getDisplayMetrics();
+        return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     public static void updateFeedAndLocation(XC_LoadPackage.LoadPackageParam lpparam, double lat, double lng) {
-        Class JodelApp = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.JodelApp", lpparam.classLoader);
-
-        Location location = new Location("Jodel");
-        location.setLatitude(lat);
-        location.setLongitude(lng);
-
-        Activity activity = XposedUtilHelpers.getActivityFromActivityThread();
-        Class AppComponent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.api.AppComponent", lpparam.classLoader);
-
-
-        Method[] methods = findMethodsByExactParameters(JodelApp, AppComponent);
-
-        Object JodelAppObject = callStaticMethod(JodelApp, "V", activity.getApplicationContext());
-        Object AppComponentObject = callMethod(JodelAppObject, methods[0].getName());
-        final Object Bus = callMethod(AppComponentObject, "getBus");
-
-        Object LocationManager = callMethod(AppComponentObject, "getLocationManager");
-
-        callMethod(LocationManager, "j", location);
-        callMethod(LocationManager, "h", location);
-        callMethod(LocationManager, "i", location);
-
-        Class UpdateMyMenuEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", lpparam.classLoader);
-        final Class FeedUpdateEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.FeedUpdateEvent", lpparam.classLoader);
-
-        Object updateEvent = newInstance(UpdateMyMenuEvent);
-        setAdditionalInstanceField(updateEvent, "locationchange", true);
-
-        callMethod(Bus, Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event, updateEvent);
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                callMethod(Bus,
-                    Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event,
-                    XposedHelpers.newInstance(FeedUpdateEvent));
+        try {
+            if (mainActivity != null) {
+                Object locationManager = getObjectField(mainActivity, "awp");
+                callMethod(locationManager, "Ew");
             }
-        }, 500);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//        Class JodelApp = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.JodelApp", lpparam.classLoader);
+//
+//        Location location = new Location("Jodel");
+//        location.setLatitude(lat);
+//        location.setLongitude(lng);
+//
+//        Activity activity = XposedUtilHelpers.getActivityFromActivityThread();
+//        Class AppComponent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.api.AppComponent", lpparam.classLoader);
+//
+//
+//        Method[] methods = findMethodsByExactParameters(JodelApp, AppComponent);
+//
+//        Object JodelAppObject = callStaticMethod(JodelApp, "Y", activity.getApplicationContext());
+//        Object AppComponentObject = callMethod(JodelAppObject, methods[0].getName());
+//        final Object Bus = callMethod(AppComponentObject, "getBus");
+//
+//        Object LocationManager = callMethod(AppComponentObject, "getLocationManager");
+//
+//        callMethod(LocationManager, "j", location);
+//        callMethod(LocationManager, "h", location);
+//        callMethod(LocationManager, "i", location);
+//
+//        Class UpdateMyMenuEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", lpparam.classLoader);
+//        final Class FeedUpdateEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.FeedUpdateEvent", lpparam.classLoader);
+//
+//        Object updateEvent = newInstance(UpdateMyMenuEvent);
+//        setAdditionalInstanceField(updateEvent, "locationchange", true);
+//
+//        callMethod(Bus, Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event, updateEvent);
+//
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                callMethod(Bus,
+//                    Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event,
+//                    XposedHelpers.newInstance(FeedUpdateEvent));
+//            }
+//        }, 500);
     }
 
     public static int getDisplayHeight() {

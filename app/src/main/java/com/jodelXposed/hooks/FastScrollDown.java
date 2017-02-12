@@ -18,9 +18,9 @@ import static de.robv.android.xposed.XposedHelpers.getObjectField;
  */
 
 @SuppressWarnings("ResourceType")
-public class FastScrollDownPostDetail {
+public class FastScrollDown {
 
-    public FastScrollDownPostDetail(final XC_LoadPackage.LoadPackageParam lpparam) {
+    public FastScrollDown(final XC_LoadPackage.LoadPackageParam lpparam) {
 
         findAndHookMethod(
             "com.jodelapp.jodelandroidv3.features.postdetail.PostDetailFragment",

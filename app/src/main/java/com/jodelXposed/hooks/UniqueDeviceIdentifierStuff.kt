@@ -1,12 +1,10 @@
 package com.jodelXposed.hooks
 
-import com.jodelXposed.utils.Options
-
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
-
 import com.jodelXposed.utils.Log.dlog
+import com.jodelXposed.utils.Options
+import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers.findAndHookMethod
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 
 class UniqueDeviceIdentifierStuff(lpparam: LoadPackageParam) {
     init {
@@ -14,7 +12,7 @@ class UniqueDeviceIdentifierStuff(lpparam: LoadPackageParam) {
             @Throws(Throwable::class)
             override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam) {
                 val realUDI = param.result as String
-                if (Options.udi.udi.length == 0) {
+                if (Options.udi.udi.isEmpty()) {
                     Options.udi.udi = realUDI
                     dlog("Backing up UDI")
                     Options.save()

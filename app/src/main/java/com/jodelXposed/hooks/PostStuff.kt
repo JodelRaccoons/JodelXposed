@@ -66,7 +66,7 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
         }
 
         fun stickyPost(param: MethodHookParam) {
-            if (Prefs.with(Utils.snackbarUtilActivity).readBoolean("displayJXchangelog", true)) {
+            if (Prefs.with(Utils.mainActivity).readBoolean("displayJXchangelog", true)) {
                 val posts: MutableList<Any>? = param.result as MutableList<Any>?
 
                 val message = Options.hooks.updateMessage
@@ -87,7 +87,7 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
             val stickyViewHolder = param.args[0]
             val closeButton = XposedHelpers.getObjectField(stickyViewHolder,"closeButton")
             XposedHelpers.callMethod(closeButton,"setOnClickListener", View.OnClickListener {
-                Prefs.with(Utils.snackbarUtilActivity).writeBoolean("displayJXchangelog", false)
+                Prefs.with(Utils.mainActivity).writeBoolean("displayJXchangelog", false)
                 for (field in param.thisObject.javaClass.declaredFields) {
                     if (field.type.toString().contains("List")) {
                         try {

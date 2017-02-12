@@ -91,7 +91,7 @@ public class LayoutHooks {
     }
 
     public void hook() {
-        final XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, resparam.res);
+//        final XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, resparam.res);
 
         resparam.res.hookLayout(App.Companion.getPACKAGE_NAME(), "layout", "fragment_create_post", new XC_LayoutInflated() {
                 @Override
@@ -121,7 +121,7 @@ public class LayoutHooks {
                     XposedHelpers.callMethod(galleryButton, "setImageDrawable", liparam.res.getDrawable(JodelResIDs.drawable_gallery_chooser));
                     XposedHelpers.callMethod(galleryButton, "setLayoutParams", layoutParams);
 
-                    //set tag for later usage, see ColorPickerGalleryPhotos.class
+                    //set tag for later usage, see ColorAndGalleryPicker.class
                     galleryButton.setTag("gallery_button");
 
                     //apply layout changes
@@ -215,28 +215,29 @@ public class LayoutHooks {
 
 
                 //find reply button and apply new layoutparams
-                LinearLayout.LayoutParams rlParamsReplyButton = new LinearLayout.LayoutParams(Utils.getDisplayWidth() - dpToPx(80), ViewGroup.LayoutParams.WRAP_CONTENT);
-                rlParamsReplyButton.weight = 3;
                 View reply_button = liparam.view.findViewById(liparam.res.getIdentifier("create_reply_button", "id", App.Companion.getPACKAGE_NAME()));
                 reply_button.measure(0, 0);
-                reply_button.setPadding(0, Utils.dpToPx(20) - 2, 0, Utils.dpToPx(20) - 2);
+                LinearLayout.LayoutParams rlParamsReplyButton = new LinearLayout.LayoutParams(Utils.getDisplayWidth() - dpToPx(80), dpToPx(70));
+//               rlParamsReplyButton.weight = 3;
+
+//              reply_button.setPadding(0, Utils.dpToPx(20) - 2, 0, Utils.dpToPx(20) - 2);
                 reply_button.setLayoutParams(rlParamsReplyButton);
                 //remove reply button from current parent
                 ((RelativeLayout) reply_button.getParent()).removeView(reply_button);
 
 
                 //Add a new placeholder view between reply and scroll down button
-                LinearLayout.LayoutParams rlParamsPlaceholder = new LinearLayout.LayoutParams(3, reply_button.getMeasuredHeight() - 3);
-                rlParamsPlaceholder.weight = 1;
+                LinearLayout.LayoutParams rlParamsPlaceholder = new LinearLayout.LayoutParams(3, ViewGroup.LayoutParams.MATCH_PARENT);
+//                rlParamsPlaceholder.weight = 1;
                 View placeholder = new View(ctx);
                 placeholder.setBackgroundColor(Color.LTGRAY);
-                placeholder.setPadding(0, Utils.dpToPx(20) - 2, 0, Utils.dpToPx(20) - 2);
+//                placeholder.setPadding(0, Utils.dpToPx(20) - 2, 0, Utils.dpToPx(20) - 2);
                 placeholder.setLayoutParams(rlParamsPlaceholder);
 
 
                 //Add new fast scroll down button
-                LinearLayout.LayoutParams rlParamsFastScrollDown = new LinearLayout.LayoutParams(dpToPx(80), reply_button.getMeasuredHeight() - 3);
-                rlParamsFastScrollDown.weight = 2;
+                LinearLayout.LayoutParams rlParamsFastScrollDown = new LinearLayout.LayoutParams(dpToPx(80), ViewGroup.LayoutParams.MATCH_PARENT);
+//                rlParamsFastScrollDown.weight = 2;
                 rlParamsFastScrollDown.gravity = Gravity.CENTER;
                 ImageView fast_scroll_down = new ImageView(ctx);
                 fast_scroll_down.setTag("tag_fast_scroll_down");
@@ -258,6 +259,7 @@ public class LayoutHooks {
 
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class JodelResIDs {
         public static int drawable_gallery_chooser;
         public static int ic_color_chooser;

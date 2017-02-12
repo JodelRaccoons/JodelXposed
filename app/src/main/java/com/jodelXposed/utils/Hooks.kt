@@ -17,21 +17,21 @@ class Hooks(private val lpparam: LoadPackageParam) {
         }
 
         try {
-            Log.xlog("#### Loading BetaStuff hooks ####")
-            BetaStuff(lpparam)
-            Log.xlog("#### BetaStuff hooks loaded! ####")
+            Log.xlog("#### Loading UnlockExperiments hooks ####")
+            UnlockExperiments(lpparam)
+            Log.xlog("#### UnlockExperiments hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.xlog("!!!! FAILED loading BetaStuff hooks! !!!!\n\n")
+            Log.xlog("!!!! FAILED loading UnlockExperiments hooks! !!!!\n\n")
         }
 
         try {
-            Log.xlog("#### Loading ColorPickerGalleryPhotos hooks ####")
-            ColorPickerGalleryPhotos(lpparam)
-            Log.xlog("#### ColorPickerGalleryPhotos hooks loaded! ####")
+            Log.xlog("#### Loading ColorAndGalleryPicker hooks ####")
+            ColorAndGalleryPicker(lpparam)
+            Log.xlog("#### ColorAndGalleryPicker hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.xlog("!!!! FAILED loading ColorPickerGalleryPhotos hooks! !!!!\n" + "\n")
+            Log.xlog("!!!! FAILED loading ColorAndGalleryPicker hooks! !!!!\n" + "\n")
         }
 
         try {
@@ -80,12 +80,12 @@ class Hooks(private val lpparam: LoadPackageParam) {
         }
 
         try {
-            Log.xlog("#### Loading FastScrollDownPostDetail hooks ####")
-            FastScrollDownPostDetail(lpparam)
-            Log.xlog("#### Loading FastScrollDownPostDetail hooks loaded! ####")
+            Log.xlog("#### Loading FastScrollDown hooks ####")
+            FastScrollDown(lpparam)
+            Log.xlog("#### Loading FastScrollDown hooks loaded! ####")
         } catch (e: Throwable) {
             e.printStackTrace()
-            Log.xlog("!!!! FAILED loading FastScrollDownPostDetail hooks! !!!!\n\n")
+            Log.xlog("!!!! FAILED loading FastScrollDown hooks! !!!!\n\n")
         }
 
         try {
@@ -114,5 +114,14 @@ class Hooks(private val lpparam: LoadPackageParam) {
             e.printStackTrace()
             Log.xlog("!!!! FAILED loading RemoveBlurFromImages hooks! !!!!\n\n")
         }
+
+//        try {
+//            Log.xlog("#### Loading JodelErrorTracing hooks ####")
+//            JodelErrorTracing(lpparam)
+//            Log.xlog("#### Loading JodelErrorTracing hooks loaded! ####")
+//        } catch (e: Throwable) {
+//            e.printStackTrace()
+//            Log.xlog("!!!! FAILED loading JodelErrorTracing hooks! !!!!\n\n")
+//        }
     }
 }

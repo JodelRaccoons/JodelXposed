@@ -24,7 +24,7 @@ class HookUpdater {
                         Log.dlog("Replacing local hooks with repo hooks")
                         Options.hooks = repoHooks
                         Options.save()
-                        Prefs.with(Utils.snackbarUtilActivity).writeBoolean("displayJXchangelog", true)
+                        Prefs.with(Utils.mainActivity).writeBoolean("displayJXchangelog", true)
                         Toast.makeText(AndroidAppHelper.currentApplication(), "Updated hooks, please force restart Jodel", Toast.LENGTH_LONG).show()
 
                     } else {

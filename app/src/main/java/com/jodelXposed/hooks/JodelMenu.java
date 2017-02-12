@@ -183,7 +183,7 @@ public class JodelMenu {
                     xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedLocationSpoofing", "Location spoofing"));
                     xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedFastChange", "Override hometown"));
                     xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedLocation", "JX Change location"));
-                    xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedReportBug", "JX Report a bug"));
+//                    xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedReportBug", "JX Report a bug"));
                     param.setResult(xposedOptionsItems);
                 } else {
                     ArrayList arrayList = (ArrayList) param.getResult();
@@ -238,14 +238,6 @@ public class JodelMenu {
 
                     view.addView(sw, view.getChildCount());
                 }
-            }
-        });
-
-        //Print any network error
-        findAndHookMethod("com.jodelapp.jodelandroidv3.utilities.errorhandling.rx.ErrorResolutionSubscriber", lpparam.classLoader, "onError", Throwable.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                ((Throwable) param.args[0]).printStackTrace();
             }
         });
     }
