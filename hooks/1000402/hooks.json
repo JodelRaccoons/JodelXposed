@@ -2,12 +2,12 @@
   /**
     * The version of this file
    **/
-  "version": 3,
+  "version": 4,
   /**
     * The targeted Jodel version code
    **/
-  "versionCode": 1000302,
-  "updateMessage": "Updated hooks for 1000302 (4.33.2)",
+  "versionCode": 1000402,
+  "updateMessage": "Updated hooks for 1000402 (4.34.2)",
   /**
     * package com.jodelapp.jodelandroidv3.model.Storage;
     * type: method
