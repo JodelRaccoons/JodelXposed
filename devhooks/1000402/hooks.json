@@ -2,7 +2,7 @@
   /**
     * The version of this file
    **/
-  "version": 6,
+  "version": 7,
   /**
     * The targeted Jodel version code
    **/
@@ -18,7 +18,7 @@
   **/
   "Class_Storage": "com.jodelapp.jodelandroidv3.model.Storage",
   "Method_BetaHook_UnlockFeatures": "cf",
-  "Array_FeaturesEnabled": ["channels", "hashtags","hometown","picture_feed",/*"notification_center"*/],
+  "Array_FeaturesEnabled": ["channels", "hashtags","hometown","picture_feed"/*,"notification_center"*/],
   /**
     * package com.jodelapp.jodelandroidv3.view.PhotoEditFragment;
     * type: field
