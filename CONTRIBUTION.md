@@ -3,6 +3,7 @@ Hi, if you want to contribute to this project this document may help you. If the
 
 # Finding the apk
 I usually get the currently installed apk by copying it from `/data/app/[package name]/base.apk`.
+The Fastlane tool might help you here. If you have it installed then check out [the available commands](fastlane/README.md).
 
 # Finding hooks
 There are a bunch of tools out there for decompiling and digging through apks.

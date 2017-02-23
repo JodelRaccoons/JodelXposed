@@ -47,7 +47,7 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
 3. If hooks are not available you can:
     * Downgrade Your Jodel version
     * Wait for a hook update
-    * Supply a hook update yourself - see [contributions](CONTRIBUTION.MD) 
+    * Supply a hook update yourself - see [contributions](CONTRIBUTION.md) 
 
 # Version compatibility
 The module aims for compatibility with the latest Jodel version. Jodel apks are usually linked in [the thread on XDA](http://forum.xda-developers.com/xposed/modules/mod-jodelxposed-enhancements-t3350019/).
@@ -62,7 +62,7 @@ The latest supported Jodel version is noted [here](https://github.com/krokofant/
 * Create an issue if you still have questions
 
 ## You dont have Google play services? No problem!
-Just edit the file file /sdcard/.jodel-settings-v2 and edit your lat/lng coordinates manually.
+Just edit the file file /sdcard/JodelXposed/jodel-settings-v2.json and edit your lat/lng coordinates manually.
 ```json
 "location":{"active":true,"lat":52.5200066,"lng":13.404954}
 ```
