@@ -31,7 +31,6 @@ import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
-import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
 public class Utils {
     public static final String OldSettingsPath = Environment.getExternalStorageDirectory() + File.separator + ".jodel-settings-v2";
@@ -152,8 +151,8 @@ public class Utils {
     public static void updateFeedAndLocation(XC_LoadPackage.LoadPackageParam lpparam, double lat, double lng) {
         try {
             if (mainActivity != null) {
-                Object locationManager = getObjectField(mainActivity, "awp");
-                callMethod(locationManager, "Ew");
+                Object locationManager = XposedHelpers.findFirstFieldByExactType(mainActivity.getClass(), XposedHelpers.findClass("com.jodelapp.jodelandroidv3.usecases.LocationManager", lpparam.classLoader)).get(mainActivity);
+                callMethod(locationManager, "EC");
             }
         } catch (Exception e) {
             e.printStackTrace();

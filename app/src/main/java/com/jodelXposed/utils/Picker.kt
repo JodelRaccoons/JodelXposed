@@ -152,14 +152,15 @@ class Picker : AppCompatActivity() {
                             .build()
                     val selectedImage = data.data
                     dlog("SelectedImage:$selectedImage")
-                    if (selectedImage.path.contains("content") || selectedImage.path.contains("content:")) {
+                    try { //(selectedImage.path.contains("content") || selectedImage.path.contains("content:"))
                         val cursor = contentResolver.query(selectedImage, arrayOf<String>(MediaStore.Images.Media.DATA), null, null, null)
                         cursor.moveToFirst()
                         val columnIndex = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
                         val picturePath = cursor.getString(columnIndex)
                         cursor.close()
                         Bitmap.saveBitmap(compressor.compressToBitmap(File(picturePath)))
-                    } else {
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                         Bitmap.saveBitmap(compressor.compressToBitmap(File(selectedImage.path)))
                     }
                 } catch (e: FileNotFoundException) {
