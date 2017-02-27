@@ -8,7 +8,8 @@
 /.idea/*
 !/.idea/encodings.xml
 .gradletasknamecache
-/jodel
+/jodel/*
+!/jodel/hookfinder.settings.js
 
 # fastlane specific
 fastlane/report.xml
