@@ -10,6 +10,14 @@ const targets = {
       }
     ]
   },
+  'features.photoedit.PhotoEditFragment': {
+    fields: [
+      {
+        name: 'Method_ImageHookValues_ImageView',
+        filter: /\.field (picPreview):Landroid\/widget\/ImageView;/g
+      }
+    ]
+  },
   'view.adapter.PostDetailRecyclerAdapter': {
     methods: [
       {
