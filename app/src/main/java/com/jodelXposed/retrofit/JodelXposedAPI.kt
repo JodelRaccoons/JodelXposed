@@ -1,15 +1,14 @@
 package com.jodelXposed.retrofit
 
 import com.jodelXposed.models.HookValues
-import org.json.JSONObject
-
 import retrofit2.Call
-import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface JodelXposedAPI {
     @GET("master/hooks/{version}/hooks.json")
     fun getHooks(@Path("version") version: Int): Call<HookValues>
+
+    @GET("master/devhooks/{version}/hooks.json")
+    fun getDevHooks(@Path("version") version: Int): Call<HookValues>
 }

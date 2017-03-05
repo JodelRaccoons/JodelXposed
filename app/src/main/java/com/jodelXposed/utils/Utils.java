@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.DisplayMetrics;
@@ -19,8 +21,10 @@ import android.widget.Toast;
 import com.jodelXposed.hooks.LayoutHooks;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
@@ -157,6 +161,36 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Class JodelApp = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.JodelApp", lpparam.classLoader);
+        Class AppComponentInterface = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.api.AppComponent", lpparam.classLoader);
+        Class OttoEventBus = XposedHelpers.findClass("com.squareup.otto.Bus", lpparam.classLoader);
+        Class AddressUpdateEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.AddressUpdateEvent", lpparam.classLoader);
+        Class LocationManagerInterface = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.usecases.LocationManager", lpparam.classLoader);
+        Method methodGetJodelApp = XposedHelpers.findMethodsByExactParameters(JodelApp, JodelApp, Context.class)[0];
+        Field appComponentField = XposedHelpers.findFirstFieldByExactType(JodelApp, AppComponentInterface);
+        Object jodelAppInstance = XposedHelpers.callStaticMethod(JodelApp, methodGetJodelApp.getName(), XposedUtilHelpers.getActivityFromActivityThread().getApplicationContext());
+        Method methodGetEventBus = XposedHelpers.findMethodsByExactParameters(AppComponentInterface, OttoEventBus)[0];
+        Method methodGetLocationManager = XposedHelpers.findMethodsByExactParameters(AppComponentInterface, LocationManagerInterface)[0];
+
+        Object appComponentInstance = XposedHelpers.getObjectField(jodelAppInstance, appComponentField.getName());
+        Object OttoEventBusInstance = XposedHelpers.callMethod(appComponentInstance, methodGetEventBus.getName());
+        Object locationManagerInstance = XposedHelpers.callMethod(appComponentInstance, methodGetLocationManager.getName());
+
+
+        Address address = new Address(Locale.getDefault());
+        address.setLatitude(lat);
+        address.setLongitude(lng);
+
+        Location location = new Location("Xposed");
+        location.setLatitude(lat);
+        location.setLongitude(lng);
+
+        XposedHelpers.callMethod(locationManagerInstance, "i", location);
+
+//        Object addressUpdateEventInstance = XposedHelpers.newInstance(AddressUpdateEvent,address, location);
+
+//        XposedHelpers.callMethod(OttoEventBusInstance,Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event, addressUpdateEventInstance);
 
 //        Class JodelApp = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.JodelApp", lpparam.classLoader);
 //

@@ -18,7 +18,7 @@ android {
         mavenCentral()
         jcenter()
         maven { url "https://jitpack.io" }
-        flatDir { dirs 'libs' }
+        flatDir { dirs '/src/main/libs' }
     }
     defaultConfig {
         applicationId "com.jodelXposed"
@@ -48,6 +48,11 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
         main.assets.srcDirs += '../hooks'
     }
+    externalNativeBuild {
+        cmake {
+            path 'src/main/cpp/CMakeLists.txt'
+        }
+    }
 }
 
 dependencies {
@@ -63,10 +68,10 @@ dependencies {
     compile 'com.androidadvance:topsnackbar:1.1.1'
     compile 'id.zelory:compressor:1.0.4'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile(name:'app-debug', ext:'aar')
     compile "com.github.nisrulz:easydeviceinfo-base:2.3.2"
     compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile(name: "app-debug", ext: 'aar')
 }
 
 gradle.taskGraph.whenReady { taskGraph ->

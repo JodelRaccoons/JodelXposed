@@ -115,13 +115,23 @@ class Hooks(private val lpparam: LoadPackageParam) {
             Log.xlog("!!!! FAILED loading RemoveBlurFromImages hooks! !!!!\n\n")
         }
 
-//        try {
-//            Log.xlog("#### Loading JodelErrorTracing hooks ####")
-//            JodelErrorTracing(lpparam)
-//            Log.xlog("#### Loading JodelErrorTracing hooks loaded! ####")
-//        } catch (e: Throwable) {
-//            e.printStackTrace()
-//            Log.xlog("!!!! FAILED loading JodelErrorTracing hooks! !!!!\n\n")
-//        }
+        try {
+            Log.xlog("#### Loading LocationUpdateHook hooks ####")
+            LocationUpdateHook(lpparam)
+            Log.xlog("#### Loading LocationUpdateHook hooks loaded! ####")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.xlog("!!!! FAILED loading LocationUpdateHook hooks! !!!!\n\n")
+        }
+
+
+        try {
+            Log.xlog("#### Loading DebugHooks hooks ####")
+            DebugHooks(lpparam)
+            Log.xlog("#### Loading DebugHooks hooks loaded! ####")
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            Log.xlog("!!!! FAILED loading DebugHooks hooks! !!!!\n\n")
+        }
     }
 }
