@@ -21,6 +21,9 @@ android {
         flatDir { dirs 'src/main/libs' }
     }
     defaultConfig {
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86", "mips"
+        }
         applicationId "com.jodelXposed"
         minSdkVersion 17
         targetSdkVersion 24
