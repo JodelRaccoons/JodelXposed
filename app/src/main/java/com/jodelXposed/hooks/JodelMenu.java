@@ -134,6 +134,8 @@ public class JodelMenu {
         getViewHook(lpparam);
 
         myMenuEntriesHandler(lpparam);
+
+        handleUpdateMyMenuEvent();
     }
 
     //Override the default page number to make the feed the initial page
@@ -237,6 +239,28 @@ public class JodelMenu {
 
 
                     view.addView(sw, view.getChildCount());
+                }
+            }
+        });
+    }
+
+    private void handleUpdateMyMenuEvent() {
+        findAndHookMethod(myMenuPresenter, "handle", "com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                if (getAdditionalInstanceField(param.args[0], "xposed") != null) {
+                    Activity activity = XposedUtilHelpers.getActivityFromActivityThread();
+
+                    ImageView ivMap = (ImageView) myMenuFragmentView[0].findViewWithTag("iv_map");
+
+                    Location location = Options.INSTANCE.getLocation();
+                    StaticMap map = new StaticMap()
+                        .size(Utils.getDisplayWidth() / 2, Utils.dpToPx(230) / 2)
+                        .zoom(12)
+                        .marker(StaticMap.Marker.Style.RED.toBuilder().label('L').build(),
+                            new StaticMap.GeoPoint(location.getLat(), location.getLng()));
+
+                    Picasso.with(activity).load(map.toURL().toString()).fit().into(ivMap);
                 }
             }
         });

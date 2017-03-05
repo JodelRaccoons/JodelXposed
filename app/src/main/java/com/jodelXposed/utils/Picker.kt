@@ -16,7 +16,6 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.ui.PlacePicker
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.jodelXposed.JXPreferenceActivity
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
 import id.zelory.compressor.Compressor
@@ -47,7 +46,6 @@ class Picker : AppCompatActivity() {
             1 -> startLocationPicker()
             2 -> fastChangeLocationPicker(intent)
             3 -> galleryPicker()
-            4 -> startActivity(Intent(this, JXPreferenceActivity::class.java))
             else -> finish()
         }
     }
@@ -64,7 +62,6 @@ class Picker : AppCompatActivity() {
     }
 
     override fun finish() {
-//        overridePendingTransition(0, 0)
         super.finish()
         overridePendingTransition(0, 0)
     }

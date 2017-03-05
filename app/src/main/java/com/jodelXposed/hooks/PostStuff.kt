@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import com.jodelXposed.App
-import com.jodelXposed.utils.Log
 import com.jodelXposed.utils.Options
 import com.jodelXposed.utils.Utils
 import de.robv.android.xposed.XC_MethodHook
@@ -15,6 +14,7 @@ import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.XposedHelpers.*
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import es.dmoral.prefs.Prefs
+import java.lang.reflect.Field
 import java.util.*
 
 class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoader = lpparam.classLoader) {
@@ -34,15 +34,12 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
             val posts = getObjectField(param.thisObject, "posts") as List<*>
             val ids = HashMap<String, String>(posts.size)
 
-            Log.vlog("Postsize: " + posts.size)
-
             for (post in posts) {
                 val user_handle = getObjectField(post, "userHandle") as String
                 if (!ids.containsKey(user_handle)) {
                     ids.put(user_handle, ids.size.toString())
                 }
                 setAdditionalInstanceField(post, "updateExtraPost", ids[user_handle])
-                Log.vlog("User handle: " + user_handle + " Id: " + ids[user_handle])
             }
 
             try {
@@ -77,35 +74,39 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
 
                 val stickyPost = XposedHelpers.newInstance(StickyPost, message, type, postid, color, locationName, null, null, null)
                 posts?.add(0, stickyPost)
-
-                //DONE set boolean to false when StickyPost is removed by user
-                //DONE set boolean to true when hooks are updated
             }
         }
 
         fun stickyPost2(param: MethodHookParam){
             val stickyViewHolder = param.args[0]
             val closeButton = XposedHelpers.getObjectField(stickyViewHolder,"closeButton")
-            XposedHelpers.callMethod(closeButton,"setOnClickListener", View.OnClickListener {
-                Prefs.with(Utils.mainActivity).writeBoolean("displayJXchangelog", false)
-                for (field in param.thisObject.javaClass.declaredFields) {
-                    if (field.type.toString().contains("List")) {
+            var stickyPostListField: Field? = null
+            for (field in param.thisObject.javaClass.declaredFields) {
+                if (field.type.toString().contains("List")) {
+                    stickyPostListField = field
+                    break
+                }
+            }
+            val firstStickyPost = (XposedHelpers.getObjectField(param.thisObject, stickyPostListField?.name) as List<*>)[0]
+            if (firstStickyPost != null) {
+                val postid = getObjectField(firstStickyPost, "stickypostId")
+                if (postid == "595959") {
+                    XposedHelpers.callMethod(closeButton, "setOnClickListener", View.OnClickListener {
+                        Prefs.with(Utils.mainActivity).writeBoolean("displayJXchangelog", false)
                         try {
-                            callMethod(XposedHelpers.getObjectField(param.thisObject, field.name), "remove", 0)
+                            callMethod(XposedHelpers.getObjectField(param.thisObject, stickyPostListField?.name), "remove", 0)
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
-                    }
+                        try {
+                            callMethod(param.thisObject, "bN", 0)
+                        } catch(e: Exception) {
+                            callMethod(param.thisObject, "notifyDataSetChanged")
+                        }
+
+                    })
                 }
-                try {
-                    callMethod(param.thisObject,"bN",0)
-                }catch(e: Exception){
-                    callMethod(param.thisObject,"notifyDataSetChanged")
-                }
-
-            })
-
-
+            }
         }
 
         /**

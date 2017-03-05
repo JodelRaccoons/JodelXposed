@@ -197,10 +197,14 @@ public class LayoutHooks {
                 Context ctx = liparam.view.getContext();
                 ViewGroup parent = (ViewGroup) liparam.view.findViewById(liparam.res.getIdentifier("post_detail_container", "id", App.Companion.getPACKAGE_NAME()));
 
+                View shadow_above_reply = liparam.view.findViewById(liparam.res.getIdentifier("shadow_above_reply", "id", App.Companion.getPACKAGE_NAME()));
+
                 //Add new linear layout
                 RelativeLayout.LayoutParams rlParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 rlParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, RelativeLayout.TRUE);
                 rlParams.addRule(RelativeLayout.FOCUSABLES_TOUCH_MODE, RelativeLayout.TRUE);
+
+
                 LinearLayout newLl = new LinearLayout(ctx);
                 newLl.setId(XResources.getFakeResId("tv_fast_scroll_down"));
                 newLl.setOrientation(LinearLayout.HORIZONTAL);
@@ -218,9 +222,7 @@ public class LayoutHooks {
                 View reply_button = liparam.view.findViewById(liparam.res.getIdentifier("create_reply_button", "id", App.Companion.getPACKAGE_NAME()));
                 reply_button.measure(0, 0);
                 LinearLayout.LayoutParams rlParamsReplyButton = new LinearLayout.LayoutParams(Utils.getDisplayWidth() - dpToPx(80), dpToPx(70));
-//               rlParamsReplyButton.weight = 3;
 
-//              reply_button.setPadding(0, Utils.dpToPx(20) - 2, 0, Utils.dpToPx(20) - 2);
                 reply_button.setLayoutParams(rlParamsReplyButton);
                 //remove reply button from current parent
                 ((RelativeLayout) reply_button.getParent()).removeView(reply_button);
@@ -228,16 +230,13 @@ public class LayoutHooks {
 
                 //Add a new placeholder view between reply and scroll down button
                 LinearLayout.LayoutParams rlParamsPlaceholder = new LinearLayout.LayoutParams(3, ViewGroup.LayoutParams.MATCH_PARENT);
-//                rlParamsPlaceholder.weight = 1;
                 View placeholder = new View(ctx);
                 placeholder.setBackgroundColor(Color.LTGRAY);
-//                placeholder.setPadding(0, Utils.dpToPx(20) - 2, 0, Utils.dpToPx(20) - 2);
                 placeholder.setLayoutParams(rlParamsPlaceholder);
 
 
                 //Add new fast scroll down button
                 LinearLayout.LayoutParams rlParamsFastScrollDown = new LinearLayout.LayoutParams(dpToPx(80), ViewGroup.LayoutParams.MATCH_PARENT);
-//                rlParamsFastScrollDown.weight = 2;
                 rlParamsFastScrollDown.gravity = Gravity.CENTER;
                 ImageView fast_scroll_down = new ImageView(ctx);
                 fast_scroll_down.setTag("tag_fast_scroll_down");
@@ -248,6 +247,9 @@ public class LayoutHooks {
                 XposedHelpers.callMethod(fast_scroll_down, "setImageDrawable", liparam.res.getDrawable(JodelResIDs.ic_scroll));
 
                 //add all views to its new LL parent
+                RelativeLayout.LayoutParams shadowParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 12);
+                shadowParams.addRule(RelativeLayout.ABOVE, newLl.getId());
+                shadow_above_reply.setLayoutParams(shadowParams);
                 newLl.addView(reply_button);
                 newLl.addView(placeholder);
                 newLl.addView(fast_scroll_down);

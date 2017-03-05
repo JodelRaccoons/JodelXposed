@@ -9,12 +9,12 @@
 
     <application android:allowBackup="false"
         android:excludeFromRecents="true"
-        tools:replace="android:allowBackup"
         android:exported="true"
-        android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        tools:replace="android:allowBackup">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -35,15 +35,6 @@
         <meta-data
             android:name="xposedminversion"
             android:value="54"/>
-
-        <activity
-            android:excludeFromRecents="true"
-            android:label="@string/title_activity_share"
-            android:name=".JXPreferenceActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
 
 
         <activity android:name=".utils.Picker"

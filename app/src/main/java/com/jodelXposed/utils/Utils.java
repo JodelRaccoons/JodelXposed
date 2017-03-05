@@ -36,6 +36,8 @@ import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
+import static de.robv.android.xposed.XposedHelpers.newInstance;
+import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 
 public class Utils {
     public static final String OldSettingsPath = Environment.getExternalStorageDirectory() + File.separator + ".jodel-settings-v2";
@@ -102,6 +104,7 @@ public class Utils {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 mainActivity = (Activity) param.thisObject;
+                System.load("/data/data/com.jodelXposed/lib/libxposedjnihook.so");
             }
         });
     }
@@ -168,6 +171,7 @@ public class Utils {
         Class AppComponentInterface = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.api.AppComponent", lpparam.classLoader);
         Class OttoEventBus = XposedHelpers.findClass("com.squareup.otto.Bus", lpparam.classLoader);
         Class AddressUpdateEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.AddressUpdateEvent", lpparam.classLoader);
+        Class UpdateMyMenuEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", lpparam.classLoader);
         Class LocationManagerInterface = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.usecases.LocationManager", lpparam.classLoader);
         Method methodGetJodelApp = XposedHelpers.findMethodsByExactParameters(JodelApp, JodelApp, Context.class)[0];
         Field appComponentField = XposedHelpers.findFirstFieldByExactType(JodelApp, AppComponentInterface);
@@ -189,6 +193,11 @@ public class Utils {
         location.setLongitude(lng);
 
         XposedHelpers.callMethod(locationManagerInstance, "i", location);
+
+        Object updateMyMenuEvent = newInstance(UpdateMyMenuEvent);
+        setAdditionalInstanceField(updateMyMenuEvent, "xposed", true);
+
+        callMethod(OttoEventBusInstance, Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event, updateMyMenuEvent);
 
 //        Object addressUpdateEventInstance = XposedHelpers.newInstance(AddressUpdateEvent,address, location);
 

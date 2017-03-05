@@ -23,8 +23,6 @@ class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: Class
 
                 if (selected.equals("xposedLocation", ignoreCase = true))
                     getSystemContext().startActivity(getNewIntent("utils.Picker").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION).putExtra("choice", 1))
-                else if (selected.equals("xposedGeneralSettings", ignoreCase = true))
-                    getSystemContext().startActivity(getNewIntent("JXPreferenceActivity").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION))
                 else if (selected.equals("xposedReportBug", ignoreCase = true)){
                     XposedUtils.get().showBugReportDialog()
                 } else if (selected.equals("xposedLink", ignoreCase = true)) {
