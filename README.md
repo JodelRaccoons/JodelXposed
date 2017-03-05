@@ -12,6 +12,7 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
   * [OTA Hook updates](#ota-hook-updates)
 - [Version compatibility](#version-compatibility)
 - [Support](#support)
+  * [OnePlus OxygenOS rom issues?](#op-oxygen-issues)
   * [You dont have Google play services? No problem!](#you-dont-have-google-play-services-no-problem)
 - [Contributions](#contributions)
 - [Special thanks](#special-thanks)
@@ -60,6 +61,9 @@ The latest supported Jodel version is noted [here](https://github.com/krokofant/
 * Are you sure your version is compatible?
 * Have you read [the thread on XDA](http://forum.xda-developers.com/xposed/modules/mod-jodelxposed-enhancements-t3350019/)?
 * Create an issue if you still have questions
+
+## op-oxygen-issues
+There are many issues relating to the OxygenOS rom on different OnePlus devices. Big part of the issue are buggy xposed resources. We can't do anything about it, a issue at the Xposed Github repo has already been created. The only workaround til now is switching to a different rom.
 
 ## You dont have Google play services? No problem!
 Just edit the file file /sdcard/JodelXposed/jodel-settings-v2.json and edit your lat/lng coordinates manually.
