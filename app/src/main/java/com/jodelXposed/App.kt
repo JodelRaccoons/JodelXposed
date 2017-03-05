@@ -36,9 +36,9 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
 
         XposedUtils.Builder()
                 .withLoadPackageParam(lpparam)
-                .withBaseUrl("http://spectre-app.de:8080")
-                .disableAnalytics(true)
                 .withResparam(Companion.resparam, Companion.MODULE_PATH)
+                .enableCrashLogs(false)
+                .disableAnalytics(true)
                 .build()
     }
 

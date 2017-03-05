@@ -19,7 +19,6 @@ import com.jodelXposed.App;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Utils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import de.robv.android.xposed.XC_MethodHook;
@@ -195,18 +194,21 @@ public class FastLocationSwitcher {
                                         Method m = Options.INSTANCE.getLocation().getClass().getMethod("getLatfastChange" + finalI1);
                                         Method m2 = Options.INSTANCE.getLocation().getClass().getMethod("getLngfastChange" + finalI1);
 
-                                        Options.INSTANCE.getLocation().setLat((Double) m.invoke(receiver));
-                                        Options.INSTANCE.getLocation().setLng((Double) m2.invoke(receiver));
-                                        Options.INSTANCE.save();
+                                        if ((Double) m.invoke(receiver) != 0 && (Double) m2.invoke(receiver) != 0) {
+                                            Options.INSTANCE.getLocation().setLat((Double) m.invoke(receiver));
+                                            Options.INSTANCE.getLocation().setLng((Double) m2.invoke(receiver));
+                                            Options.INSTANCE.save();
 
-                                        dialog.dismiss();
+                                            dialog.dismiss();
 
-                                        Utils.updateFeedAndLocation(lpparam, Options.INSTANCE.getLocation().getLat(), Options.INSTANCE.getLocation().getLng());
-                                    } catch (NoSuchMethodException e) {
-                                        e.printStackTrace();
-                                    } catch (InvocationTargetException e) {
-                                        e.printStackTrace();
-                                    } catch (IllegalAccessException e) {
+                                            Utils.updateFeedAndLocation(lpparam, Options.INSTANCE.getLocation().getLat(), Options.INSTANCE.getLocation().getLng());
+                                        } else {
+                                            dialog.dismiss();
+                                            Utils.makeSnackbarWithNoCtx(lpparam, "Please set a location first!");
+                                        }
+
+                                    } catch (Exception e) {
+                                        Utils.makeSnackbarWithNoCtx(lpparam, "Something went wrong: " + e.getLocalizedMessage());
                                         e.printStackTrace();
                                     }
                                 }

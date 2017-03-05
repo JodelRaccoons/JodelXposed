@@ -1,5 +1,6 @@
 package com.jodelXposed.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -97,6 +98,7 @@ public class Utils {
 
     public static void getFirstJodelFragmentActivity(XC_LoadPackage.LoadPackageParam lpparam) {
         findAndHookMethod("com.jodelapp.jodelandroidv3.view.MainActivity", lpparam.classLoader, "onCreate", Bundle.class, new XC_MethodHook() {
+            @SuppressLint({"UnsafeDynamicallyLoadedCode", "SdCardPath"})
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 mainActivity = (Activity) param.thisObject;
@@ -153,14 +155,14 @@ public class Utils {
     }
 
     public static void updateFeedAndLocation(XC_LoadPackage.LoadPackageParam lpparam, double lat, double lng) {
-        try {
-            if (mainActivity != null) {
-                Object locationManager = XposedHelpers.findFirstFieldByExactType(mainActivity.getClass(), XposedHelpers.findClass("com.jodelapp.jodelandroidv3.usecases.LocationManager", lpparam.classLoader)).get(mainActivity);
-                callMethod(locationManager, "EC");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if (mainActivity != null) {
+//                Object locationManager = XposedHelpers.findFirstFieldByExactType(mainActivity.getClass(), XposedHelpers.findClass("com.jodelapp.jodelandroidv3.usecases.LocationManager", lpparam.classLoader)).get(mainActivity);
+//                callMethod(locationManager, "EC");
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         Class JodelApp = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.JodelApp", lpparam.classLoader);
         Class AppComponentInterface = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.api.AppComponent", lpparam.classLoader);
