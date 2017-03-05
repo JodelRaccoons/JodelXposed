@@ -18,7 +18,7 @@ android {
         mavenCentral()
         jcenter()
         maven { url "https://jitpack.io" }
-        flatDir { dirs '/src/main/libs' }
+        flatDir { dirs 'src/main/libs' }
     }
     defaultConfig {
         applicationId "com.jodelXposed"
