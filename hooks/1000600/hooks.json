@@ -2,7 +2,7 @@
   /**
     * The version of this file
    **/
-  "version": 1,
+  "version": 2,
   /**
     * The targeted Jodel version code
    **/
@@ -44,7 +44,7 @@
     * search term:  postViewHolder.AP();
     *
   **/
-  "Class_PostDetailRecyclerAdapter": "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter",
+  "Class_PostDetailRecyclerAdapter": "com.jodelapp.jodelandroidv3.features.postdetail.PostDetailRecyclerAdapter",
   "Method_PostStuff_TrackPostsMethod": "a",
   /**
     * package com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter;
