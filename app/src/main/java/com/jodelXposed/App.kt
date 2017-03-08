@@ -9,11 +9,9 @@ import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.jodelXposed.hooks.LayoutHooks
 import com.jodelXposed.models.HookValues
-import com.jodelXposed.utils.HookUpdater
-import com.jodelXposed.utils.Hooks
+import com.jodelXposed.utils.*
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
-import com.jodelXposed.utils.Options
 import com.jodelXposed.utils.Utils.getNewIntent
 import com.jodelXposed.utils.Utils.getSystemContext
 import de.robv.android.xposed.IXposedHookInitPackageResources
@@ -21,7 +19,6 @@ import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_InitPackageResources
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
-import git.unbrick.xposedhelpers.XposedUtils
 import java.io.IOException
 
 class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackageResources {
@@ -34,12 +31,12 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
         layoutHooks.addResources()
         layoutHooks.hook()
 
-        XposedUtils.Builder()
-                .withLoadPackageParam(lpparam)
-                .withResparam(Companion.resparam, Companion.MODULE_PATH)
-                .enableCrashLogs(false)
-                .disableAnalytics(true)
-                .build()
+//        XposedUtils.Builder()
+//                .withLoadPackageParam(lpparam)
+//                .withResparam(Companion.resparam, Companion.MODULE_PATH)
+//                .enableCrashLogs(false)
+//                .disableAnalytics(true)
+//                .build()
     }
 
 
@@ -53,7 +50,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
         val pkgInfo: PackageInfo = getSystemContext().packageManager.getPackageInfo(lpparam.packageName, 0)
 
 
-        xlog("----------\n" +
+        xlog("\n----------\n" +
                 "Starting JodelXposed\n" +
                 "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
                 "JodelTarget ${BuildConfig.JODEL_VERSION_NAME} (${BuildConfig.JODEL_VERSION_CODE})\n" +
@@ -92,8 +89,14 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
             }
         }
 
+        xlog("Locating classes!")
+        JClasses(lpparam)
+
         // Check for hook updates
         HookUpdater().updateHooks(Options.hooks, pkgInfo.versionCode)
+
+        XposedUtilHelpers.setup(lpparam)
+        AnalyticsDisabler(lpparam)
 
         xlog("#### Loading hooks ####")
         Hooks(lpparam).hook()

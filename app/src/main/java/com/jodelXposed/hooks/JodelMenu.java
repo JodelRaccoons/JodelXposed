@@ -10,9 +10,11 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.jodelXposed.JClasses;
 import com.jodelXposed.models.Location;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Utils;
+import com.jodelXposed.utils.XposedUtilHelpers;
 import com.mypopsy.maps.StaticMap;
 import com.squareup.picasso.Picasso;
 
@@ -25,7 +27,6 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
-import git.unbrick.xposedhelpers.XposedUtilHelpers;
 
 import static com.jodelXposed.utils.Log.dlog;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -43,31 +44,15 @@ import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 public class JodelMenu {
 
     public static Object viewPagerReference;
-    private final Class sectionsPagerAdapter;
-    private final Class myMenuPresenter;
-    private final Class myMenuPresenterInterface;
-    private final Class mainActivity;
-    private final Class myMenuFragment;
-    private final Class myMenuAdapter;
-    private final Class slidingTabLayout;
     private final Object[] myMenuFragmentInstance;
     private final View[] myMenuFragmentView;
 
     public JodelMenu(final XC_LoadPackage.LoadPackageParam lpparam) {
-
-        sectionsPagerAdapter = findClass("com.jodelapp.jodelandroidv3.view.adapter.SectionsPagerAdapter", lpparam.classLoader);
-        myMenuPresenter = findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter", lpparam.classLoader);
-        myMenuPresenterInterface = findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuContract.Presenter", lpparam.classLoader);
-        mainActivity = findClass("com.jodelapp.jodelandroidv3.view.MainActivity", lpparam.classLoader);
-        myMenuFragment = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuFragment", lpparam.classLoader);
-        myMenuAdapter = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuAdapter", lpparam.classLoader);
-        slidingTabLayout = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.view.SlidingTabLayout", lpparam.classLoader);
-
         myMenuFragmentInstance = new Object[]{null};
         myMenuFragmentView = new View[]{null};
 
 
-        for (Method m : mainActivity.getDeclaredMethods()) {
+        for (Method m : JClasses.MainActivity.getDeclaredMethods()) {
             if (m.getReturnType().equals(int.class) && m.getParameterTypes().length == 0) {
                 changeInitialPageNumber(m);
                 break;
@@ -75,9 +60,9 @@ public class JodelMenu {
         }
 
         //Higher the offscreen page limit to prevent the destroying of the feed -> buggy layout
-        for (final Field f : mainActivity.getDeclaredFields()) {
+        for (final Field f : JClasses.MainActivity.getDeclaredFields()) {
             if (f.toGenericString().contains("ViewPager")) {
-                XposedHelpers.findAndHookMethod(mainActivity, "onCreate", Bundle.class, new XC_MethodHook() {
+                XposedHelpers.findAndHookMethod(JClasses.MainActivity, "onCreate", Bundle.class, new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         viewPagerReference = getObjectField(param.thisObject, f.getName());
@@ -89,7 +74,7 @@ public class JodelMenu {
 
 
         //Prevent instantiation of fourth tab item by returning to the layout a adaptercount of 3
-        XposedHelpers.findAndHookMethod(sectionsPagerAdapter, "getCount", new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod(JClasses.SectionsPagerAdapter, "getCount", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if (new Exception().getStackTrace()[3].getClassName().contains("SlidingTabLayout")) {
@@ -100,17 +85,17 @@ public class JodelMenu {
         });
 
         //Create a new instance of the MyMenuFragment and add it to the fragment list
-        XposedBridge.hookAllConstructors(sectionsPagerAdapter, new XC_MethodHook() {
+        XposedBridge.hookAllConstructors(JClasses.SectionsPagerAdapter, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
 
-                for (Field f : sectionsPagerAdapter.getFields()) {
+                for (Field f : JClasses.SectionsPagerAdapter.getFields()) {
                     if (f.toGenericString().contains("Fragment")) {
                         dlog("Found fragmentlist at: " + f.getName());
                     }
                 }
 
-                myMenuFragmentInstance[0] = XposedHelpers.newInstance(myMenuFragment);
+                myMenuFragmentInstance[0] = XposedHelpers.newInstance(JClasses.MyMenuFragment);
 
                 for (Field f : param.thisObject.getClass().getDeclaredFields()) {
                     if (f.getType().toString().contains("java.util.List")) {
@@ -125,7 +110,7 @@ public class JodelMenu {
         updateMapOnChange();
 
         //Check if the current hooked fragment is our newly created fragment -> if yes, set additional instance field
-        for (Field f : myMenuFragment.getDeclaredFields()) {
+        for (Field f : JClasses.MyMenuFragment.getDeclaredFields()) {
             if (f.toGenericString().contains("Presenter")) {
                 onViewCreatedHook(f);
             }
@@ -140,7 +125,7 @@ public class JodelMenu {
 
     //Override the default page number to make the feed the initial page
     private void changeInitialPageNumber(Method m) {
-        findAndHookMethod(mainActivity, m.getName(), new XC_MethodHook() {
+        findAndHookMethod(JClasses.MainActivity, m.getName(), new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 param.setResult(1);
@@ -150,7 +135,7 @@ public class JodelMenu {
 
     //Update static map
     private void updateMapOnChange() {
-        findAndHookMethod(myMenuPresenter, "handle", "com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", new XC_MethodHook() {
+        findAndHookMethod(JClasses.MyMenuPresenter, "handle", "com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Object updateMyMenuEvent = param.args[0];
@@ -177,7 +162,7 @@ public class JodelMenu {
     //New list in new fragment
     private void myMenuEntriesHandler(final XC_LoadPackage.LoadPackageParam lpparam) {
         //if(additionalinstancefield is set) -> return a different list
-        XposedHelpers.findAndHookMethod(myMenuPresenter, Options.INSTANCE.getHooks().Method_Settings_AddEntriesMethod, new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod(JClasses.MyMenuPresenter, Options.INSTANCE.getHooks().Method_Settings_AddEntriesMethod, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 if (getAdditionalInstanceField(param.thisObject, "xposed") != null) {
@@ -197,7 +182,7 @@ public class JodelMenu {
 
     //Change some MyMenuItems to a switch
     private void getViewHook(XC_LoadPackage.LoadPackageParam lpparam) {
-        findAndHookMethod(myMenuAdapter, "getView", int.class, View.class, ViewGroup.class, new XC_MethodHook() {
+        findAndHookMethod(JClasses.MyMenuAdapter, "getView", int.class, View.class, ViewGroup.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Object myMenuItem = callMethod(param.thisObject, "getItem", (int) param.args[0]);
@@ -245,7 +230,7 @@ public class JodelMenu {
     }
 
     private void handleUpdateMyMenuEvent() {
-        findAndHookMethod(myMenuPresenter, "handle", "com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", new XC_MethodHook() {
+        findAndHookMethod(JClasses.MyMenuPresenter, "handle", "com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if (getAdditionalInstanceField(param.args[0], "xposed") != null) {
@@ -268,7 +253,7 @@ public class JodelMenu {
 
     //Handle instantiation of new myMenuFragment
     private void onViewCreatedHook(final Field f) {
-        findAndHookMethod(myMenuFragment, "onViewCreated", View.class, Bundle.class, new XC_MethodHook() {
+        findAndHookMethod(JClasses.MyMenuFragment, "onViewCreated", View.class, Bundle.class, new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                 if ((myMenuFragmentInstance[0] != null) && (myMenuFragmentInstance[0] == param.thisObject)) {

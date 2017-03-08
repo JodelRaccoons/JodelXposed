@@ -133,7 +133,7 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
                 hooks.Class_PostDetailRecyclerAdapter,
                 classLoader,
                 hooks.Method_PostStuff_TrackPostsMethod,
-                "com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter\$PostViewHolder",
+                "com.jodelapp.jodelandroidv3.features.postdetail.PostDetailRecyclerAdapter\$PostViewHolder",
                 Int::class.javaPrimitiveType,
                 object : XC_MethodHook() {
                     @Throws(Throwable::class)
@@ -157,6 +157,7 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
                     @Throws(Throwable::class)
                     override fun afterHookedMethod(param: MethodHookParam) = stickyPost(param)
                 })
+
 
         findAndHookMethod(
                 "com.jodelapp.jodelandroidv3.view.CreateTextPostFragment",

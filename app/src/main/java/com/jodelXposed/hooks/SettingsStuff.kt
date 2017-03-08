@@ -7,7 +7,6 @@ import com.jodelXposed.utils.Utils.getSystemContext
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers.*
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import git.unbrick.xposedhelpers.XposedUtils
 
 class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoader = lpparam.classLoader) {
 
@@ -24,7 +23,7 @@ class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: Class
                 if (selected.equals("xposedLocation", ignoreCase = true))
                     getSystemContext().startActivity(getNewIntent("utils.Picker").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION).putExtra("choice", 1))
                 else if (selected.equals("xposedReportBug", ignoreCase = true)){
-                    XposedUtils.get().showBugReportDialog()
+//                    XposedUtils.get().showBugReportDialog()
                 } else if (selected.equals("xposedLink", ignoreCase = true)) {
                     //setCurrentItem(int,boolean)
                     callMethod(JodelMenu.viewPagerReference, "e", 4, true)

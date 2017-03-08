@@ -2,12 +2,10 @@ package com.jodelXposed.utils
 
 import android.app.AndroidAppHelper
 import android.widget.Toast
-import com.jodelXposed.BuildConfig
 import com.jodelXposed.models.HookValues
 import com.jodelXposed.retrofit.JodelXposedAPI
 import com.jodelXposed.retrofit.RetrofitProvider
 import es.dmoral.prefs.Prefs
-import git.unbrick.xposedhelpers.XposedUtilHelpers
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -17,13 +15,7 @@ import retrofit2.Response
  */
 class HookUpdater {
     fun updateHooks(oldHooks: HookValues, installedVersionCode: Int, api: JodelXposedAPI = RetrofitProvider.JXAPI) {
-        if (BuildConfig.DEBUG) {
-            Log.dlog("++++++++++++ Retriving debug hooks ++++++++++++")
-            getBetaHooks(oldHooks, installedVersionCode, api)
-        } else {
-            Log.dlog("++++++++++++ Retriving release hooks ++++++++++++")
-            getHooks(oldHooks, installedVersionCode, api)
-        }
+        getHooks(oldHooks, installedVersionCode, api)
     }
 
     fun getBetaHooks(oldHooks: HookValues, installedVersionCode: Int, api: JodelXposedAPI = RetrofitProvider.JXAPI) {

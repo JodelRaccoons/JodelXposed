@@ -2,11 +2,9 @@ package com.jodelXposed.utils
 
 import android.graphics.BitmapFactory
 import android.media.MediaScannerConnection
-import android.net.Uri
 import com.jodelXposed.utils.Log.dlog
 import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Utils.getJXSharedImage
-import git.unbrick.xposedhelpers.XposedUtilHelpers
 import java.io.*
 
 
@@ -63,13 +61,11 @@ object Bitmap {
     fun scanFile(file: File){
         try {
             MediaScannerConnection.scanFile(XposedUtilHelpers.getActivityFromActivityThread(),
-                    arrayOf<String>(file.toString()), null,
-                    object : MediaScannerConnection.OnScanCompletedListener {
-                        override fun onScanCompleted(path: String, uri: Uri) {
-                            Log.dlog("ExternalStorage"+"Scanned $path:")
-                            Log.dlog("ExternalStorage"+"-> uri=" + uri)
-                        }
-                    })
+                    arrayOf(file.toString()), null
+            ) { path, uri ->
+                Log.dlog("ExternalStorageScanned $path:")
+                Log.dlog("ExternalStorage" + "-> uri=" + uri)
+            }
         }catch (e :Exception){
             e.printStackTrace()
         }

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -21,6 +22,14 @@ import static de.robv.android.xposed.XposedHelpers.getObjectField;
 public class FastScrollDown {
 
     public FastScrollDown(final XC_LoadPackage.LoadPackageParam lpparam) {
+
+        findAndHookMethod("com.jodelapp.jodelandroidv3.features.postdetail.PostDetailFragment", lpparam.classLoader, "xb", new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                View view = (View) XposedHelpers.findFirstFieldByExactType(param.thisObject.getClass(), View.class).get(param.thisObject);
+                view.findViewWithTag("tag_fast_scroll_down").setVisibility(View.VISIBLE);
+            }
+        });
 
         findAndHookMethod(
             "com.jodelapp.jodelandroidv3.features.postdetail.PostDetailFragment",

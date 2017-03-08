@@ -6,7 +6,6 @@ import android.content.res.XResources;
 import android.graphics.Color;
 import android.support.v7.widget.AppCompatImageButton;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -22,6 +21,7 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 
+import static android.view.View.GONE;
 import static android.widget.ImageView.ScaleType.CENTER_CROP;
 import static android.widget.ImageView.ScaleType.FIT_CENTER;
 import static android.widget.ImageView.ScaleType.FIT_XY;
@@ -52,8 +52,11 @@ public class LayoutHooks {
         JodelResIDs.ic_color_chooser = XResources.getFakeResId(modRes, R.drawable.ic_color_palette);
         resparam.res.setReplacement(JodelResIDs.ic_color_chooser, modRes.fwd(R.drawable.ic_color_palette));
 
-        JodelResIDs.ic_jx_icon = XResources.getFakeResId(modRes, R.mipmap.ic_launcher);
-        resparam.res.setReplacement(JodelResIDs.ic_jx_icon, modRes.fwd(R.mipmap.ic_launcher));
+        JodelResIDs.ic_launcher = XResources.getFakeResId(modRes, R.drawable.ic_launcher);
+        resparam.res.setReplacement(JodelResIDs.ic_launcher, modRes.fwd(R.drawable.ic_launcher));
+
+        JodelResIDs.ic_jx_icon = XResources.getFakeResId(modRes, R.drawable.ewok);
+        resparam.res.setReplacement(JodelResIDs.ic_jx_icon, modRes.fwd(R.drawable.ewok));
 
         JodelResIDs.ic_toggle_scale = XResources.getFakeResId(modRes, R.drawable.ic_toggle_scale);
         resparam.res.setReplacement(JodelResIDs.ic_toggle_scale, modRes.fwd(R.drawable.ic_toggle_scale));
@@ -71,28 +74,14 @@ public class LayoutHooks {
         resparam.res.setReplacement(JodelResIDs.ic_information, modRes.fwd(R.drawable.ic_information));
 
         //Add layout
-        JodelResIDs.layout_appcompatimageview = XResources.getFakeResId(modRes, R.layout.image_view_gallery_chooser);
-        resparam.res.setReplacement(JodelResIDs.layout_appcompatimageview, modRes.fwd(R.layout.image_view_gallery_chooser));
+//        JodelResIDs.layout_appcompatimageview = XResources.getFakeResId(modRes, R.layout.image_view_gallery_chooser);
+//        resparam.res.setReplacement(JodelResIDs.layout_appcompatimageview, modRes.fwd(R.layout.image_view_gallery_chooser));
 
         JodelResIDs.layout_color_picker = XResources.getFakeResId(modRes, R.layout.color_picker_layout);
         resparam.res.setReplacement(JodelResIDs.layout_color_picker, modRes.fwd(R.layout.color_picker_layout));
-
-        JodelResIDs.layout_tab_strip = XResources.getFakeResId(modRes, R.layout.xposed_tab);
-        resparam.res.setReplacement(JodelResIDs.layout_tab_strip, modRes.fwd(R.layout.xposed_tab));
-
-//        JodelResIDs.fragment_map = XResources.getFakeResId(modRes, R.layout.fragment_map);
-//        int headerId = resparam.res.getIdentifier("aboutme_header","layout","com.tellm.android.app");
-//        resparam.res.setReplacement(headerId, modRes.fwd(R.layout.fragment_map));
-
-        //Replace google_play_services_version
-        int resID = resparam.res.getIdentifier("google_play_services_version","integer","com.tellm.android.app");
-        resparam.res.setReplacement(resID,modRes.fwd(R.integer.google_play_services_version));
-
     }
 
     public void hook() {
-//        final XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, resparam.res);
-
         resparam.res.hookLayout(App.Companion.getPACKAGE_NAME(), "layout", "fragment_create_post", new XC_LayoutInflated() {
                 @Override
                 public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
@@ -117,7 +106,15 @@ public class LayoutHooks {
 
                     //type-casting from AppCompatImageView to AppCompatImageView wont work so we have to call the methods manually -.-
                     //Inflate the new gallery button, set image and apply layout params
-                    View galleryButton = LayoutInflater.from(liparam.view.getContext()).inflate(JodelResIDs.layout_appcompatimageview, null, false);
+                    AppCompatImageButton galleryButton = new AppCompatImageButton(liparam.view.getContext());
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+                    params.setMargins(20, 20, 20, 20);
+                    params.gravity = Gravity.RIGHT;
+                    galleryButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    galleryButton.setLayoutParams(params);
                     XposedHelpers.callMethod(galleryButton, "setImageDrawable", liparam.res.getDrawable(JodelResIDs.drawable_gallery_chooser));
                     XposedHelpers.callMethod(galleryButton, "setLayoutParams", layoutParams);
 
@@ -128,7 +125,9 @@ public class LayoutHooks {
                     galleryButton.requestLayout();
 
                     //Inflate view for color chooser and so on, see above for details
-                    View colorChooserButton = LayoutInflater.from(liparam.view.getContext()).inflate(JodelResIDs.layout_appcompatimageview, null, false);
+                    AppCompatImageButton colorChooserButton = new AppCompatImageButton(liparam.view.getContext());
+                    colorChooserButton.setLayoutParams(params);
+                    colorChooserButton.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     XposedHelpers.callMethod(colorChooserButton, "setImageDrawable", liparam.res.getDrawable(JodelResIDs.ic_color_chooser));
                     XposedHelpers.callMethod(colorChooserButton, "setLayoutParams", layoutParams);
                     colorChooserButton.setTag("color_chooser");
@@ -240,6 +239,7 @@ public class LayoutHooks {
                 rlParamsFastScrollDown.gravity = Gravity.CENTER;
                 ImageView fast_scroll_down = new ImageView(ctx);
                 fast_scroll_down.setTag("tag_fast_scroll_down");
+                fast_scroll_down.setVisibility(GONE);
                 fast_scroll_down.setPadding(0, Utils.dpToPx(20) - 2, 0, Utils.dpToPx(20) - 2);
                 fast_scroll_down.setBackgroundColor(Color.WHITE);
                 fast_scroll_down.setLayoutParams(rlParamsFastScrollDown);
@@ -270,9 +270,9 @@ public class LayoutHooks {
         public static int layout_color_picker;
         public static int ic_toggle_scale;
         public static int ic_scroll;
-        public static int layout_tab_strip;
         public static int ic_edit;
         public static int ic_map_location;
         public static int ic_information;
+        public static int ic_launcher;
     }
 }

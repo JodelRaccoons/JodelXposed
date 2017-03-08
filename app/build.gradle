@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 project.ext {
-    versionCode = 27
-    versionName = "2.4.3"
-    jodelVersionCode = 1000506
-    jodelVersionName = "4.35.6"
+    versionCode = 28
+    versionName = "2.4.5"
+    jodelVersionCode = 1000600
+    jodelVersionName = "4.36.0"
 }
 
 android {
@@ -63,7 +63,7 @@ dependencies {
     provided 'de.robv.android.xposed:api:82:sources'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.google.android.gms:play-services-places:10.0.1'
+    compile 'com.google.android.gms:play-services-places:10.2.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -74,7 +74,6 @@ dependencies {
     compile "com.github.nisrulz:easydeviceinfo-base:2.3.2"
     compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile(name: 'xutils', ext: 'aar')
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
