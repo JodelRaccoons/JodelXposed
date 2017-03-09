@@ -10,8 +10,8 @@ project.ext {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 23
+    buildToolsVersion '25.0.0'
 
 
     repositories {
@@ -26,7 +26,7 @@ android {
         }
         applicationId "com.jodelXposed"
         minSdkVersion 17
-        targetSdkVersion 24
+        targetSdkVersion 23
         versionCode project.versionCode
         versionName project.versionName
         buildConfigField "int", "JODEL_VERSION_CODE", project.jodelVersionCode.toString()
