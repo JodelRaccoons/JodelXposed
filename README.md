@@ -11,7 +11,7 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
   * [Increased control over account](#increased-control-over-account)
   * [OTA Hook updates](#ota-hook-updates)
 - [Version compatibility](#version-compatibility)
-- [Report a bug / Make a suggestion] (#Report-a-bug-Make-a-suggestion)
+- [Report a bug / Make a suggestion] (#Report-a-bug-/-Make-a-suggestion)
 - [Support](#support)
   * [OnePlus OxygenOS rom issues](#oneplus-oxygenos-rom-issues)
   * [You dont have Google play services? No problem!](#you-dont-have-google-play-services-no-problem)
