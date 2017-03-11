@@ -59,12 +59,13 @@ The latest supported Jodel version is noted [here](https://github.com/krokofant/
 # Report a bug / Make a suggestion
 We'd love to see you reporting a bug to make this Xposed module even better.
 If you want to report a bug we need some information:
+
 1. Steps to reproduce the bug.
 2. Some details about your enviroment like:
-    * Android OS and Xposed version
-    * Your phone model and rom information (this helps to sort out rom issues)
-    * The Jodel/JodelXposed log (depends on what is crashing)
-    * The Xposed log
+    *Android OS and Xposed version
+    *Your phone model and rom information (this helps to sort out rom issues)
+    *The Jodel/JodelXposed log (depends on what is crashing)
+    *The Xposed log
 3. Create a issue, providing the information. We'll give our best to solve your problem!
 
 If you want to give a suggestion for a new feature just create a issue providing a short description!
