@@ -105,7 +105,7 @@ class Picker : AppCompatActivity() {
 
         when (requestCode) {
             PLACEPICKER_REQUEST_CODE -> {
-                val place = PlacePicker.getPlace(data, this)
+                val place = PlacePicker.getPlace(this, data)
                 val name = place.name
                 val lat = place.latLng.latitude
                 val lng = place.latLng.longitude

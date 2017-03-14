@@ -33,7 +33,7 @@ object Bitmap {
         try {
             dlog("Saving bitmap of size: ${bitmap.byteCount}")
             var fos: FileOutputStream? = null
-            var file: File? = null
+            val file: File?
             if (path == null) {
                 file = File(getJXSharedImage())
                 if (!file.exists())

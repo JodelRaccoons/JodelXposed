@@ -64,7 +64,7 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
 
         fun stickyPost(param: MethodHookParam) {
             if (Prefs.with(Utils.mainActivity).readBoolean("displayJXchangelog", true)) {
-                val posts: MutableList<Any>? = param.result as MutableList<Any>?
+                val posts: ArrayList<Any>? = param.result as ArrayList<Any>?
 
                 val message = Options.hooks.updateMessage
                 val type = "info"
@@ -89,8 +89,8 @@ class PostStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: ClassLoad
             }
             val firstStickyPost = (XposedHelpers.getObjectField(param.thisObject, stickyPostListField?.name) as List<*>)[0]
             if (firstStickyPost != null) {
-                val postid = getObjectField(firstStickyPost, "stickypostId")
-                if (postid == "595959") {
+                val locationName = getObjectField(firstStickyPost, "locationName")
+                if (locationName == "JodelXposed") {
                     XposedHelpers.callMethod(closeButton, "setOnClickListener", View.OnClickListener {
                         Prefs.with(Utils.mainActivity).writeBoolean("displayJXchangelog", false)
                         try {

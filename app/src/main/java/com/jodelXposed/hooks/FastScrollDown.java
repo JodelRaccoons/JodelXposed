@@ -31,6 +31,7 @@ public class FastScrollDown {
             }
         });
 
+
         findAndHookMethod(
             "com.jodelapp.jodelandroidv3.features.postdetail.PostDetailFragment",
             lpparam.classLoader,
@@ -50,10 +51,19 @@ public class FastScrollDown {
                             int lastVisibleItemPosition = (int) callMethod(rvLayoutManager, "gV");
                             int splitList = Math.round(itemCount / 2);
 
+                            Class presenter = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.features.postdetail.PostDetailContract.Presenter", lpparam.classLoader);
+                            Class postDetailFragment = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.features.postdetail.PostDetailFragment", lpparam.classLoader);
+                            Object presenterInstance = null;
+                            try {
+                                presenterInstance = XposedHelpers.findFirstFieldByExactType(postDetailFragment, presenter).get(param.thisObject);
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+
                             if (lastVisibleItemPosition > splitList) {
-                                callMethod(recyclerView, "smoothScrollToPosition", 0);
+                                callMethod(presenterInstance, "CG");
                             } else if (lastVisibleItemPosition <= splitList) {
-                                callMethod(recyclerView, "smoothScrollToPosition", itemCount);
+                                callMethod(presenterInstance, "CH");
                             }
                         }
                     });

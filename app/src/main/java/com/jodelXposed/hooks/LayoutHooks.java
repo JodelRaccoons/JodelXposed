@@ -1,6 +1,7 @@
 package com.jodelXposed.hooks;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.XModuleResources;
 import android.content.res.XResources;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.jodelXposed.App;
 import com.jodelXposed.R;
@@ -26,6 +28,7 @@ import static android.widget.ImageView.ScaleType.CENTER_CROP;
 import static android.widget.ImageView.ScaleType.FIT_CENTER;
 import static android.widget.ImageView.ScaleType.FIT_XY;
 import static com.jodelXposed.utils.Utils.dpToPx;
+import static com.jodelXposed.utils.Utils.getSystemContext;
 
 /**
  * Created by Admin on 21.11.2016.
@@ -46,42 +49,44 @@ public class LayoutHooks {
         XModuleResources modRes = XModuleResources.createInstance(MODULE_PATH, resparam.res);
 
         //Add svg
-        JodelResIDs.drawable_gallery_chooser = XResources.getFakeResId(modRes, R.drawable.ic_icon_gallery);
-        resparam.res.setReplacement(JodelResIDs.drawable_gallery_chooser, modRes.fwd(R.drawable.ic_icon_gallery));
+        try {
+            JodelResIDs.drawable_gallery_chooser = XResources.getFakeResId(modRes, R.drawable.ic_icon_gallery);
+            resparam.res.setReplacement(JodelResIDs.drawable_gallery_chooser, modRes.fwd(R.drawable.ic_icon_gallery));
 
-        JodelResIDs.ic_color_chooser = XResources.getFakeResId(modRes, R.drawable.ic_color_palette);
-        resparam.res.setReplacement(JodelResIDs.ic_color_chooser, modRes.fwd(R.drawable.ic_color_palette));
+            JodelResIDs.ic_color_chooser = XResources.getFakeResId(modRes, R.drawable.ic_color_palette);
+            resparam.res.setReplacement(JodelResIDs.ic_color_chooser, modRes.fwd(R.drawable.ic_color_palette));
 
-        JodelResIDs.ic_launcher = XResources.getFakeResId(modRes, R.drawable.ic_launcher);
-        resparam.res.setReplacement(JodelResIDs.ic_launcher, modRes.fwd(R.drawable.ic_launcher));
+            JodelResIDs.ic_launcher = XResources.getFakeResId(modRes, R.drawable.ic_launcher);
+            resparam.res.setReplacement(JodelResIDs.ic_launcher, modRes.fwd(R.drawable.ic_launcher));
 
-        JodelResIDs.ic_jx_icon = XResources.getFakeResId(modRes, R.drawable.ewok);
-        resparam.res.setReplacement(JodelResIDs.ic_jx_icon, modRes.fwd(R.drawable.ewok));
+            JodelResIDs.ic_jx_icon = XResources.getFakeResId(modRes, R.drawable.ewok);
+            resparam.res.setReplacement(JodelResIDs.ic_jx_icon, modRes.fwd(R.drawable.ewok));
 
-        JodelResIDs.ic_toggle_scale = XResources.getFakeResId(modRes, R.drawable.ic_toggle_scale);
-        resparam.res.setReplacement(JodelResIDs.ic_toggle_scale, modRes.fwd(R.drawable.ic_toggle_scale));
+            JodelResIDs.ic_toggle_scale = XResources.getFakeResId(modRes, R.drawable.ic_toggle_scale);
+            resparam.res.setReplacement(JodelResIDs.ic_toggle_scale, modRes.fwd(R.drawable.ic_toggle_scale));
 
-        JodelResIDs.ic_scroll = XResources.getFakeResId(modRes, R.drawable.ic_scroll);
-        resparam.res.setReplacement(JodelResIDs.ic_scroll, modRes.fwd(R.drawable.ic_scroll));
+            JodelResIDs.ic_scroll = XResources.getFakeResId(modRes, R.drawable.ic_scroll);
+            resparam.res.setReplacement(JodelResIDs.ic_scroll, modRes.fwd(R.drawable.ic_scroll));
 
-        JodelResIDs.ic_edit = XResources.getFakeResId(modRes, R.drawable.ic_mode_edit_black_24dp);
-        resparam.res.setReplacement(JodelResIDs.ic_edit, modRes.fwd(R.drawable.ic_mode_edit_black_24dp));
+            JodelResIDs.ic_edit = XResources.getFakeResId(modRes, R.drawable.ic_mode_edit_black_24dp);
+            resparam.res.setReplacement(JodelResIDs.ic_edit, modRes.fwd(R.drawable.ic_mode_edit_black_24dp));
 
-        JodelResIDs.ic_map_location = XResources.getFakeResId(modRes, R.drawable.ic_map_location);
-        resparam.res.setReplacement(JodelResIDs.ic_map_location, modRes.fwd(R.drawable.ic_map_location));
+            JodelResIDs.ic_map_location = XResources.getFakeResId(modRes, R.drawable.ic_map_location);
+            resparam.res.setReplacement(JodelResIDs.ic_map_location, modRes.fwd(R.drawable.ic_map_location));
 
-        JodelResIDs.ic_information = XResources.getFakeResId(modRes, R.drawable.ic_information);
-        resparam.res.setReplacement(JodelResIDs.ic_information, modRes.fwd(R.drawable.ic_information));
-
-        //Add layout
-//        JodelResIDs.layout_appcompatimageview = XResources.getFakeResId(modRes, R.layout.image_view_gallery_chooser);
-//        resparam.res.setReplacement(JodelResIDs.layout_appcompatimageview, modRes.fwd(R.layout.image_view_gallery_chooser));
-
-        JodelResIDs.layout_color_picker = XResources.getFakeResId(modRes, R.layout.color_picker_layout);
-        resparam.res.setReplacement(JodelResIDs.layout_color_picker, modRes.fwd(R.layout.color_picker_layout));
+            JodelResIDs.ic_information = XResources.getFakeResId(modRes, R.drawable.ic_information);
+            resparam.res.setReplacement(JodelResIDs.ic_information, modRes.fwd(R.drawable.ic_information));
+        } catch (Exception e) {
+            if (e instanceof Resources.NotFoundException) {
+                Toast.makeText(getSystemContext(), "Please reboot your device in order to use JodelXposed", Toast.LENGTH_LONG).show();
+            } else {
+                e.printStackTrace();
+                Toast.makeText(getSystemContext(), "Something weired happened. Please open a issue on GitHub", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
-    public void hook() {
+    public void fragment_create_post() {
         resparam.res.hookLayout(App.Companion.getPACKAGE_NAME(), "layout", "fragment_create_post", new XC_LayoutInflated() {
                 @Override
                 public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
@@ -143,7 +148,9 @@ public class LayoutHooks {
                 }
             }
         );
+    }
 
+    public void fragment_photo_edit() {
         resparam.res.hookLayout(App.Companion.getPACKAGE_NAME(), "layout", "fragment_photo_edit", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
@@ -189,7 +196,9 @@ public class LayoutHooks {
                 });
             }
         });
+    }
 
+    public void fragment_post_detail() {
         resparam.res.hookLayout(App.Companion.getPACKAGE_NAME(), "layout", "fragment_post_detail", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
@@ -258,7 +267,26 @@ public class LayoutHooks {
                 parent.addView(newLl);
             }
         });
+    }
 
+    public void hook() {
+        try {
+            fragment_create_post();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            fragment_post_detail();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            fragment_photo_edit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressWarnings("WeakerAccess")

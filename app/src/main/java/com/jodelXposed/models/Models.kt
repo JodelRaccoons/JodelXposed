@@ -16,8 +16,7 @@ data class Location(var active: Boolean = false, var lat: Double = 0.0, var lng:
 )
 
 
-
-data class UDI(var active: Boolean = true, var udi: String = "")
+data class UDI(var active: Boolean = false, var udi: String = "", var originalUdi: String = "")
 
 data class HookValues(
         @JvmField @Expose var version: Int = 0,

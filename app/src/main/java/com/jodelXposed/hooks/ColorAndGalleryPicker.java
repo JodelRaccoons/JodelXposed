@@ -2,16 +2,21 @@ package com.jodelXposed.hooks;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.FileObserver;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.jodelXposed.utils.Log;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Utils;
+import com.jodelXposed.utils.XposedUtilHelpers;
 
 import java.lang.reflect.Field;
 
@@ -20,6 +25,8 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 import static android.os.FileObserver.CLOSE_WRITE;
+import static android.widget.LinearLayout.HORIZONTAL;
+import static android.widget.LinearLayout.VERTICAL;
 import static com.jodelXposed.utils.Bitmap.loadBitmap;
 import static com.jodelXposed.utils.Utils.getActivity;
 import static com.jodelXposed.utils.Utils.getJXSharedImage;
@@ -30,8 +37,6 @@ import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
 public class ColorAndGalleryPicker {
-    public static boolean imageShared = false;
-
 
     /**
      * Add features on ImageView - load custom stored image, adjust ScaleType
@@ -104,7 +109,7 @@ public class ColorAndGalleryPicker {
                 @Override
                 public void onClick(View v) {
 
-                    View dialoglayout = activity.getLayoutInflater().inflate(LayoutHooks.JodelResIDs.layout_color_picker, null);
+                    View dialoglayout = getColorPickerView();
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     builder.setTitle("Pick your desired color");
@@ -124,6 +129,71 @@ public class ColorAndGalleryPicker {
                     alertDialog.show();
                 }
             });
+    }
+
+    private View getColorPickerView() {
+        Context ctx = XposedUtilHelpers.getActivityFromActivityThread();
+
+        LinearLayout.LayoutParams colorLayoutParams = new LinearLayout.LayoutParams(Utils.dpToPx(70), Utils.dpToPx(70));
+        colorLayoutParams.setMargins(Utils.dpToPx(20), Utils.dpToPx(20), Utils.dpToPx(20), Utils.dpToPx(20));
+
+        LinearLayout rootLayout = new LinearLayout(ctx);
+        rootLayout.setOrientation(VERTICAL);
+        LinearLayout.LayoutParams rootLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        rootLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        rootLayout.setLayoutParams(rootLayoutParams);
+
+        LinearLayout firstRow = new LinearLayout(ctx);
+        firstRow.setOrientation(HORIZONTAL);
+        LinearLayout.LayoutParams firstRowLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        firstRowLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        firstRow.setLayoutParams(firstRowLayoutParams);
+
+        ImageView orange = new ImageView(ctx);
+        orange.setTag("cp_orange");
+        orange.setBackgroundColor(Color.parseColor("#FFFF9908"));
+        orange.setLayoutParams(colorLayoutParams);
+        firstRow.addView(orange);
+
+        ImageView yellow = new ImageView(ctx);
+        yellow.setTag("cp_yellow");
+        yellow.setBackgroundColor(Color.parseColor("#FFFFBA00"));
+        yellow.setLayoutParams(colorLayoutParams);
+        firstRow.addView(yellow);
+
+        ImageView red = new ImageView(ctx);
+        red.setTag("cp_red");
+        red.setBackgroundColor(Color.parseColor("#FFDD5F5F"));
+        red.setLayoutParams(colorLayoutParams);
+        firstRow.addView(red);
+        rootLayout.addView(firstRow);
+
+        LinearLayout secondRow = new LinearLayout(ctx);
+        secondRow.setOrientation(HORIZONTAL);
+        LinearLayout.LayoutParams secondRowLayoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        secondRowLayoutParams.gravity = Gravity.CENTER_HORIZONTAL;
+        secondRow.setLayoutParams(secondRowLayoutParams);
+
+        ImageView blue = new ImageView(ctx);
+        blue.setTag("cp_blue");
+        blue.setBackgroundColor(Color.parseColor("#FF06A3CB"));
+        blue.setLayoutParams(colorLayoutParams);
+        secondRow.addView(blue);
+
+        ImageView bluegrayish = new ImageView(ctx);
+        bluegrayish.setTag("cp_bluegrayish");
+        bluegrayish.setBackgroundColor(Color.parseColor("#FF8ABDB0"));
+        bluegrayish.setLayoutParams(colorLayoutParams);
+        secondRow.addView(bluegrayish);
+
+        ImageView green = new ImageView(ctx);
+        green.setTag("cp_green");
+        green.setBackgroundColor(Color.parseColor("#FF9EC41C"));
+        green.setLayoutParams(colorLayoutParams);
+        secondRow.addView(green);
+        rootLayout.addView(secondRow);
+
+        return rootLayout;
     }
 
     private class ColorPickerOnClickListener implements View.OnClickListener {

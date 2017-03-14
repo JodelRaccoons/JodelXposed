@@ -23,6 +23,7 @@ public class JClasses {
     public static Class AddressUpdateEvent;
     public static Class UpdateMyMenuEvent;
     public static Class LocationManagerInterface;
+    public static Class UniqueDeviceIdentifier;
 
     public JClasses(XC_LoadPackage.LoadPackageParam lpparam) {
         SectionsPagerAdapter = findClass("com.jodelapp.jodelandroidv3.view.adapter.SectionsPagerAdapter", lpparam.classLoader);
@@ -38,5 +39,6 @@ public class JClasses {
         AddressUpdateEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.AddressUpdateEvent", lpparam.classLoader);
         UpdateMyMenuEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", lpparam.classLoader);
         LocationManagerInterface = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.usecases.LocationManager", lpparam.classLoader);
+        UniqueDeviceIdentifier = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier", lpparam.classLoader);
     }
 }

@@ -1,6 +1,7 @@
 package com.jodelXposed.hooks
 
 import android.content.Intent
+import android.widget.Toast
 import com.jodelXposed.utils.Options
 import com.jodelXposed.utils.Utils.getNewIntent
 import com.jodelXposed.utils.Utils.getSystemContext
@@ -20,10 +21,11 @@ class SettingsStuff(lpparam: XC_LoadPackage.LoadPackageParam, classLoader: Class
             override fun afterHookedMethod(param: XC_MethodHook.MethodHookParam?) {
                 val selected = getObjectField(param!!.args[0], "name") as String
 
-                if (selected.equals("xposedLocation", ignoreCase = true))
+                if (selected.equals("xposedLocation", ignoreCase = true)) {
+                    Toast.makeText(getSystemContext(), "Starting location picker...", Toast.LENGTH_LONG).show()
                     getSystemContext().startActivity(getNewIntent("utils.Picker").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION).putExtra("choice", 1))
-                else if (selected.equals("xposedReportBug", ignoreCase = true)){
-//                    XposedUtils.get().showBugReportDialog()
+                } else if (selected.equals("xposedChangeUdi", ignoreCase = true)) {
+
                 } else if (selected.equals("xposedLink", ignoreCase = true)) {
                     //setCurrentItem(int,boolean)
                     callMethod(JodelMenu.viewPagerReference, "e", 4, true)

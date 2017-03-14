@@ -173,6 +173,25 @@ public class Utils {
         callMethod(OttoEventBusInstance, Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event, updateMyMenuEvent);
     }
 
+    public static Object getEventBus() {
+        Method methodGetJodelApp = XposedHelpers.findMethodsByExactParameters(JClasses.JodelApp, JClasses.JodelApp, Context.class)[0];
+        Field appComponentField = XposedHelpers.findFirstFieldByExactType(JClasses.JodelApp, JClasses.AppComponentInterface);
+        Object jodelAppInstance = XposedHelpers.callStaticMethod(JClasses.JodelApp, methodGetJodelApp.getName(), XposedUtilHelpers.getActivityFromActivityThread().getApplicationContext());
+        Method methodGetEventBus = XposedHelpers.findMethodsByExactParameters(JClasses.AppComponentInterface, JClasses.OttoEventBus)[0];
+        Object appComponentInstance = XposedHelpers.getObjectField(jodelAppInstance, appComponentField.getName());
+        return XposedHelpers.callMethod(appComponentInstance, methodGetEventBus.getName());
+    }
+
+    public static Object getUniqueDeviceIdentifier() {
+        Method methodGetJodelApp = XposedHelpers.findMethodsByExactParameters(JClasses.JodelApp, JClasses.JodelApp, Context.class)[0];
+        Field appComponentField = XposedHelpers.findFirstFieldByExactType(JClasses.JodelApp, JClasses.AppComponentInterface);
+        Object jodelAppInstance = XposedHelpers.callStaticMethod(JClasses.JodelApp, methodGetJodelApp.getName(), XposedUtilHelpers.getActivityFromActivityThread().getApplicationContext());
+
+        Method methodGetUniqueDeviceIdentifier = XposedHelpers.findMethodsByExactParameters(JClasses.AppComponentInterface, JClasses.UniqueDeviceIdentifier)[0];
+        Object appComponentInstance = XposedHelpers.getObjectField(jodelAppInstance, appComponentField.getName());
+        return XposedHelpers.callMethod(appComponentInstance, methodGetUniqueDeviceIdentifier.getName());
+    }
+
     public static int getDisplayHeight() {
         return Utils.getSystemContext().getResources().getDisplayMetrics().heightPixels;
     }

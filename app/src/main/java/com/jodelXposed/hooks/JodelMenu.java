@@ -11,7 +11,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.jodelXposed.JClasses;
+import com.jodelXposed.models.HookValues;
 import com.jodelXposed.models.Location;
+import com.jodelXposed.models.UDI;
+import com.jodelXposed.utils.EventBus;
 import com.jodelXposed.utils.Options;
 import com.jodelXposed.utils.Utils;
 import com.jodelXposed.utils.XposedUtilHelpers;
@@ -34,6 +37,7 @@ import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.getAdditionalInstanceField;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
+import static de.robv.android.xposed.XposedHelpers.newInstance;
 import static de.robv.android.xposed.XposedHelpers.setAdditionalInstanceField;
 
 /**
@@ -170,6 +174,8 @@ public class JodelMenu {
                     xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedLocationSpoofing", "Location spoofing"));
                     xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedFastChange", "Override hometown"));
                     xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedLocation", "JX Change location"));
+//                    xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedUdiSwitch", "UDI Spoofing"));
+//                    xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedChangeUdi", "Change UDI"));
 //                    xposedOptionsItems.add(XposedHelpers.newInstance(findClass("com.jodelapp.jodelandroidv3.view.MyMenuItem", lpparam.classLoader), "xposedReportBug", "JX Report a bug"));
                     param.setResult(xposedOptionsItems);
                 } else {
@@ -181,13 +187,13 @@ public class JodelMenu {
     }
 
     //Change some MyMenuItems to a switch
-    private void getViewHook(XC_LoadPackage.LoadPackageParam lpparam) {
+    private void getViewHook(final XC_LoadPackage.LoadPackageParam lpparam) {
         findAndHookMethod(JClasses.MyMenuAdapter, "getView", int.class, View.class, ViewGroup.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 Object myMenuItem = callMethod(param.thisObject, "getItem", (int) param.args[0]);
                 String name = (String) getObjectField(myMenuItem, "name");
-                if (name.equals("xposedLocationSpoofing") || name.equals("xposedFastChange")) {
+                if (name.equals("xposedLocationSpoofing") || name.equals("xposedFastChange") || name.equals("xposedUdiSwitch")) {
                     final Activity activity = XposedUtilHelpers.getActivityFromActivityThread();
                     LinearLayout view = (LinearLayout) param.getResult();
 
@@ -201,25 +207,54 @@ public class JodelMenu {
                     final LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     llp.setMargins(0, 0, Utils.dpToPx(11), 0);
                     sw.setLayoutParams(llp);
-                    if (name.equals("xposedLocationSpoofing")) {
-                        sw.setChecked(Options.INSTANCE.getLocation().getActive());
-                        sw.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Options.INSTANCE.getLocation().setActive(sw.isChecked());
-                                Options.INSTANCE.save();
-                            }
-                        });
+                    switch (name) {
+                        case "xposedLocationSpoofing":
+                            sw.setChecked(Options.INSTANCE.getLocation().getActive());
+                            sw.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Options.INSTANCE.getLocation().setActive(sw.isChecked());
+                                    Options.INSTANCE.save();
+                                }
+                            });
 
-                    } else if (name.equals("xposedFastChange")) {
-                        sw.setChecked(Options.INSTANCE.getLocation().getOverrideHometown());
-                        sw.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Options.INSTANCE.getLocation().setOverrideHometown(sw.isChecked());
-                                Options.INSTANCE.save();
-                            }
-                        });
+                            break;
+                        case "xposedFastChange":
+                            sw.setChecked(Options.INSTANCE.getLocation().getOverrideHometown());
+                            sw.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Options.INSTANCE.getLocation().setOverrideHometown(sw.isChecked());
+                                    Options.INSTANCE.save();
+                                }
+                            });
+                            break;
+                        case "xposedUdiSwitch":
+                            sw.setChecked(Options.INSTANCE.getUdi().getActive());
+                            sw.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Options options = Options.INSTANCE;
+                                    UDI udi = options.getUdi();
+                                    HookValues hooks = options.getHooks();
+                                    if (udi.getOriginalUdi().isEmpty()
+                                        || !udi.getOriginalUdi().equals(callMethod(Utils.getUniqueDeviceIdentifier(), hooks.Method_UDI_GetUdiMethod))) {
+                                        udi.setOriginalUdi((String) callMethod(Utils.getUniqueDeviceIdentifier(), hooks.Method_UDI_GetUdiMethod));
+                                    }
+                                    if (sw.isChecked()) {
+                                        if (udi.getUdi().isEmpty()) {
+                                            Utils.makeSnackbarWithNoCtx(lpparam, "Please set a UDI first!");
+                                            sw.setChecked(false);
+                                        } else
+                                            EventBus.post(newInstance(EventBus.Events.UserSyncRequestEvent, udi.getUdi()));
+                                    } else {
+                                        EventBus.post(newInstance(EventBus.Events.UserSyncRequestEvent, udi.getOriginalUdi()));
+                                    }
+                                    udi.setActive(sw.isChecked());
+                                    Options.INSTANCE.save();
+                                }
+                            });
+                            break;
                     }
 
 

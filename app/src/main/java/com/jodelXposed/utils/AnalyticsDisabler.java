@@ -36,6 +36,7 @@ public class AnalyticsDisabler {
 
 
     public AnalyticsDisabler(XC_LoadPackage.LoadPackageParam lpparam) {
+//        if (!BuildConfig.DEBUG)
         suppressLoggingCalls();
 
         StringBuilder analyticsFrameworks = new StringBuilder("Found ");
@@ -139,61 +140,35 @@ public class AnalyticsDisabler {
     }
 
     private void suppressLoggingCalls() {
-        findAndHookMethod(Log.class, "e", String.class, String.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (suppressTags.contains(param.args[0].toString())) {
-                    param.setResult(0);
-                }
-            }
-        });
+        findAndHookMethod(Log.class, "e", String.class, String.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "w", String.class, String.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "i", String.class, String.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "d", String.class, String.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "v", String.class, String.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "wtf", String.class, String.class, new LogSuppressorHook());
 
-        findAndHookMethod(Log.class, "w", String.class, String.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (suppressTags.contains(param.args[0].toString())) {
-                    param.setResult(0);
-                }
-            }
-        });
+        findAndHookMethod(Log.class, "e", String.class, String.class, Throwable.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "w", String.class, String.class, Throwable.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "i", String.class, String.class, Throwable.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "d", String.class, String.class, Throwable.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "v", String.class, String.class, Throwable.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "wtf", String.class, String.class, Throwable.class, new LogSuppressorHook());
 
-        findAndHookMethod(Log.class, "i", String.class, String.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (suppressTags.contains(param.args[0].toString())) {
-                    param.setResult(0);
-                }
-            }
-        });
-        findAndHookMethod(Log.class, "d", String.class, String.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (suppressTags.contains(param.args[0].toString())) {
-                    param.setResult(0);
-                }
-            }
-        });
-        findAndHookMethod(Log.class, "v", String.class, String.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (suppressTags.contains(param.args[0].toString())) {
-                    param.setResult(0);
-                }
-            }
-        });
-        findAndHookMethod(Log.class, "wtf", String.class, String.class, new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (suppressTags.contains(param.args[0].toString())) {
-                    param.setResult(0);
-                }
-            }
-        });
-
+        findAndHookMethod(Log.class, "wtf", String.class, Throwable.class, new LogSuppressorHook());
+        findAndHookMethod(Log.class, "w", String.class, Throwable.class, new LogSuppressorHook());
     }
 
     public void suppress(String tag) {
         if (!suppressTags.contains(tag))
             suppressTags.add(tag);
+    }
+
+    public class LogSuppressorHook extends XC_MethodHook {
+        @Override
+        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+            if (suppressTags.contains(param.args[0].toString())) {
+                param.setResult(0);
+            }
+        }
     }
 }

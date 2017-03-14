@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.os.Build
 import android.os.Handler
+import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.jodelXposed.hooks.LayoutHooks
@@ -30,13 +31,6 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
         val layoutHooks = LayoutHooks(resparam, MODULE_PATH)
         layoutHooks.addResources()
         layoutHooks.hook()
-
-//        XposedUtils.Builder()
-//                .withLoadPackageParam(lpparam)
-//                .withResparam(Companion.resparam, Companion.MODULE_PATH)
-//                .enableCrashLogs(false)
-//                .disableAnalytics(true)
-//                .build()
     }
 
 
@@ -90,7 +84,12 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
         }
 
         xlog("Locating classes!")
-        JClasses(lpparam)
+        try {
+            JClasses(lpparam)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(getSystemContext(), "Something went wrong while finding the classes...", Toast.LENGTH_LONG).show()
+        }
 
         // Check for hook updates
         HookUpdater().updateHooks(Options.hooks, pkgInfo.versionCode)
@@ -99,7 +98,16 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
         AnalyticsDisabler(lpparam)
 
         xlog("#### Loading hooks ####")
-        Hooks(lpparam).hook()
+        if (Options.hooks.versionCode == pkgInfo.versionCode)
+            Hooks(lpparam).hook()
+        else {
+            try {
+                Utils.makeSnackbarWithNoCtx(lpparam, "Please update your Jodel version!")
+            } catch (e: Exception) {
+                Toast.makeText(getSystemContext(), "Please update your Jodel version!", Toast.LENGTH_LONG).show()
+            }
+        }
+
     }
 
     private fun checkPermissions() {
