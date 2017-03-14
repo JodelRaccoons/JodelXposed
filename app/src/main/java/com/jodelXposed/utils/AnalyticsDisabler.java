@@ -11,12 +11,12 @@ import java.util.Map;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XposedBridge;
+import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
-import static de.robv.android.xposed.XposedHelpers.findClassIfExists;
 import static de.robv.android.xposed.XposedHelpers.findMethodBestMatch;
 
 /**
@@ -136,6 +136,15 @@ public class AnalyticsDisabler {
 
         analyticsFrameworks.append("disabling them! Your data belongs to you!");
         Log.d(TAG, analyticsFrameworks.toString());
+    }
+
+    private static Class findClassIfExists(String s, ClassLoader classLoader) {
+        try {
+            Class<?> cls = findClass(s, classLoader);
+            return cls;
+        } catch (XposedHelpers.ClassNotFoundError ex) {
+            return null;
+        }
     }
 
     private void suppressLoggingCalls() {
