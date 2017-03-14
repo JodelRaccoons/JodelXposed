@@ -11,6 +11,7 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
   * [Increased control over account](#increased-control-over-account)
   * [OTA Hook updates](#ota-hook-updates)
 - [Version compatibility](#version-compatibility)
+- [Report a bug / Make a suggestion] (#report-a-bug--make-a-suggestion)
 - [Support](#support)
   * [OnePlus OxygenOS rom issues](#oneplus-oxygenos-rom-issues)
   * [You dont have Google play services? No problem!](#you-dont-have-google-play-services-no-problem)
@@ -54,6 +55,21 @@ This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR
 The module aims for compatibility with the latest Jodel version. Jodel apks are usually linked in [the thread on XDA](http://forum.xda-developers.com/xposed/modules/mod-jodelxposed-enhancements-t3350019/).
 
 The latest supported Jodel version is noted [here](https://github.com/krokofant/JodelXposed/blob/master/app/build.gradle#L7) or as a hooks folder [here](https://github.com/krokofant/JodelXposed/tree/master/hooks).
+
+# Report a bug / Make a suggestion
+We'd love to see you reporting a bug to make this Xposed module even better.
+If you want to report a bug we need some information:
+
+1. Steps to reproduce the bug.
+2. Some details about your enviroment like:
+ - Android OS and Xposed version
+ - Your phone model and rom information (this helps to sort out rom issues)
+ - The Jodel/JodelXposed log (depends on what is crashing)
+ - The Xposed log
+3. Create a issue, providing the information. We'll give our best to solve your problem!
+
+If you want to give a suggestion for a new feature just create a issue providing a short description!
+
 
 # Support
 * Are you using Android?
