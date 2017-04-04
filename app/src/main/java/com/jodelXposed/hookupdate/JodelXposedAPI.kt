@@ -1,4 +1,4 @@
-package com.jodelXposed.retrofit
+package com.jodelXposed.hookupdate
 
 import com.jodelXposed.models.HookValues
 import retrofit2.Call

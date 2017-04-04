@@ -1,11 +1,11 @@
-package com.jodelXposed.hooks;
+package com.jodelXposed.hooks.picker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.FileObserver;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,10 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.jodelXposed.utils.Log;
-import com.jodelXposed.utils.Options;
+import com.jodelXposed.hooks.helper.Log;
 import com.jodelXposed.utils.Utils;
-import com.jodelXposed.utils.XposedUtilHelpers;
 
 import java.lang.reflect.Field;
 
@@ -24,59 +22,45 @@ import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
-import static android.os.FileObserver.CLOSE_WRITE;
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
-import static com.jodelXposed.utils.Bitmap.loadBitmap;
-import static com.jodelXposed.utils.Utils.getActivity;
-import static com.jodelXposed.utils.Utils.getJXSharedImage;
-import static com.jodelXposed.utils.Utils.getNewIntent;
-import static com.jodelXposed.utils.Utils.getSystemContext;
-import static de.robv.android.xposed.XposedHelpers.callMethod;
+import static com.jodelXposed.hooks.helper.Activity.getMain;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
-import static de.robv.android.xposed.XposedHelpers.getObjectField;
 
-public class ColorAndGalleryPicker {
+/**
+ * Created by Admin on 04.04.2017.
+ */
 
-    /**
-     * Add features on ImageView - load custom stored image, adjust ScaleType
-     * Remove blur effect
-     */
-    public ColorAndGalleryPicker(final XC_LoadPackage.LoadPackageParam lpparam) {
-        findAndHookMethod("com.jodelapp.jodelandroidv3.view.CreateTextPostFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
-            @Override
-            protected void afterHookedMethod(final MethodHookParam param) throws IllegalAccessException {
-                setupGalleryPicker(param, lpparam);
-                setupColorPicker(param);
-            }
-        });
-    }
+public class ColorPicker {
 
-    private void setupGalleryPicker(final XC_MethodHook.MethodHookParam param, final XC_LoadPackage.LoadPackageParam lpparam) {
-        final FileObserver imageFileObserver = new FileObserver(getJXSharedImage(), CLOSE_WRITE) {
-            @Override
-            public void onEvent(int i, String s) {
-                Log.dlog("File Observer issued, loading image");
-                this.stopWatching();
-                Log.dlog("Image loading, FileObserver stopped!");
-
-                Object eventBus = getObjectField(param.thisObject, "bus");
-
-                Class PictureTakenEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.PictureTakenEvent", lpparam.classLoader);
-                Object pictureTakenEvent = XposedHelpers.newInstance(PictureTakenEvent, loadBitmap());
-
-                callMethod(eventBus, Options.INSTANCE.getHooks().Method_Otto_Append_Bus_Event, pictureTakenEvent);
-            }
-        };
-
-        (((View) param.getResult()).findViewWithTag("gallery_button"))
-            .setOnClickListener(new View.OnClickListener() {
+    public ColorPicker(XC_LoadPackage.LoadPackageParam lpparam) {
+        try {
+            findAndHookMethod("com.jodelapp.jodelandroidv3.view.CreateTextPostFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
                 @Override
-                public void onClick(View view) {
-                    imageFileObserver.startWatching();
-                    getSystemContext().startActivity(getNewIntent("utils.Picker").putExtra("choice", 3));
+                protected void afterHookedMethod(final MethodHookParam param) throws IllegalAccessException {
+                    setupColorPicker(param);
                 }
             });
+            passColorToCamera(lpparam);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.dlog("!!!!!!!!!! Failed loading ColorPicker hook !!!!!!!!!!");
+        }
+    }
+
+    private void passColorToCamera(final XC_LoadPackage.LoadPackageParam lpparam) {
+        findAndHookMethod("com.jodelapp.jodelandroidv3.features.photoedit.PhotoEditFragment", lpparam.classLoader, "onCreateView", LayoutInflater.class, ViewGroup.class, Bundle.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                Class PhotoEditFragment = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.features.photoedit.PhotoEditFragment", lpparam.classLoader);
+                Field colorField = XposedHelpers.findFirstFieldByExactType(PhotoEditFragment, String.class);
+                Field bitmapField = XposedHelpers.findFirstFieldByExactType(PhotoEditFragment, Bitmap.class);
+                bitmapField.setAccessible(true);
+                Bitmap bitmap = (Bitmap) bitmapField.get(param.thisObject);
+                String color = (String) XposedHelpers.getAdditionalInstanceField(bitmap, "color");
+                XposedHelpers.setObjectField(param.thisObject, colorField.getName(), color);
+            }
+        });
     }
 
     private String findColorField(XC_MethodHook.MethodHookParam param) {
@@ -100,7 +84,7 @@ public class ColorAndGalleryPicker {
     }
 
     private void setupColorPicker(final XC_MethodHook.MethodHookParam param) throws IllegalAccessException {
-        final Activity activity = getActivity(param);
+        final Activity activity = getMain();
 
         final View create_post_layout = ((View) param.getResult()).findViewById(activity.getResources().getIdentifier("create_post_layout", "id", "com.tellm.android.app"));
 
@@ -132,7 +116,7 @@ public class ColorAndGalleryPicker {
     }
 
     private View getColorPickerView() {
-        Context ctx = XposedUtilHelpers.getActivityFromActivityThread();
+        Context ctx = getMain();
 
         LinearLayout.LayoutParams colorLayoutParams = new LinearLayout.LayoutParams(Utils.dpToPx(70), Utils.dpToPx(70));
         colorLayoutParams.setMargins(Utils.dpToPx(20), Utils.dpToPx(20), Utils.dpToPx(20), Utils.dpToPx(20));

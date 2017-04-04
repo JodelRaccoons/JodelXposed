@@ -37,7 +37,8 @@
             android:value="54"/>
 
 
-        <activity android:name=".utils.Picker"
+        <activity
+            android:name=".Picker"
             android:excludeFromRecents="true"
             android:theme="@style/TransparentTheme">
             <intent-filter>

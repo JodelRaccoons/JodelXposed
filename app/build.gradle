@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 project.ext {
-    versionCode = 31
-    versionName = "2.4.7"
-    jodelVersionCode = 1000600
-    jodelVersionName = "4.36.0"
+    versionCode = 33
+    versionName = "2.4.8"
+    jodelVersionCode = 1000705
+    jodelVersionName = "4.37.5"
 }
 
 android {
@@ -74,6 +74,7 @@ dependencies {
     compile "com.github.nisrulz:easydeviceinfo-base:2.3.2"
     compile 'com.github.renaudcerrato:static-maps-api:1.0.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
 gradle.taskGraph.whenReady { taskGraph ->

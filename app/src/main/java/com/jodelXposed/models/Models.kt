@@ -46,5 +46,7 @@ data class HookValues(
         @JvmField @Expose var Class_JodelGestureListener: String = "",
         @JvmField @Expose var Field_JodelGestureListener_Post: String = "",
 
-        @JvmField @Expose var Method_Otto_Append_Bus_Event: String = ""
+        @JvmField @Expose var Method_Otto_Append_Bus_Event: String = "",
+
+        @JvmField @Expose var Method_FeedFragment_NewInstance_Hashtags: String = ""
 )

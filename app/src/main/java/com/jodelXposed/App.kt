@@ -5,16 +5,18 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.os.Build
 import android.os.Handler
-import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.jodelXposed.hooks.LayoutHooks
+import com.jodelXposed.hooks.helper.Activity.getSys
+import com.jodelXposed.hooks.helper.Log.dlog
+import com.jodelXposed.hooks.helper.Log.xlog
+import com.jodelXposed.hookupdate.HookUpdater
 import com.jodelXposed.models.HookValues
-import com.jodelXposed.utils.*
-import com.jodelXposed.utils.Log.dlog
-import com.jodelXposed.utils.Log.xlog
+import com.jodelXposed.utils.Hooks
+import com.jodelXposed.utils.Options
+import com.jodelXposed.utils.TSnackbar
 import com.jodelXposed.utils.Utils.getNewIntent
-import com.jodelXposed.utils.Utils.getSystemContext
 import de.robv.android.xposed.IXposedHookInitPackageResources
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
@@ -41,7 +43,7 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
 
         App.Companion.lpparam = lpparam
 
-        val pkgInfo: PackageInfo = getSystemContext().packageManager.getPackageInfo(lpparam.packageName, 0)
+        val pkgInfo: PackageInfo = getSys().packageManager.getPackageInfo(lpparam.packageName, 0)
 
 
         xlog("\n----------\n" +
@@ -55,17 +57,14 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
             checkPermissions()
         }
 
-        try {
-            Options.load()
-        } catch (e: Exception) {
-            xlog("Options cannot be loaded", e)
-        }
+        Options.load()
+
 
         if (BuildConfig.JODEL_VERSION_CODE == pkgInfo.versionCode) {
             dlog("Loading shipped hooks.json")
             var shippedHooks = HookValues()
             try {
-                val jxContext = getSystemContext().createPackageContext("com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
+                val jxContext = getSys().createPackageContext("com.jodelXposed", Context.CONTEXT_IGNORE_SECURITY)
                 val ins = jxContext.assets.open("${pkgInfo.versionCode}/hooks.json")
                 shippedHooks = Gson().fromJson(ins.reader().readText(), HookValues::class.java)
             } catch(ex: JsonSyntaxException) {
@@ -83,35 +82,21 @@ class App : IXposedHookLoadPackage, IXposedHookZygoteInit, IXposedHookInitPackag
             }
         }
 
-        xlog("Locating classes!")
-        try {
-            JClasses(lpparam)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Toast.makeText(getSystemContext(), "Something went wrong while finding the classes...", Toast.LENGTH_LONG).show()
-        }
+        xlog("#### Locating classes ####")
+        JClasses(lpparam)
 
-        // Check for hook updates
+        xlog("#### Updating hooks ####")
         HookUpdater().updateHooks(Options.hooks, pkgInfo.versionCode)
-
-        XposedUtilHelpers.setup(lpparam)
-        AnalyticsDisabler(lpparam)
 
         xlog("#### Loading hooks ####")
         if (Options.hooks.versionCode == pkgInfo.versionCode)
             Hooks(lpparam).hook()
-        else {
-            try {
-                Utils.makeSnackbarWithNoCtx(lpparam, "Please update your Jodel version!")
-            } catch (e: Exception) {
-                Toast.makeText(getSystemContext(), "Please update your Jodel version!", Toast.LENGTH_LONG).show()
-            }
-        }
-
+        else
+            TSnackbar.make(lpparam, "Please update your Jodel version!")
     }
 
     private fun checkPermissions() {
-        Handler().postDelayed({ getSystemContext().startActivity(getNewIntent("utils.Picker").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)) }, 3000)
+        Handler().postDelayed({ getSys().startActivity(getNewIntent("Picker").addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)) }, 3000)
     }
 
     @Throws(Throwable::class)

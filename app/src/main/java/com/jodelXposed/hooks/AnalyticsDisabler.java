@@ -1,8 +1,10 @@
-package com.jodelXposed.utils;
+package com.jodelXposed.hooks;
 
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
+
+import com.jodelXposed.utils.XCEmptyReplacement;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

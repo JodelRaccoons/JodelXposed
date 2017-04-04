@@ -1,114 +1,58 @@
 package com.jodelXposed.utils
 
-import com.jodelXposed.hooks.*
+import com.jodelXposed.hooks.AnalyticsDisabler
+import com.jodelXposed.hooks.debug.DebugHooks
+import com.jodelXposed.hooks.experiments.UnlockExperiments
+import com.jodelXposed.hooks.helper.Activity
+import com.jodelXposed.hooks.helper.Log
+import com.jodelXposed.hooks.imageblur.RemoveBlurFromImages
+import com.jodelXposed.hooks.location.FastLocationSwitcher
+import com.jodelXposed.hooks.location.LocationSpoof
+import com.jodelXposed.hooks.menu.MyMenuHooks
+import com.jodelXposed.hooks.picker.ColorPicker
+import com.jodelXposed.hooks.picker.GalleryPicker
+import com.jodelXposed.hooks.post.*
+import com.jodelXposed.hooks.udi.UniqueDeviceIdentifierStuff
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 
 class Hooks(private val lpparam: LoadPackageParam) {
 
     fun hook() {
 
-        try {
-            Log.xlog("#### Acquiring... JodelActivity ####")
-            Utils.getFirstJodelFragmentActivity(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED acquiring JodelActivity ! !!!!\n" + "\n")
-        }
+        Log.xlog("#### Setting up XposedUtilHelers ####")
+        Activity.setup(lpparam)
 
-        try {
-            Log.xlog("#### Loading UnlockExperiments hooks ####")
-            UnlockExperiments(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading UnlockExperiments hooks! !!!!\n\n")
-        }
+        Log.xlog("#### Disabling Analytics ####")
+        AnalyticsDisabler(lpparam)
 
-        try {
-            Log.xlog("#### Loading ColorAndGalleryPicker hooks ####")
-            ColorAndGalleryPicker(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading ColorAndGalleryPicker hooks! !!!!\n" + "\n")
-        }
+        Log.xlog("#### Loading ColorAndGalleryPicker hooks ####")
+        ColorPicker(lpparam)
+        GalleryPicker(lpparam)
 
-        try {
-            Log.xlog("#### Loading LocationStuff hooks ####")
-            LocationStuff(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading LocationStuff hooks! !!!!\n" + "\n")
-        }
+        Log.xlog("#### Loading UnlockExperiments hooks ####")
+        UnlockExperiments(lpparam)
 
-        try {
-            Log.xlog("#### Loading PostStuff hooks ####")
-            PostStuff(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading PostStuff hooks! !!!!\n" + "\n")
-        }
+        Log.xlog("#### Loading LocationSpoof hooks ####")
+        LocationSpoof(lpparam)
+        FastLocationSwitcher(lpparam)
 
-        try {
-            Log.xlog("#### Loading SettingsStuff hooks ####")
-            SettingsStuff(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading SettingsStuff hooks! !!!!\n\n")
-        }
+        Log.xlog("#### Loading Post hooks ####")
+        StickyPosts(lpparam)
+        EnablePasting(lpparam)
+        TrackPosts(lpparam)
+        SavePost(lpparam)
+        TimeViewHook(lpparam)
+        DistanceHook(lpparam)
+        RemoveBlurFromImages(lpparam)
+        FastScrollDown(lpparam)
 
-        try {
-            Log.xlog("#### Loading UniqueDeviceIdentifierStuff hooks ####")
-            UniqueDeviceIdentifierStuff(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading UniqueDeviceIdentifierStuff hooks! !!!!\n\n")
-        }
+        Log.xlog("#### Loading UniqueDeviceIdentifierStuff hooks ####")
+        UniqueDeviceIdentifierStuff(lpparam)
 
-        try {
-            Log.xlog("#### Loading SavePost hooks ####")
-            SavePost(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading SavePost hooks! !!!!\n\n")
-        }
+        Log.xlog("#### Loading MyMenuHooks hooks ####")
+        MyMenuHooks(lpparam)
 
-        try {
-            Log.xlog("#### Loading FastScrollDown hooks ####")
-            FastScrollDown(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading FastScrollDown hooks! !!!!\n\n")
-        }
-
-        try {
-            Log.xlog("#### Loading JodelMenu hooks ####")
-            JodelMenu(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading JodelMenu hooks! !!!!\n\n")
-        }
-
-        try {
-            Log.xlog("#### Loading FastLocationSwitcher hooks ####")
-            FastLocationSwitcher(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading FastLocationSwitcher hooks! !!!!\n\n")
-        }
-
-        try {
-            Log.xlog("#### Loading RemoveBlurFromImages hooks ####")
-            RemoveBlurFromImages(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading RemoveBlurFromImages hooks! !!!!\n\n")
-        }
-
-        try {
-            Log.xlog("#### Loading DebugHooks hooks ####")
-            DebugHooks(lpparam)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-            Log.xlog("!!!! FAILED loading DebugHooks hooks! !!!!\n\n")
-        }
+        Log.xlog("#### Loading DebugHooks hooks ####")
+        DebugHooks(lpparam)
     }
 }

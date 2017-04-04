@@ -27,8 +27,8 @@ import static android.view.View.GONE;
 import static android.widget.ImageView.ScaleType.CENTER_CROP;
 import static android.widget.ImageView.ScaleType.FIT_CENTER;
 import static android.widget.ImageView.ScaleType.FIT_XY;
+import static com.jodelXposed.hooks.helper.Activity.getSys;
 import static com.jodelXposed.utils.Utils.dpToPx;
-import static com.jodelXposed.utils.Utils.getSystemContext;
 
 /**
  * Created by Admin on 21.11.2016.
@@ -76,12 +76,18 @@ public class LayoutHooks {
 
             JodelResIDs.ic_information = XResources.getFakeResId(modRes, R.drawable.ic_information);
             resparam.res.setReplacement(JodelResIDs.ic_information, modRes.fwd(R.drawable.ic_information));
+
+            JodelResIDs.ic_circular_clock = XResources.getFakeResId(modRes, R.drawable.ic_circular_clock);
+            resparam.res.setReplacement(JodelResIDs.ic_circular_clock, modRes.fwd(R.drawable.ic_circular_clock));
+
+            JodelResIDs.ic_hashtag = XResources.getFakeResId(modRes, R.drawable.ic_hashtag);
+            resparam.res.setReplacement(JodelResIDs.ic_hashtag, modRes.fwd(R.drawable.ic_hashtag));
         } catch (Exception e) {
             if (e instanceof Resources.NotFoundException) {
-                Toast.makeText(getSystemContext(), "Please reboot your device in order to use JodelXposed", Toast.LENGTH_LONG).show();
+                Toast.makeText(getSys(), "Please reboot your device in order to use JodelXposed", Toast.LENGTH_LONG).show();
             } else {
                 e.printStackTrace();
-                Toast.makeText(getSystemContext(), "Something weired happened. Please open a issue on GitHub", Toast.LENGTH_LONG).show();
+                Toast.makeText(getSys(), "Something weired happened. Please open a issue on GitHub", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -293,14 +299,14 @@ public class LayoutHooks {
     public static class JodelResIDs {
         public static int drawable_gallery_chooser;
         public static int ic_color_chooser;
-        public static int layout_appcompatimageview;
         public static int ic_jx_icon;
-        public static int layout_color_picker;
         public static int ic_toggle_scale;
         public static int ic_scroll;
         public static int ic_edit;
         public static int ic_map_location;
         public static int ic_information;
         public static int ic_launcher;
+        public static int ic_circular_clock;
+        public static int ic_hashtag;
     }
 }

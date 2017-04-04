@@ -1,4 +1,4 @@
-package com.jodelXposed.utils
+package com.jodelXposed
 
 
 import android.Manifest
@@ -16,8 +16,10 @@ import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.location.places.ui.PlacePicker
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
-import com.jodelXposed.utils.Log.dlog
-import com.jodelXposed.utils.Log.xlog
+import com.jodelXposed.hooks.helper.Log.dlog
+import com.jodelXposed.hooks.helper.Log.xlog
+import com.jodelXposed.utils.Bitmap
+import com.jodelXposed.utils.Options
 import id.zelory.compressor.Compressor
 import java.io.File
 import java.io.FileNotFoundException
@@ -69,7 +71,7 @@ class Picker : AppCompatActivity() {
     private fun galleryPicker() {
         //TODO only google photos works for me, a third party gallery app crashes / is not seen as such
         startActivityForResult(
-                Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI),
                 GALLERY_REQUEST_CODE
         )
     }
@@ -92,7 +94,7 @@ class Picker : AppCompatActivity() {
 
     @TargetApi(Build.VERSION_CODES.M)
     private fun permissionsGranted(): Boolean {
-        return this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        return this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -134,6 +136,7 @@ class Picker : AppCompatActivity() {
                     }
                     fastLocationPickerChoice = 0
                     Toast.makeText(this@Picker, "Saved successfully!", Toast.LENGTH_LONG).show()
+
                 } else {
                     Options.location.lat = lat
                     Options.location.lng = lng

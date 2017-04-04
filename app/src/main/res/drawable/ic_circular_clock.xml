@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportHeight="512.0"
+    android:viewportWidth="512.0">
+    <path
+        android:fillColor="#FF9E24"
+        android:pathData="M256,256m-256,0a256,256 0,1 1,512 0a256,256 0,1 1,-512 0" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M256,256m-207.5,0a207.5,207.5 0,1 1,414.9 0a207.5,207.5 0,1 1,-414.9 0" />
+    <path
+        android:fillColor="#181818"
+        android:pathData="M342.6,196.8c7.6,-7.6 7.6,-19.9 0,-27.5c-7.6,-7.6 -19.9,-7.6 -27.5,0l-73.6,73.6l27.5,27.5L342.6,196.8z" />
+    <path
+        android:fillColor="#EE3840"
+        android:pathData="M244.2,250.6L135,359.8c-4.7,4.7 -4.7,12.4 0,17.2c2.4,2.4 5.5,3.6 8.6,3.6c3.1,0 6.2,-1.2 8.6,-3.6l109.2,-109.2L244.2,250.6z" />
+    <path
+        android:fillColor="#181818"
+        android:pathData="M171.1,143.6c-7.6,-7.6 -19.9,-7.6 -27.5,0c-7.6,7.6 -7.6,19.9 0,27.5l99.3,99.3l27.5,-27.5L171.1,143.6z" />
+    <path
+        android:fillColor="#524E4D"
+        android:pathData="M256,286.3c-16.7,0 -30.3,-13.6 -30.3,-30.3s13.6,-30.3 30.3,-30.3s30.3,13.6 30.3,30.3S272.7,286.3 256,286.3z" />
+    <path
+        android:fillColor="#7A7674"
+        android:pathData="M115.3,268.1H97.1c-6.7,0 -12.1,-5.4 -12.1,-12.1s5.4,-12.1 12.1,-12.1h18.2c6.7,0 12.1,5.4 12.1,12.1S122,268.1 115.3,268.1z" />
+    <path
+        android:fillColor="#7A7674"
+        android:pathData="M256,127.4c-6.7,0 -12.1,-5.4 -12.1,-12.1V97.1c0,-6.7 5.4,-12.1 12.1,-12.1c6.7,0 12.1,5.4 12.1,12.1v18.2C268.1,122 262.7,127.4 256,127.4z" />
+    <path
+        android:fillColor="#7A7674"
+        android:pathData="M414.9,268.1h-18.2c-6.7,0 -12.1,-5.4 -12.1,-12.1s5.4,-12.1 12.1,-12.1h18.2c6.7,0 12.1,5.4 12.1,12.1S421.6,268.1 414.9,268.1z" />
+    <path
+        android:fillColor="#7A7674"
+        android:pathData="M256,427.1c-6.7,0 -12.1,-5.4 -12.1,-12.1v-18.2c0,-6.7 5.4,-12.1 12.1,-12.1c6.7,0 12.1,5.4 12.1,12.1v18.2C268.1,421.6 262.7,427.1 256,427.1z" />
+</vector>

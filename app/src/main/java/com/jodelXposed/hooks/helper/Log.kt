@@ -1,4 +1,4 @@
-package com.jodelXposed.utils
+package com.jodelXposed.hooks.helper
 
 import de.robv.android.xposed.XposedBridge
 
@@ -10,7 +10,7 @@ object Log {
     fun xlog(msg: String?) {
         try {
             Class.forName("de.robv.android.xposed.XposedBridge", false, Log::class.java.classLoader)
-            XposedBridge.log("$TAG: $msg")
+            XposedBridge.log("${TAG}: $msg")
         } catch (e: ClassNotFoundException) {
             android.util.Log.e(TAG, "Tried to output to Xposed log: $msg")
         }

@@ -1,10 +1,11 @@
-package com.jodelXposed.utils
+package com.jodelXposed.hookupdate
 
 import android.app.AndroidAppHelper
 import android.widget.Toast
+import com.jodelXposed.hooks.helper.Activity
+import com.jodelXposed.hooks.helper.Log
 import com.jodelXposed.models.HookValues
-import com.jodelXposed.retrofit.JodelXposedAPI
-import com.jodelXposed.retrofit.RetrofitProvider
+import com.jodelXposed.utils.Options
 import es.dmoral.prefs.Prefs
 import retrofit2.Call
 import retrofit2.Callback
@@ -27,7 +28,7 @@ class HookUpdater {
                         Log.dlog("Replacing local hooks with repo hooks")
                         Options.hooks = repoHooks
                         Options.save()
-                        Prefs.with(XposedUtilHelpers.getActivityFromActivityThread()).writeBoolean("displayJXchangelog", true)
+                        Prefs.with(Activity.getMain()).writeBoolean("displayJXchangelog", true)
                         Toast.makeText(AndroidAppHelper.currentApplication(), "Updated hooks, please force restart Jodel", Toast.LENGTH_LONG).show()
                     } else {
                         Log.dlog("++++++++++++ Repo hooks are of the same or older version. Not updating. ++++++++++++")
@@ -54,8 +55,8 @@ class HookUpdater {
                         Log.dlog("Replacing local hooks with repo hooks")
                         Options.hooks = repoHooks
                         Options.save()
-                        Prefs.with(Utils.mainActivity).writeBoolean("displayJXchangelog", true)
-                        Toast.makeText(XposedUtilHelpers.getActivityFromActivityThread(), "Updated hooks, please force restart Jodel", Toast.LENGTH_LONG).show()
+                        Prefs.with(Activity.getMain()).writeBoolean("displayJXchangelog", true)
+                        Toast.makeText(Activity.getMain(), "Updated hooks, please force restart Jodel", Toast.LENGTH_LONG).show()
 
                     } else {
                         Log.dlog("Repo hooks are of the same or older version. Not updating.")

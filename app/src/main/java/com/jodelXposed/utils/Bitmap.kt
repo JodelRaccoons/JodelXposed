@@ -2,8 +2,10 @@ package com.jodelXposed.utils
 
 import android.graphics.BitmapFactory
 import android.media.MediaScannerConnection
-import com.jodelXposed.utils.Log.dlog
-import com.jodelXposed.utils.Log.xlog
+import com.jodelXposed.hooks.helper.Activity
+import com.jodelXposed.hooks.helper.Log
+import com.jodelXposed.hooks.helper.Log.dlog
+import com.jodelXposed.hooks.helper.Log.xlog
 import com.jodelXposed.utils.Utils.getJXSharedImage
 import java.io.*
 
@@ -60,7 +62,7 @@ object Bitmap {
 
     fun scanFile(file: File){
         try {
-            MediaScannerConnection.scanFile(XposedUtilHelpers.getActivityFromActivityThread(),
+            MediaScannerConnection.scanFile(Activity.getMain(),
                     arrayOf(file.toString()), null
             ) { path, uri ->
                 Log.dlog("ExternalStorageScanned $path:")

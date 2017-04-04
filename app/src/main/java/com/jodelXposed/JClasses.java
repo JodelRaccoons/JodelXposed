@@ -1,8 +1,12 @@
 package com.jodelXposed;
 
+import android.widget.Toast;
+
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
+import static com.jodelXposed.hooks.helper.Activity.getSys;
+import static com.jodelXposed.hooks.helper.Log.xlog;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 
 /**
@@ -26,19 +30,25 @@ public class JClasses {
     public static Class UniqueDeviceIdentifier;
 
     public JClasses(XC_LoadPackage.LoadPackageParam lpparam) {
-        SectionsPagerAdapter = findClass("com.jodelapp.jodelandroidv3.view.adapter.SectionsPagerAdapter", lpparam.classLoader);
-        MyMenuPresenter = findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter", lpparam.classLoader);
-        MyMenuPresenterInterface = findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuContract.Presenter", lpparam.classLoader);
-        MainActivity = findClass("com.jodelapp.jodelandroidv3.view.MainActivity", lpparam.classLoader);
-        MyMenuFragment = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuFragment", lpparam.classLoader);
-        MyMenuAdapter = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuAdapter", lpparam.classLoader);
-        SlidingTabLayout = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.view.SlidingTabLayout", lpparam.classLoader);
-        JodelApp = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.JodelApp", lpparam.classLoader);
-        AppComponentInterface = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.api.AppComponent", lpparam.classLoader);
-        OttoEventBus = XposedHelpers.findClass("com.squareup.otto.Bus", lpparam.classLoader);
-        AddressUpdateEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.AddressUpdateEvent", lpparam.classLoader);
-        UpdateMyMenuEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", lpparam.classLoader);
-        LocationManagerInterface = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.usecases.LocationManager", lpparam.classLoader);
-        UniqueDeviceIdentifier = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier", lpparam.classLoader);
+        try {
+            SectionsPagerAdapter = findClass("com.jodelapp.jodelandroidv3.view.adapter.SectionsPagerAdapter", lpparam.classLoader);
+            MyMenuPresenter = findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter", lpparam.classLoader);
+            MyMenuPresenterInterface = findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuContract.Presenter", lpparam.classLoader);
+            MainActivity = findClass("com.jodelapp.jodelandroidv3.view.MainActivity", lpparam.classLoader);
+            MyMenuFragment = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuFragment", lpparam.classLoader);
+            MyMenuAdapter = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.features.mymenu.MyMenuAdapter", lpparam.classLoader);
+            SlidingTabLayout = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.view.SlidingTabLayout", lpparam.classLoader);
+            JodelApp = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.JodelApp", lpparam.classLoader);
+            AppComponentInterface = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.api.AppComponent", lpparam.classLoader);
+            OttoEventBus = XposedHelpers.findClass("com.squareup.otto.Bus", lpparam.classLoader);
+            AddressUpdateEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.AddressUpdateEvent", lpparam.classLoader);
+            UpdateMyMenuEvent = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.events.UpdateMyMenuEvent", lpparam.classLoader);
+            LocationManagerInterface = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.usecases.LocationManager", lpparam.classLoader);
+            UniqueDeviceIdentifier = XposedHelpers.findClass("com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier", lpparam.classLoader);
+        } catch (Exception e) {
+            e.printStackTrace();
+            xlog("!!!!!!!!!! Failed locating classes in JClasses !!!!!!!!!!");
+            Toast.makeText(getSys(), "Something went wrong while finding the classes...", Toast.LENGTH_LONG).show();
+        }
     }
 }

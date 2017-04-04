@@ -1,4 +1,4 @@
-package com.jodelXposed.retrofit
+package com.jodelXposed.hookupdate
 
 import com.google.gson.GsonBuilder
 

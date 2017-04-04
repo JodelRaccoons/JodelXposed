@@ -1,6 +1,6 @@
-package com.jodelXposed.hooks;
+package com.jodelXposed.hooks.debug;
 
-import com.jodelXposed.utils.Log;
+import com.jodelXposed.hooks.helper.Log;
 
 import java.lang.reflect.Field;
 

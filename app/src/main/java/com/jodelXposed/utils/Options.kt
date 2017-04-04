@@ -2,12 +2,12 @@ package com.jodelXposed.utils
 
 import android.os.FileObserver
 import com.google.gson.GsonBuilder
+import com.jodelXposed.hooks.helper.Log.dlog
+import com.jodelXposed.hooks.helper.Log.vlog
+import com.jodelXposed.hooks.helper.Log.xlog
 import com.jodelXposed.models.HookValues
 import com.jodelXposed.models.Location
 import com.jodelXposed.models.UDI
-import com.jodelXposed.utils.Log.dlog
-import com.jodelXposed.utils.Log.vlog
-import com.jodelXposed.utils.Log.xlog
 import com.jodelXposed.utils.Utils.OldSettingsPath
 import com.jodelXposed.utils.Utils.getJXSettingsFile
 import java.io.File
@@ -48,7 +48,7 @@ object Options : FileObserver(getJXSettingsFile(), CLOSE_WRITE) {
         try {
             options = gson.fromJson(settingsFile.readText(),OptionsObject::class.java)
         } catch (e: IOException) {
-            xlog("Could not load options file", e)
+            xlog("Options cannot be loaded", e)
         }
     }
 
