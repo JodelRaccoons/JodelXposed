@@ -2,7 +2,7 @@
   /**
     * The version of this file
    **/
-  "version": 1,
+  "version": 2,
   /**
     * The targeted Jodel version code
    **/
@@ -64,7 +64,7 @@
     *       search term: String str = myMenuItem.name;
   **/
   "Class_MyMenuPresenter": "com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter",
-  "Method_Settings_AddEntriesMethod": "deprecated",
+  "Method_Settings_AddEntriesMethod": "Jk",
   "Method_Settings_HandleClickEventsMethod": "a",
   /**
     * package com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier;
