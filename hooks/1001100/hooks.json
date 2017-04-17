@@ -1,0 +1,97 @@
+ {
+  /**
+    * The version of this file
+   **/
+  "version": 1
+  /**
+    * The targeted Jodel version code
+   **/
+  "versionCode": 1001100,
+  "updateMessage": "Updated hooks for 1001100 (4.41.0)! Thanks to Michael for supplying them!",
+  /**
+    * package com.jodelapp.jodelandroidv3.model.Storage;
+    * type: method
+    * arg 0: String.class (String str)
+    * return: boolean.class
+    * modifier: public
+    * search term: features
+  **/
+  "Class_Storage": "com.jodelapp.jodelandroidv3.model.Storage",
+  "Method_BetaHook_UnlockFeatures": "eB",
+  "Array_FeaturesEnabled": [
+    "channels",
+    "hashtags",
+    "hometown",
+    "picture_feed"
+  ],
+  /**
+    * package com.jodelapp.jodelandroidv3.view.PhotoEditFragment;
+    * type: field
+    * class: ImageView.class
+    * search term: setImageBitmap
+    *
+  **/
+  "Class_PhotoEditFragment": "com.jodelapp.jodelandroidv3.features.photoedit.PhotoEditFragment",
+  /** WTH this is a FIELD */
+  "Method_ImageHookValues_ImageView": "picPreview",
+  /**
+    * package com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter;
+    * type: method
+    * arg 0: com.jodelapp.jodelandroidv3.view.adapter.PostDetailRecyclerAdapter$PostViewHolder.class (PostViewHolder postViewHolder)
+    * arg 1: int.class (int i)
+    * return: void.class
+    * modifier: public
+    * search term:  postViewHolder.AP();
+    *
+  **/
+  "Class_PostDetailRecyclerAdapter": "com.jodelapp.jodelandroidv3.features.postdetail.PostDetailRecyclerAdapter",
+  "Method_PostStuff_TrackPostsMethod": "a",
+  /**
+    * package com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter;
+    *
+    * Settings_AddEntriesMethod:
+    *       type: method
+    *       args: null
+    *       return: List<com.jodelapp.jodelandroidv3.view.MyMenuItem>.class
+    *       modifier: private
+    *       search term: arrayList.add(new MyMenuItem
+    *
+    * Settings_HandleClickEventsMethod:
+    *       type: method
+    *       arg 0: com.jodelapp.jodelandroidv3.view.MyMenuItem.class (MyMenuItem myMenuItem)
+    *       return: void.class
+    *       modifier: public
+    *       search term: String str = myMenuItem.name;
+  **/
+  "Class_MyMenuPresenter": "com.jodelapp.jodelandroidv3.features.mymenu.MyMenuPresenter",
+  "Method_Settings_AddEntriesMethod": "JP",
+  "Method_Settings_HandleClickEventsMethod": "a",
+  /**
+    * package com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier;
+    * type: method
+    * args: null
+    * return: String.class
+    * modifier: public
+    * search term: (getValue()); //method call to getValue
+  **/
+  "Class_UniqueDeviceIdentifier": "com.jodelapp.jodelandroidv3.utilities.UniqueDeviceIdentifier",
+  "Method_UDI_GetUdiMethod": "QO",
+  /**
+    * search term: onLocationChanged
+  **/
+  "Class_LocationChangeListener": "com.jodelapp.jodelandroidv3.data.googleservices.location.LocationUpdatesOnSubscribe$$Lambda$1",
+  /**
+    * search term: Post
+  **/
+  "Class_JodelGestureListener": "com.jodelapp.jodelandroidv3.view.gesture.PostGestureManager.JodelGestureListener",
+  "Field_JodelGestureListener_Post": "aYp",
+  /**
+    * package com.squareup.otto.Bus;
+    * type: method
+    * arg 0: Object.class (Object obj)
+    * return: void.class
+    * modifier: public
+    * search term: Event to post must not be null
+  **/
+  "Method_Otto_Append_Bus_Event": "aZ"
+}
