@@ -2,7 +2,7 @@
   /**
     * The version of this file
    **/
-  "version": 3,
+  "version": 4,
   /**
     * The targeted Jodel version code
    **/
@@ -95,5 +95,24 @@
     * modifier: public
     * search term: Event to post must not be null
   **/
-  "Method_Otto_Append_Bus_Event": "aZ"
+  "Method_Otto_Append_Bus_Event": "aZ",
+  
+  /*
+  * package com.jodelapp.jodelandroidv3.view.MainActivity
+  * type: method
+  * arg 0: View.class
+  * return: void.class
+  * modifier: private synthetic
+  * search term: MainTabClickedEvent
+  */
+  "Method_Override_Hometown": "ct",
+  
+  /*
+  * package com.jodelapp.jodelandroidv3.features.feed.FeedFragment
+  * type: method
+  * return: FeedFragment.class
+  * modifier: public static
+  * search term: FeedFragment("HashtagFeed")
+  */
+  "Method_FeedFragment_NewInstance_Hashtags": "HG"
 }
