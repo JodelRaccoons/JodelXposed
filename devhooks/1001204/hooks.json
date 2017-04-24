@@ -2,7 +2,7 @@
   /**
     * The version of this file
    **/
-  "version": 6,
+  "version": 7,
   /**
     * The targeted Jodel version code
    **/
@@ -25,7 +25,8 @@
     "picture_feed",
     "cell_new_design",
     "pin_main_feed",
-    "mark_repliers"
+    "mark_repliers",
+    "reply_in_feed"
   ],
   /**
     * package com.jodelapp.jodelandroidv3.view.PhotoEditFragment;
