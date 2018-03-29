@@ -1,6 +1,8 @@
 Jodel Enhancements
 ==================
 
+> **Notice:** This project is unmaintained in favour of [JodelPatched](https://github.com/JodelRaccoons/JodelPatched)
+
 This modules utilises the [Xposed Framework](https://www.youtube.com/watch?v=uRR0Flqx9M8) to add features to [Jodel](https://jodel-app.com/).
 
 <!-- toc -->
